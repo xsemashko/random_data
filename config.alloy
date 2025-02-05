@@ -1,0 +1,40 @@
+// Источник логов (чтение из файла)
+loki.source.file "logs" {
+  targets = [
+    { __path__ = "/var/log/your-log-file.log" },
+  ]
+
+  // Добавление статических меток
+  labels = {
+    server_name = "server1",  // Замените на имя вашего сервера
+    server_ip = "192.168.1.10",  // Замените на IP-адрес вашего сервера
+  }
+}
+
+// Обработка логов
+loki.process "parse_logs" {
+  forward_to = [loki.write.endpoint.receiver]
+
+  // Стадия для извлечения полей с помощью регулярного выражения
+  stage.regex {
+    expression = "^(?P<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}[:\.]\\d{3})\\s+(?P<message_type>\\w+)\\s+(?P<interface>\\S{1,15})\\s+(?P<thread_code>\\S+)\\s+(?P<message_text>.*)$"
+  }
+
+  // Стадия для добавления извлеченных полей как меток
+  stage.labels {
+    values = {
+      timestamp = "timestamp",
+      message_type = "message_type",
+      interface = "interface",
+      thread_code = "thread_code",
+      message_text = "message_text",
+    }
+  }
+}
+
+// Отправка логов в Loki
+loki.write "endpoint" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}
