@@ -6,8 +6,8 @@ loki.source.file "logs" {
 
   // Добавление статических меток
   labels = {
-    server_name = "server1",  // Замените на имя вашего сервера
-    server_ip = "192.168.1.10",  // Замените на IP-адрес вашего сервера
+    server_name = env("HOSTNAME"),  // Замените на имя вашего сервера
+    server_ip = env("SERVER_IP"),  // Замените на IP-адрес вашего сервера
   }
 }
 
