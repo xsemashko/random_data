@@ -1,40 +1,40 @@
-// Источник логов (чтение из файла)
-loki.source.file "logs" {
-  targets = [
-    { __path__ = "/var/log/your-log-file.log" },
-  ]
-
-  // Добавление статических меток
-  labels = {
-    server_name = env("HOSTNAME"),  // Замените на имя вашего сервера
-    server_ip = env("SERVER_IP"),  // Замените на IP-адрес вашего сервера
-  }
+local.file_match "local_files" {
+	path_targets = [{"__path__" = "/home/way4/appserver/applications/ts_ws/webapps/ts_ws/WEB-INF/logs/ext*.log"}]
+	sync_period = "5s"
 }
 
-// Обработка логов
+loki.source.file "log_scrape" {
+	targets = local.file_match.local_files.targets
+	forward_to = [loki.process.parse_logs.receiver]
+	tail_from_end = true
+}
+
 loki.process "parse_logs" {
-  forward_to = [loki.write.endpoint.receiver]
+  forward_to = [loki.write.loki.receiver]
 
-  // Стадия для извлечения полей с помощью регулярного выражения
+
   stage.regex {
-    expression = "^(?P<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}[:\.]\\d{3})\\s+(?P<message_type>\\w+)\\s+(?P<interface>\\S{1,15})\\s+(?P<thread_code>\\S+)\\s+(?P<message_text>.*)$"
-  }
-
-  // Стадия для добавления извлеченных полей как меток
-  stage.labels {
-    values = {
-      timestamp = "timestamp",
-      message_type = "message_type",
-      interface = "interface",
-      thread_code = "thread_code",
-      message_text = "message_text",
+      expression = "^(?P<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3})\\s+(?P<message_type>\\w+)\\s+(?P<interface>\\S{1,15})\\s+(?P<thread_code>\\S+)\\s+(?P<message_text>.*)$"
     }
-  }
+
+  stage.labels {
+      values = {
+        timestamp = "timestamp",
+        message_type = "message_type",
+        interface = "interface",
+        thread_code = "thread_code",
+        message_id = "message_id",
+        message_text = "message_text",
+      }
+    }
 }
 
-// Отправка логов в Loki
-loki.write "endpoint" {
-  endpoint {
-    url = "http://loki:3100/loki/api/v1/push"
-  }
+loki.process "filter_logs" {
+	forward_to = [loki.write.loki.receiver]
+}
+
+loki.write "loki" {
+	endpoint {
+		url = "http://172.30.74.179:3100/loki/api/v1/push"
+	}
 }
