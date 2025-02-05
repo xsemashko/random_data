@@ -7,6 +7,10 @@ loki.source.file "log_scrape" {
 	targets = local.file_match.local_files.targets
 	forward_to = [loki.process.parse_logs.receiver]
 	tail_from_end = true
+  	labels = {
+    		server_name = "server1",  // Имя сервера
+    		server_ip = "192.168.1.10",  // IP-адрес сервера
+  }
 }
 
 loki.process "parse_logs" {
