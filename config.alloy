@@ -15,7 +15,7 @@ loki.process "parse_logs" {
   stage.multiline {
     firstline = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\s+"
     max_wait_time = "3s"
-    max_lines = 500
+    max_lines = 2000
   }
 
   stage.regex {
@@ -28,6 +28,17 @@ loki.process "parse_logs" {
         interface = "interface",
       }
     }
+    
+  stage.template {
+	  source = "level"
+    template = `{{ if eq .message_type "E"}}error{{ else if eq .message_type "L"}}debug{{ else }}info{{ end }}`
+  }
+  
+  stage.labels {
+    values = {
+		"level" = "level",
+	  }
+  }
 }
 
 loki.relabel "add_static_label" {
