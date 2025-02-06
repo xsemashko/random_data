@@ -7,35 +7,53 @@ loki.source.file "log_scrape" {
 	targets = local.file_match.local_files.targets
 	forward_to = [loki.process.parse_logs.receiver]
 	tail_from_end = true
-  	labels = {
-    		server_name = "server1",  // Имя сервера
-    		server_ip = "192.168.1.10",  // IP-адрес сервера
-  }
 }
 
 loki.process "parse_logs" {
-  forward_to = [loki.write.loki.receiver]
-
+  forward_to = [loki.relabel.add_static_label.receiver]
+  
+  stage.multiline {
+    firstline = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\s+"
+    max_wait_time = "3s"
+    max_lines = 500
+  }
 
   stage.regex {
-      expression = "^(?P<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3})\\s+(?P<message_type>\\w+)\\s+(?P<interface>\\S{1,15})\\s+(?P<thread_code>\\S+)\\s+(?P<message_text>.*)$"
+      expression = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\s+(?P<message_type>\\w+)\\s+(?P<interface>\\S{1,15})\\s+"
     }
 
   stage.labels {
       values = {
-        timestamp = "timestamp",
         message_type = "message_type",
         interface = "interface",
-        thread_code = "thread_code",
-        message_id = "message_id",
-        message_text = "message_text",
       }
     }
 }
 
+loki.relabel "add_static_label" {
+	forward_to = [loki.write.loki.receiver]
+	
+	rule {
+		target_label = "hostname"
+		replacement = constants.hostname
+	}
+  rule {
+    target_label = "service_name"
+		replacement = "ts_ws"
+  }
+  rule {
+    target_label = "host_ip"
+		replacement = "172.30.74.151"
+  }
+}
+
 loki.process "filter_logs" {
 	forward_to = [loki.write.loki.receiver]
+  stage.drop {
+    expression = "timestamp !~ '\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}'"
+  }
 }
+
 
 loki.write "loki" {
 	endpoint {
