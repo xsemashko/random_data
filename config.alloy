@@ -66,6 +66,66 @@ loki.process "filter_logs" {
 }
 
 
+local.file_match "local_files_ts_sms" {
+	path_targets = [{"__path__" = "/home/way4/appserver/applications/ts_sms/webapps/ts_sms/WEB-INF/logs/ext*.log"}]
+	sync_period = "5s"
+}
+
+loki.source.file "log_scrape_sms" {
+	targets = local.file_match.local_files_ts_sms.targets
+	forward_to = [loki.process.parse_logs_ts_sms.receiver]
+	tail_from_end = true
+}
+
+loki.process "parse_logs_ts_sms" {
+  forward_to = [loki.relabel.add_static_label_ts_sms.receiver]
+  
+  stage.multiline {
+    firstline = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\s+"
+    max_wait_time = "3s"
+    max_lines = 2000
+  }
+
+  stage.regex {
+      expression = "^\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}\\.\\d{3}\\s+(?P<message_type>\\w+)\\s+(?P<interface>\\S{1,15})\\s+"
+    }
+
+  stage.labels {
+      values = {
+        message_type = "message_type",
+        interface = "interface",
+      }
+    }
+    
+  stage.template {
+	  source = "level"
+    template = `{{ if eq .message_type "E"}}error{{ else if eq .message_type "L"}}debug{{ else }}info{{ end }}`
+  }
+  
+  stage.labels {
+    values = {
+		"level" = "level",
+	  }
+  }
+}
+
+loki.relabel "add_static_label_ts_sms" {
+	forward_to = [loki.write.loki.receiver]
+	
+	rule {
+		target_label = "hostname"
+		replacement = constants.hostname
+	}
+  rule {
+    target_label = "service_name"
+		replacement = "ts_sms"
+  }
+  rule {
+    target_label = "host_ip"
+		replacement = "172.30.74.151"
+  }
+}
+
 loki.write "loki" {
 	endpoint {
 		url = "http://172.30.74.179:3100/loki/api/v1/push"
