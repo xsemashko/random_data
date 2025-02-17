@@ -32,8 +32,17 @@ function exportToExcel() {
     // Создаем бинарный файл Excel
     const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
     
-    // Сохраняем файл
-    saveAsExcelFile(excelBuffer, "Результаты_запроса.xlsx");
+    // Форматируем текущую дату и время
+    const now = new Date();
+    const formattedDate = `${String(now.getDate()).padStart(2, '0')}_${
+        String(now.getMonth() + 1).padStart(2, '0')}_${
+        now.getFullYear()}_${
+        String(now.getHours()).padStart(2, '0')}_${
+        String(now.getMinutes()).padStart(2, '0')}_${
+        String(now.getSeconds()).padStart(2, '0')}`;
+    
+    // Сохраняем файл с именем, содержащим дату и время
+    saveAsExcelFile(excelBuffer, `Результаты_запроса_${formattedDate}.xlsx`);
 }
 
 function saveAsExcelFile(buffer, filename) {
