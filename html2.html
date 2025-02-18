@@ -1,57 +1,236 @@
-function exportToExcel() {
-    const table = document.getElementById("data-table");
-    
-    // Создаем массив для данных таблицы
-    const data = [];
-    
-    // Проходим по всем строкам таблицы
-    const rows = table.querySelectorAll("tr");
-    rows.forEach((row, rowIndex) => {
-        const rowData = [];
-        const cells = row.querySelectorAll("th, td");
-        
-        cells.forEach((cell, cellIndex) => {
-            // Если это первый столбец (индекс 0), форматируем значение как текст
-            if (cellIndex === 0 && rowIndex > 0) { // Пропускаем заголовок
-                rowData.push({ t: 's', v: cell.innerText }); // 's' означает строку (текст)
-            } else {
-                rowData.push(cell.innerText);
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты запроса</title>
+    <!-- Подключение шрифта Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Подключение библиотеки SheetJS для экспорта в Excel -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            text-align: center;
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .table-container {
+            width: 100%;
+            max-width: 1200px;
+            max-height: calc(100vh - 200px); /* Ограничиваем высоту таблицы */
+            overflow-y: auto; /* Добавляем вертикальную прокрутку */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #2c3e50;
+            color: #fff;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: sticky;
+            top: 0; /* Фиксируем шапку */
+            z-index: 1; /* Убедимся, что шапка поверх строк */
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+        .export-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .export-button:hover {
+            background-color: #1a252f;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+        }
+        /* Стили для всплывающего уведомления */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideIn 0.5s ease-out;
+        }
+        .toast button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 20px;
+        }
+        .toast button:hover {
+            opacity: 0.8;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
             }
-        });
-        
-        data.push(rowData);
-    });
-    
-    // Создаем рабочий лист Excel
-    const worksheet = XLSX.utils.aoa_to_sheet(data);
-    
-    // Создаем книгу и добавляем рабочий лист
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    
-    // Создаем бинарный файл Excel
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    
-    // Форматируем текущую дату и время
-    const now = new Date();
-    const formattedDate = `${String(now.getDate()).padStart(2, '0')}_${
-        String(now.getMonth() + 1).padStart(2, '0')}_${
-        now.getFullYear()}_${
-        String(now.getHours()).padStart(2, '0')}_${
-        String(now.getMinutes()).padStart(2, '0')}_${
-        String(now.getSeconds()).padStart(2, '0')}`;
-    
-    // Сохраняем файл с именем, содержащим дату и время
-    saveAsExcelFile(excelBuffer, `Результаты_запроса_${formattedDate}.xlsx`);
-}
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Результаты запроса</h1>
+        <button class="export-button" onclick="exportToExcel()">Экспорт в Excel</button>
+        <div class="table-container">
+            <table id="data-table">
+                <thead>
+                    <tr>
+                        <th>Месяц в котором была выполнена первая токенизация по карте</th>
+                        <th>Белкарт Сберкарты</th>
+                        <th>Белкарт</th>
+                        <th>Visa</th>
+                        <th>Mastercard</th>
+                        <th>Все карты Банка</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="footer">
+        <p>&copy; 2023 Ваша компания. Все права защищены.</p>
+    </div>
 
-function saveAsExcelFile(buffer, filename) {
-    const blob = new Blob([buffer], { type: 'application/octet-stream' });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = filename;
-    link.click();
-    setTimeout(() => {
-        URL.revokeObjectURL(link.href);
-    }, 100);
-}
+    <!-- Всплывающее уведомление -->
+    <div id="toast" class="toast">
+        <span>В статистику включены только те карты, которые были активны на момент токенизации.</span>
+        <button onclick="closeToast()">&times;</button>
+    </div>
+
+    <script>
+        // Функция для экспорта таблицы в Excel
+        function exportToExcel() {
+            const table = document.getElementById("data-table");
+            
+            // Создаем массив для данных таблицы
+            const data = [];
+            
+            // Проходим по всем строкам таблицы
+            const rows = table.querySelectorAll("tr");
+            rows.forEach((row, rowIndex) => {
+                const rowData = [];
+                const cells = row.querySelectorAll("th, td");
+                
+                cells.forEach((cell, cellIndex) => {
+                    // Если это первый столбец (индекс 0), форматируем значение как текст
+                    if (cellIndex === 0 && rowIndex > 0) { // Пропускаем заголовок
+                        rowData.push({ t: 's', v: cell.innerText }); // 's' означает строку (текст)
+                    } else {
+                        rowData.push(cell.innerText);
+                    }
+                });
+                
+                data.push(rowData);
+            });
+            
+            // Создаем рабочий лист Excel
+            const worksheet = XLSX.utils.aoa_to_sheet(data);
+            
+            // Создаем книгу и добавляем рабочий лист
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+            
+            // Создаем бинарный файл Excel
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            
+            // Форматируем текущую дату и время
+            const now = new Date();
+            const formattedDate = `${String(now.getDate()).padStart(2, '0')}_${
+                String(now.getMonth() + 1).padStart(2, '0')}_${
+                now.getFullYear()}_${
+                String(now.getHours()).padStart(2, '0')}_${
+                String(now.getMinutes()).padStart(2, '0')}_${
+                String(now.getSeconds()).padStart(2, '0')}`;
+            
+            // Сохраняем файл с именем, содержащим дату и время
+            saveAsExcelFile(excelBuffer, `Результаты_запроса_${formattedDate}.xlsx`);
+        }
+
+        function saveAsExcelFile(buffer, filename) {
+            const blob = new Blob([buffer], { type: 'application/octet-stream' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+            setTimeout(() => {
+                URL.revokeObjectURL(link.href);
+            }, 100);
+        }
+
+        // Функция для закрытия уведомления
+        function closeToast() {
+            const toast = document.getElementById("toast");
+            toast.style.display = "none";
+        }
+
+        // Автоматическое закрытие уведомления через 10 секунд
+        setTimeout(() => {
+            closeToast();
+        }, 10000); // 10 секунд
+    </script>
+</body>
+</html>
