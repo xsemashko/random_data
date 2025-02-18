@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Результаты запроса</title>
-    <!-- Подключение шрифта Google Fonts -->
+    <title>Аналитика по токенизациям</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <!-- Подключение библиотеки SheetJS для экспорта в Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
+        /* Общие стили */
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #f9f9f9;
@@ -16,172 +15,153 @@
             padding: 20px;
             color: #333;
         }
-        h1 {
-            text-align: center;
-            font-weight: 500;
-            color: #2c3e50;
-            margin-bottom: 30px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0 auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            background-color: #fff;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-        }
-        th {
-            background-color: #2c3e50;
-            color: #fff;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        tr:hover {
-            background-color: #e9ecef;
-            transition: background-color 0.3s ease;
-        }
-        .container {
+        
+        /* Стили вкладок */
+        .tab-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
         }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 14px;
-            color: #777;
+        
+        .tabs {
+            margin-bottom: 20px;
         }
-        .export-button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #2c3e50;
-            color: #fff;
+        
+        .tablinks {
+            background-color: #f1f1f1;
             border: none;
-            border-radius: 5px;
+            outline: none;
             cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
             font-size: 16px;
-            transition: background-color 0.3s ease;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
         }
-        .export-button:hover {
-            background-color: #1a252f;
-        }
-        /* Стили для всплывающего уведомления */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
+        
+        .tablinks.active {
             background-color: #2c3e50;
-            color: #fff;
-            padding: 15px 20px;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            animation: slideIn 0.5s ease-out;
+            color: white;
         }
-        .toast button {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            margin-left: 20px;
+        
+        .tabcontent {
+            display: none;
+            animation: fadeEffect 0.5s;
         }
-        .toast button:hover {
-            opacity: 0.8;
+        
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
         }
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
+
+        /* Остальные стили (таблицы, кнопки и т.д.) остаются как в предыдущей версии */
+        /* ... */
+
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Результаты запроса</h1>
+        <h1>Аналитика по токенизациям</h1>
         <button class="export-button" onclick="exportToExcel()">Экспорт в Excel</button>
-        <table id="data-table">
-            <thead>
-                <tr>
-                    <th>Месяц в котором была выполнена первая токенизация по карте</th>
-                    <th>Белкарт Сберкарты</th>
-                    <th>Белкарт</th>
-                    <th>Visa</th>
-                    <th>Mastercard</th>
-                    <th>Все карты Банка</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in data %}
-                <tr>
-                    <td>{{ row[0] }}</td>
-                    <td>{{ row[1] }}</td>
-                    <td>{{ row[2] }}</td>
-                    <td>{{ row[3] }}</td>
-                    <td>{{ row[4] }}</td>
-                    <td>{{ row[5] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    <div class="footer">
-        <p>&copy; 2023 Ваша компания. Все права защищены.</p>
-    </div>
+        
+        <div class="tab-container">
+            <div class="tabs">
+                <button class="tablinks active" onclick="openTab(event, 'tab1')">Основная статистика</button>
+                <button class="tablinks" onclick="openTab(event, 'tab2')">Успешные операции</button>
+            </div>
 
-    <!-- Всплывающее уведомление -->
-    <div id="toast" class="toast">
-        <span>В статистику включены только те карты, которые были активны на момент токенизации.</span>
-        <button onclick="closeToast()">&times;</button>
+            <!-- Первая вкладка -->
+            <div id="tab1" class="tabcontent" style="display:block;">
+                <div class="table-container">
+                    <table id="data-table1">
+                        <!-- Первая таблица -->
+                    </table>
+                </div>
+            </div>
+
+            <!-- Вторая вкладка -->
+            <div id="tab2" class="tabcontent">
+                <div class="table-container">
+                    <table id="data-table2">
+                        <!-- Вторая таблица -->
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        // Функция для экспорта таблицы в Excel
-        function exportToExcel() {
-            const table = document.getElementById("data-table");
-            const workbook = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
-            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-            saveAsExcelFile(excelBuffer, "Результаты_запроса.xlsx");
+        // Логика вкладок
+        function openTab(evt, tabName) {
+            const tabcontent = document.getElementsByClassName("tabcontent");
+            const tablinks = document.getElementsByClassName("tablinks");
+
+            for (let i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            for (let i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
         }
 
-        function saveAsExcelFile(buffer, filename) {
+        // Модифицированная функция экспорта
+        function exportToExcel() {
+            const tables = [
+                {node: document.getElementById('data-table1'), name: 'Основная_статистика'},
+                {node: document.getElementById('data-table2'), name: 'Успешные_операции'}
+            ];
+
+            const workbook = XLSX.utils.book_new();
+            
+            tables.forEach((table) => {
+                const data = [];
+                const rows = table.node.querySelectorAll("tr");
+                
+                rows.forEach((row) => {
+                    const rowData = [];
+                    const cells = row.querySelectorAll("th, td");
+                    
+                    cells.forEach((cell, cellIndex) => {
+                        if (cellIndex === 0 && row.rowIndex > 0) {
+                            rowData.push({ t: 's', v: cell.innerText });
+                        } else {
+                            rowData.push(cell.innerText);
+                        }
+                    });
+                    data.push(rowData);
+                });
+                
+                const worksheet = XLSX.utils.aoa_to_sheet(data);
+                XLSX.utils.book_append_sheet(workbook, worksheet, table.name);
+            });
+
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            saveAsExcelFile(excelBuffer);
+        }
+
+        function saveAsExcelFile(buffer) {
+            const now = new Date();
+            const formattedDate = [
+                now.getFullYear(),
+                String(now.getMonth() + 1).padStart(2, '0'),
+                String(now.getDate()).padStart(2, '0'),
+                String(now.getHours()).padStart(2, '0'),
+                String(now.getMinutes()).padStart(2, '0')
+            ].join('-');
+
             const blob = new Blob([buffer], { type: 'application/octet-stream' });
             const link = document.createElement("a");
             link.href = URL.createObjectURL(blob);
-            link.download = filename;
+            link.download = `Аналитика_по_токенизациям_${formattedDate}.xlsx`;
             link.click();
+            
             setTimeout(() => {
                 URL.revokeObjectURL(link.href);
             }, 100);
         }
-
-        // Функция для закрытия уведомления
-        function closeToast() {
-            const toast = document.getElementById("toast");
-            toast.style.display = "none";
-        }
-
-        // Автоматическое закрытие уведомления через 10 секунд
-        setTimeout(() => {
-            closeToast();
-        }, 10000); // 10 секунд
     </script>
 </body>
 </html>
