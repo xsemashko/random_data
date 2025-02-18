@@ -1,3 +1,6 @@
+select M as "Месяц", C as "Количетсво успешных операций по токенам", BS as "Белкарт Сберкарты", B 
+ as "Белкарт", Visa, Mastercard  from lpc.token_operations_success_by_month
+
 WITH A AS (
 SELECT TO_CHAR(AMND_DATE_first, 'YYYY.MM') as "Месяц в котором была выполнена первая токенизация по карте",
 sum (case when (target_number like '9112388002%' or target_number like '9112388050%' or target_number like '9112388053%'
