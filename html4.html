@@ -3,19 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Аналитика по токенизациям</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <title>Токенизация.Статистика</title>
+    <script src="/static/js/xlsx.full.min.js"></script>
     <style>
         /* Общие стили */
+        @font-face {
+			font-family: 'OpenSans';
+			src: url('/static/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+		}
+		
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'OpenSans';
             background-color: #f9f9f9;
             margin: 0;
             padding: 20px;
             color: #333;
         }
         
+		h1 {
+            text-align: center;
+            font-weight: 500;
+            color: #2c3e50;
+			margin-top: 15px;
+        }
+		
+		.table-container {
+            width: 100%;
+            max-width: 1200px;
+            max-height: calc(100vh - 350px); /* Ограничиваем высоту таблицы */
+            overflow-y: auto; /* Добавляем вертикальную прокрутку */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #2c3e50;
+            color: #fff;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            position: sticky;
+            top: 0; /* Фиксируем шапку */
+            z-index: 1; /* Убедимся, что шапка поверх строк */
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+        .export-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .export-button:hover {
+            background-color: #1a252f;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+        }
+		
         /* Стили вкладок */
         .tab-container {
             max-width: 1200px;
@@ -34,8 +102,9 @@
             padding: 14px 16px;
             transition: 0.3s;
             font-size: 16px;
-            border-radius: 5px 5px 0 0;
+            border-radius: 5px 5px 5px 5px;
             margin-right: 5px;
+			margin-bottom: 5px;
         }
         
         .tablinks.active {
@@ -53,27 +122,118 @@
             to {opacity: 1;}
         }
 
-        /* Остальные стили (таблицы, кнопки и т.д.) остаются как в предыдущей версии */
-        /* ... */
+        /* Стили для всплывающего уведомления */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+			left: 20px;
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideIn 0.5s ease-out;
+			font-size: 15px;
+			opacity: 0.9;
+        }
+        .toast button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 20px;
+        }
+        .toast button:hover {
+            opacity: 0.8;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
 
     </style>
 </head>
 <body>
+{% include 'toolbar_with_opacity.html' %}
     <div class="container">
-        <h1>Аналитика по токенизациям</h1>
+        <h1>Токенизация Белкарт PAY. Статистика.</h1>
         <button class="export-button" onclick="exportToExcel()">Экспорт в Excel</button>
         
         <div class="tab-container">
             <div class="tabs">
-                <button class="tablinks active" onclick="openTab(event, 'tab1')">Основная статистика</button>
-                <button class="tablinks" onclick="openTab(event, 'tab2')">Успешные операции</button>
+				<button class="tablinks active" onclick="openTab(event, 'tab0')">Первая успешная попытка токенизации карты Банка</button>
+				<button class="tablinks" onclick="openTab(event, 'tab2')">Первая успешная операция по новому токену Банка</button>
+                <button class="tablinks" onclick="openTab(event, 'tab1')">Успешные операции по токенам Банка</button> 
+            </div>
+			
+			<!-- Основная вкладка -->
+            <div id="tab0" class="tabcontent" style="display:block;">
+                <div class="table-container">
+                    <table id="data-table">
+            <thead>
+                <tr>
+                    <th>Месяц в котором была выполнена первая успешная попытка токенизации по карте</th>
+                    <th>Белкарт Сберкарты</th>
+                    <th>Белкарт</th>
+                    <th>Visa</th>
+                    <th>Mastercard</th>
+                    <th>Все карты Банка</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td>{{ row[5] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+                </div>
             </div>
 
             <!-- Первая вкладка -->
-            <div id="tab1" class="tabcontent" style="display:block;">
+            <div id="tab1" class="tabcontent">
                 <div class="table-container">
                     <table id="data-table1">
                         <!-- Первая таблица -->
+						<thead>
+                    <tr>
+                        <th>Месяц</th>
+						<th>Количество успешных операций с использованием токена</th>
+                        <th>Белкарт Сберкарты</th>
+                        <th>Белкарт</th>
+                        <th>Visa</th>
+                        <th>Mastercard</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data1 %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
                     </table>
                 </div>
             </div>
@@ -83,10 +243,42 @@
                 <div class="table-container">
                     <table id="data-table2">
                         <!-- Вторая таблица -->
+						<thead>
+                    <tr>
+                        <th>Месяц в котором была выполнена первая успешная операция по токену</th>
+						<th>Количество токенов, по которым появилась хоть одна успешная операция</th>
+                        <th>Белкарт Сберкарты</th>
+                        <th>Белкарт</th>
+                        <th>Visa</th>
+                        <th>Mastercard</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data2 %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
                     </table>
                 </div>
             </div>
         </div>
+    </div>
+
+	<div class="footer">
+        <p>Разработано командой процессинга. 2025.</p>
+    </div>
+
+<!-- Всплывающее уведомление -->
+    <div id="toast" class="toast">
+        <span>В статистику включены только те карты, которые были активны на момент токенизации. Реальное количество токенизированных карт будет меньше, так как Клиенту ещё необходимо пройти путь в приложении Белкарт Pay и успешно ввести смс код. Точными данными обладает только ПС Белкарт.</span>
+        <button onclick="closeToast()">&times;</button>
     </div>
 
     <script>
@@ -110,8 +302,9 @@
         // Модифицированная функция экспорта
         function exportToExcel() {
             const tables = [
-                {node: document.getElementById('data-table1'), name: 'Основная_статистика'},
-                {node: document.getElementById('data-table2'), name: 'Успешные_операции'}
+				{node: document.getElementById('data-table'), name: '1-я успеш_попытка токен_карты'},
+				{node: document.getElementById('data-table2'), name: '1-я успешая опер_по нов_токену'},
+                {node: document.getElementById('data-table1'), name: 'Успешные операции по токенам'}
             ];
 
             const workbook = XLSX.utils.book_new();
@@ -162,6 +355,17 @@
                 URL.revokeObjectURL(link.href);
             }, 100);
         }
+		
+		// Функция для закрытия уведомления
+        function closeToast() {
+            const toast = document.getElementById("toast");
+            toast.style.display = "none";
+        }
+
+        // Автоматическое закрытие уведомления через 10 секунд
+        setTimeout(() => {
+            closeToast();
+        }, 15000); // 15 секунд
     </script>
 </body>
 </html>
