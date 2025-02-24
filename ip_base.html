@@ -48,14 +48,29 @@
     </dialog>
     <script>
         const dialog = document.getElementById("wiki_dialog");
-        
+
+        // Функция для открытия модального окна
         function showDialog() {
             dialog.showModal();
         }
-        
+
+        // Функция для закрытия модального окна
         function closeDialog() {
             dialog.close();
         }
+
+        // Закрытие модального окна по клику вне его области
+        dialog.addEventListener("click", (event) => {
+            const dialogDimensions = dialog.getBoundingClientRect();
+            if (
+                event.clientX < dialogDimensions.left ||
+                event.clientX > dialogDimensions.right ||
+                event.clientY < dialogDimensions.top ||
+                event.clientY > dialogDimensions.bottom
+            ) {
+                closeDialog();
+            }
+        });
     </script>
     {% include 'toolbar_with_opacity.html' %}
 </body>
