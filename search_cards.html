@@ -1,56 +1,44 @@
 {% extends "ip_base.html" %}
+
 {% block content %}
-<h1 class="username" style= "color: black;"></h1>
-<form method="post" action="/search_cards">
-    <label id="itn_search_label" for="ITN">Введите Идентификационный номер паспорта:</label>
-                <div class="button_itn">
-					<input class="card_id" type="text" value="{{ITN}}" id="ITN" name="ITN"/>
-					<div class="button_search">
-								<button class="search_itn" id="b_ITN" type="submit" value="ITN" name="search_itn">Поиск карт</button>
-
-					</div>
-					<div id="loading-spinner" style="display: none;">Загрузка...</div>
-				</div>
-                <b><label class="lab" for="text_memo">Карты клиента:</label><br></b>
-    <div class="scroll-table">
-                    {% if data == "Empty"%}
-                        <b><label class="lab" style="color:red">Карты не найдены</label><br></b>
-                    {% else %}
-
-                    <table>
-			<thead>
+    <h1 class="username"></h1>
+    <form method="post" action="/search_cards">
+        <label id="itn_search_label" for="ITN">Введите Идентификационный номер паспорта:</label>
+        <div class="button_itn">
+            <input class="card_id" type="text" value="{{ITN}}" id="ITN" name="ITN"/>
+            <div class="button_search">
+                <button class="search_itn" id="b_ITN" type="submit" value="ITN" name="search_itn">Поиск карт</button>
+            </div>
+            <div id="loading-spinner" class="loading-spinner">Загрузка...</div>
+        </div>
+        <b><label class="lab" for="text_memo">Карты клиента:</label><br></b>
+        <div class="scroll-table">
+            {% if data == "Empty" %}
+                <b><label class="lab error-message">Карты не найдены</label><br></b>
+            {% else %}
+                <table>
+                    <thead>
                         <tr>
-                            <th style="background-color: #1C3144; color: white;">Карта</th>
-                            <th style="background-color: #1C3144; color: white;">ФИО клиента</th>
-                            <th style="background-color: #1C3144; color: white;">ITN</th>
-		            <th style="background-color: #1C3144; color: white;width: 10.3%;">Статус</th>
+                            <th>Карта</th>
+                            <th>ФИО клиента</th>
+                            <th>ITN</th>
+                            <th>Статус</th>
                         </tr>
-			</thead>
-		    </table>
-			<div class="scroll-table-body">
-				<table>
-                        	{% if data != '' %}
-				<tbody>
-                        	{% for element in data %}
-                        	<tr>
-                            
-                        	<td style="background-color: #C4CAD0; color: black;"><a href="/details/{{ element[3] }}">{{element[0]}}</a></td>	
-                        	<td style="background-color: #C4CAD0; color: black;">{{element[1]}}</td>
-                        	<td style="background-color: #FCF7FF; color: black;">{{element[2]}}</td>
-				{% if element[4] == 'ON' %}
-                		    <td style="background-color: #ABE188; color: black;width: 10%;">{{element[4]}}</td>
-                  		{% elif element[4] == 'SKIP'%}
-                      		    <td style="background-color: #F0C808; color: black;width: 10%;">{{element[4]}}</td>
-                  		{% else %}
-                      		    <td style="background-color: #E63946; color: black;width: 10%;">{{element[4]}}</td>
-                  		{% endif %}
-                        	</tr>
-                        	{% endfor %}
-				</tbody>
-                        	{% endif %}
-				</table>
-		      {% endif %}
-                    
-    </div>
-</form>
+                    </thead>
+                    <tbody>
+                        {% if data != '' %}
+                            {% for element in data %}
+                                <tr>
+                                    <td><a href="/details/{{ element[3] }}">{{element[0]}}</a></td>
+                                    <td>{{element[1]}}</td>
+                                    <td>{{element[2]}}</td>
+                                    <td class="status-{{element[4] | lower}}">{{element[4]}}</td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </form>
 {% endblock %}
