@@ -1,0 +1,65 @@
+{% extends "ip_base.html" %}
+
+{% block content %}
+            <h1 class="username" style="color: black;"></h1>
+            <form method="post" action="/details/{{rbs}}">
+
+		<br>
+                {% if current_status != 0 %}
+                    <b><label>Текущий статус услуги:</label></b>
+                    {% if 'ON' in current_status %}
+                        <p  style="background-color: #ABE188; color: black;">{{current_status}}</p>
+                        <div class="button_search">
+                                <button class="search_delete" type="submit" value="{{rbs}}" name="delete_b">
+                            Отключить услугу
+                        </button>
+                        </div>
+                    {% else %}
+                        <p  style="background-color: #E63946; color: black;">{{current_status}}</p>
+                    {% endif %}
+                {% endif %}
+                <b><label for="text_memo">История подключения услуги по карте {{mask}}:</label><br></b>
+<div class="scroll-table">
+		{% if data %}
+                <table>
+			<thead>
+                		<tr>
+                			<th style="background-color: #1C3144; color: white; width: 10%;">Дата, время</th>
+							<th style="background-color: #1C3144; color: white;width: 20%;">Маска карты</th>
+							<th style="background-color: #1C3144; color: white;word-break: break-all;">RQUID/Пользователь</th>
+							<th style="background-color: #1C3144; color: white;width: 15%">CARD ID</th>
+							<th style="background-color: #1C3144; color: white;width: 10%;">Номер телефона</th>
+							<th style="background-color: #1C3144; color: white;width: 10.3%;">Статус</th>
+                		</tr>
+			</thead>
+                </table>
+		
+		<div class="scroll-table-body">
+		<table>
+			<tbody>
+                        {% for element in data %}
+                        <tr>
+                        <td style="background-color: #FCF7FF; color: black; width: 10%;">{{element[0]}}</td>
+						<td style="background-color: #C4CAD0; color: black;word-break: break-all;width: 20%;">{{element[1]}}</td>
+						<td style="background-color: #FCF7FF; color: black;word-break: break-all;">{{element[2]}}</td>
+						<td style="background-color: #C4CAD0; color: black;word-break: break-all;width: 15%">{{element[3]}}</td>
+						<td style="background-color: #FCF7FF; color: black;width: 10%;word-break: break-all;">{{element[4]}}</td>
+                          {% if element[5] == 'ON' %}
+							<td style="background-color: #ABE188; color: black;width: 10%;">{{element[5]}}</td>
+					  {% elif element[5] == 'SKIP'%}
+						  <td style="background-color: #F0C808; color: black;width: 10%;">{{element[5]}}</td>
+					  {% else %}
+						  <td style="background-color: #E63946; color: black;width: 10%;">{{element[5]}}</td>
+					  {% endif %}
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                    <b><label class="not_conn">Услуга не подключена</label><br></b>
+			</tbody>
+			</table>
+		</div>
+                	{% endif %}
+                </table>
+</div>
+            </form>
+{% endblock %}
