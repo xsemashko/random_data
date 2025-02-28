@@ -10,9 +10,15 @@
     <div class="tabs">
         <button class="tablink" onclick="openTab(event, 'reg_requests')">Registration Requests</button>
         <button class="tablink" onclick="openTab(event, 'users')">Users</button>
+        <button class="tablink" onclick="openTab(event, 'applications')">Applications</button>
     </div>
 
     <div id="reg_requests" class="tabcontent">
+        <div class="controls">
+            <label for="search_reg_requests">Search by Username:</label>
+            <input type="text" id="search_reg_requests" oninput="fetchData('reg_requests')">
+            <button onclick="toggleSort('reg_requests')">Sort by ID ({{ sort_order }})</button>
+        </div>
         <table>
             <thead>
                 <tr>
@@ -30,6 +36,11 @@
     </div>
 
     <div id="users" class="tabcontent">
+        <div class="controls">
+            <label for="search_users">Search by Username:</label>
+            <input type="text" id="search_users" oninput="fetchData('users')">
+            <button onclick="toggleSort('users')">Sort by ID ({{ sort_order }})</button>
+        </div>
         <table>
             <thead>
                 <tr>
@@ -49,7 +60,25 @@
         </table>
     </div>
 
+    <div id="applications" class="tabcontent">
+        <div class="controls">
+            <button onclick="toggleSort('applications')">Sort by ID ({{ sort_order }})</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>App</th>
+                    <th>Alias</th>
+                </tr>
+            </thead>
+            <tbody id="applications_body"></tbody>
+        </table>
+    </div>
+
     <script>
+        let sortOrder = 'DESC'; // По умолчанию сортировка по убыванию
+
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tabcontent");
@@ -64,40 +93,61 @@
             evt.currentTarget.className += " active";
         }
 
-        function fetchData() {
-            fetch('/get_data')
+        function fetchData(table) {
+            const searchInput = table === 'reg_requests' 
+                ? document.getElementById('search_reg_requests').value 
+                : table === 'users' 
+                ? document.getElementById('search_users').value 
+                : '';
+            
+            fetch(`/get_data?sort=${sortOrder}&search=${searchInput}`)
                 .then(response => response.json())
                 .then(data => {
-                    const regRequestsBody = document.getElementById('reg_requests_body');
-                    const usersBody = document.getElementById('users_body');
-
-                    regRequestsBody.innerHTML = data.reg_requests.map(row => `
-                        <tr data-id="${row[0]}">
-                            <td>${row[0]}</td>
-                            <td>${row[1]}</td>
-                            <td>${row[2]}</td>
-                            <td>${row[3]}</td>
-                            <td><input type="text" name="status" value="${row[4]}" onchange="updateField('reg_requests', ${row[0]}, 'status', this.value)"></td>
-                            <td>${row[5]}</td>
-                            <td><button onclick="saveChanges('reg_requests', ${row[0]})">Save</button></td>
-                        </tr>
-                    `).join('');
-
-                    usersBody.innerHTML = data.users.map(row => `
-                        <tr data-id="${row[0]}">
-                            <td>${row[0]}</td>
-                            <td>${row[1]}</td>
-                            <td>${row[2]}</td>
-                            <td>${row[3]}</td>
-                            <td>${row[4]}</td>
-                            <td><input type="text" name="mail" value="${row[5]}" onchange="updateField('users', ${row[0]}, 'mail', this.value)"></td>
-                            <td><input type="text" name="status" value="${row[6]}" onchange="updateField('users', ${row[0]}, 'status', this.value)"></td>
-                            <td>${row[7]}</td>
-                            <td><input type="text" name="grants" value="${row[8]}" onchange="updateField('users', ${row[0]}, 'grants', this.value)"></td>
-                            <td><button onclick="saveChanges('users', ${row[0]})">Save</button></td>
-                        </tr>
-                    `).join('');
+                    if (table === 'reg_requests') {
+                        const regRequestsBody = document.getElementById('reg_requests_body');
+                        regRequestsBody.innerHTML = data.reg_requests.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                                <td>${row[3]}</td>
+                                <td><input type="text" name="status" value="${row[4]}" onchange="updateField('reg_requests', ${row[0]}, 'status', this.value)"></td>
+                                <td>${row[5]}</td>
+                                <td><button onclick="saveChanges('reg_requests', ${row[0]})">Save</button></td>
+                            </tr>
+                        `).join('');
+                    } else if (table === 'users') {
+                        const usersBody = document.getElementById('users_body');
+                        usersBody.innerHTML = data.users.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                                <td>${row[3]}</td>
+                                <td>${row[4]}</td>
+                                <td><input type="text" name="mail" value="${row[5]}" onchange="updateField('users', ${row[0]}, 'mail', this.value)"></td>
+                                <td><input type="text" name="status" value="${row[6]}" onchange="updateField('users', ${row[0]}, 'status', this.value)"></td>
+                                <td>${row[7]}</td>
+                                <td><input type="text" name="grants" value="${row[8]}" onchange="updateField('users', ${row[0]}, 'grants', this.value)"></td>
+                                <td><button onclick="saveChanges('users', ${row[0]})">Save</button></td>
+                            </tr>
+                        `).join('');
+                    } else if (table === 'applications') {
+                        const applicationsBody = document.getElementById('applications_body');
+                        applicationsBody.innerHTML = data.apps.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                            </tr>
+                        `).join('');
+                    }
                 });
+        }
+
+        function toggleSort(table) {
+            sortOrder = sortOrder === 'DESC' ? 'ASC' : 'DESC';
+            fetchData(table);
         }
 
         function updateField(table, id, field, value) {
@@ -136,7 +186,7 @@
               .then(data => {
                   if (data.success) {
                       alert('Changes saved successfully');
-                      fetchData();
+                      fetchData(table);
                   } else {
                       alert('Error: ' + data.error);
                   }
@@ -144,7 +194,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            fetchData();
+            fetchData('reg_requests');
             document.getElementsByClassName('tablink')[0].click();
         });
     </script>
