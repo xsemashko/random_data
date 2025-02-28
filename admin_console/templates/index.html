@@ -72,28 +72,28 @@
                     const usersBody = document.getElementById('users_body');
 
                     regRequestsBody.innerHTML = data.reg_requests.map(row => `
-                        <tr>
+                        <tr data-id="${row[0]}">
                             <td>${row[0]}</td>
                             <td>${row[1]}</td>
                             <td>${row[2]}</td>
                             <td>${row[3]}</td>
-                            <td><input type="text" value="${row[4]}" onchange="updateField('reg_requests', ${row[0]}, 'status', this.value)"></td>
+                            <td><input type="text" name="status" value="${row[4]}" onchange="updateField('reg_requests', ${row[0]}, 'status', this.value)"></td>
                             <td>${row[5]}</td>
                             <td><button onclick="saveChanges('reg_requests', ${row[0]})">Save</button></td>
                         </tr>
                     `).join('');
 
                     usersBody.innerHTML = data.users.map(row => `
-                        <tr>
+                        <tr data-id="${row[0]}">
                             <td>${row[0]}</td>
                             <td>${row[1]}</td>
                             <td>${row[2]}</td>
                             <td>${row[3]}</td>
                             <td>${row[4]}</td>
-                            <td><input type="text" value="${row[5]}" onchange="updateField('users', ${row[0]}, 'mail', this.value)"></td>
-                            <td><input type="text" value="${row[6]}" onchange="updateField('users', ${row[0]}, 'status', this.value)"></td>
+                            <td><input type="text" name="mail" value="${row[5]}" onchange="updateField('users', ${row[0]}, 'mail', this.value)"></td>
+                            <td><input type="text" name="status" value="${row[6]}" onchange="updateField('users', ${row[0]}, 'status', this.value)"></td>
                             <td>${row[7]}</td>
-                            <td><input type="text" value="${row[8]}" onchange="updateField('users', ${row[0]}, 'grants', this.value)"></td>
+                            <td><input type="text" name="grants" value="${row[8]}" onchange="updateField('users', ${row[0]}, 'grants', this.value)"></td>
                             <td><button onclick="saveChanges('users', ${row[0]})">Save</button></td>
                         </tr>
                     `).join('');
@@ -108,24 +108,37 @@
         }
 
         function saveChanges(table, id) {
-            const changes = window.changes?.[table]?.[id];
-            if (!changes) return;
+            const changes = window.changes?.[table]?.[id] || {};
+            const row = document.querySelector(`#${table}_body tr[data-id="${id}"]`);
+
+            const data = {
+                table: table,
+                id: id,
+                ...changes
+            };
+
+            // Добавляем обязательные поля, если они не были изменены
+            if (table === 'users') {
+                if (!data.mail) data.mail = row.querySelector('input[name="mail"]').value;
+                if (!data.status) data.status = row.querySelector('input[name="status"]').value;
+                if (!data.grants) data.grants = row.querySelector('input[name="grants"]').value;
+            } else if (table === 'reg_requests') {
+                if (!data.status) data.status = row.querySelector('input[name="status"]').value;
+            }
 
             fetch('/update_data', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                    table: table,
-                    id: id,
-                    ...changes
-                })
+                body: JSON.stringify(data)
             }).then(response => response.json())
               .then(data => {
                   if (data.success) {
                       alert('Changes saved successfully');
                       fetchData();
+                  } else {
+                      alert('Error: ' + data.error);
                   }
               });
         }
