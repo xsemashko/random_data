@@ -47,24 +47,28 @@ def update_data():
     conn = get_db_connection()
     cur = conn.cursor()
 
-    if data['table'] == 'reg_requests':
-        cur.execute('''
-            UPDATE webplatform.reg_requests
-            SET status = %s
-            WHERE id = %s
-        ''', (data['status'], data['id']))
-    elif data['table'] == 'users':
-        cur.execute('''
-            UPDATE webplatform.users
-            SET mail = %s, status = %s, grants = %s
-            WHERE id = %s
-        ''', (data['mail'], data['status'], data['grants'], data['id']))
+    try:
+        if data['table'] == 'reg_requests':
+            cur.execute('''
+                UPDATE webplatform.reg_requests
+                SET status = %s
+                WHERE id = %s
+            ''', (data.get('status'), data['id']))
+        elif data['table'] == 'users':
+            cur.execute('''
+                UPDATE webplatform.users
+                SET mail = %s, status = %s, grants = %s
+                WHERE id = %s
+            ''', (data.get('mail'), data.get('status'), data.get('grants'), data['id']))
 
-    conn.commit()
-    cur.close()
-    conn.close()
-
-    return jsonify({'success': True})
+        conn.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        conn.rollback()
+        return jsonify({'success': False, 'error': str(e)})
+    finally:
+        cur.close()
+        conn.close()
 
 if __name__ == '__main__':
     app.run(debug=True)
