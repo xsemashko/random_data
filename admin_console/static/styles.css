@@ -110,3 +110,21 @@ button:hover {
 .controls button:hover {
     background-color: #45a049;
 }
+
+.notification-button {
+    margin: 20px;
+    text-align: center;
+}
+
+.notification-button button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.notification-button button:hover {
+    background-color: #0056b3;
+}
