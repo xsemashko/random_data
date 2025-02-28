@@ -1,80 +1,17 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
+.controls {
+    margin-bottom: 10px;
 }
 
-.tabs {
-    overflow: hidden;
-    background-color: #333;
+.controls label {
+    margin-right: 10px;
 }
 
-.tablink {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-    font-size: 17px;
-    color: white;
-}
-
-.tablink:hover {
-    background-color: #555;
-}
-
-.tablink.active {
-    background-color: #666;
-}
-
-.tabcontent {
-    display: none;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-top: none;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-th, td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-th {
-    background-color: #333;
-    color: white;
-    position: sticky;
-    top: 0;
-}
-
-tbody {
-    display: block;
-    height: 400px;
-    overflow-y: auto;
-}
-
-thead, tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-}
-
-input[type="text"] {
-    width: 100%;
+.controls input {
     padding: 5px;
-    box-sizing: border-box;
+    margin-right: 10px;
 }
 
-button {
+.controls button {
     padding: 5px 10px;
     background-color: #4CAF50;
     color: white;
@@ -82,6 +19,6 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+.controls button:hover {
     background-color: #45a049;
 }
