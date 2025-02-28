@@ -13,6 +13,10 @@
         <button class="tablink" onclick="openTab(event, 'applications')">Applications</button>
     </div>
 
+    <div class="notification-button">
+        <button onclick="sendNotifications()">Отправить уведомления</button>
+    </div>
+
     <div id="reg_requests" class="tabcontent">
         <div class="controls">
             <label for="search_reg_requests">Search by Username:</label>
@@ -194,6 +198,23 @@
                       alert('Error: ' + data.error);
                   }
               });
+        }
+
+        function sendNotifications() {
+            fetch('/send_notifications', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                } else {
+                    alert('Ошибка: ' + data.error);
+                }
+            });
         }
 
         document.addEventListener('DOMContentLoaded', function() {
