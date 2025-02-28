@@ -91,6 +91,9 @@
             }
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
+
+            // Загружаем данные для активной вкладки
+            fetchData(tabName);
         }
 
         function fetchData(table) {
@@ -194,7 +197,7 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            fetchData('reg_requests');
+            // Открываем первую вкладку и загружаем данные
             document.getElementsByClassName('tablink')[0].click();
         });
     </script>
