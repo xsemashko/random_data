@@ -4,30 +4,31 @@
     <h1 class="username"></h1>
     <form method="post" action="/details/{{rbs}}">
         <br>
-		<div id="status_button">
-        {% if current_status != 0 %}
-            <label>Текущий статус услуги:</label>
-            {% if 'ON' in current_status %}
-                <div class="status-on">{{current_status}}</div>
-                <div class="button_search">
-				<button class="search_delete" type="submit" value="{{rbs}}" name="search_b">
-                        Обновить данные
-                    </button>
-                    <button class="search_delete" type="submit" value="{{rbs}}" name="delete_b">
-                        Отключить услугу
-                    </button>
-                </div>
-            {% else %}
-                <div class="status-off">{{current_status}}</div>
-				<div class="button_search">
-				<button class="search_delete" type="submit" value="{{rbs}}" name="search_b">
-                        Обновить данные
-                    </button>
-                </div>
+        <div id="status_button">
+            {% if current_status != 0 %}
+                <label>Текущий статус услуги:</label>
+                {% if 'ON' in current_status %}
+                    <div class="status-on">{{current_status}}</div>
+                    <div class="button_search">
+                        <button class="search_delete" type="submit" value="{{rbs}}" name="search_b">
+                            Обновить данные
+                        </button>
+                        <!-- Кнопка "Отключить услугу" с вызовом модального окна -->
+                        <button class="search_delete" type="button" onclick="openModal('{{rbs}}')">
+                            Отключить услугу
+                        </button>
+                    </div>
+                {% else %}
+                    <div class="status-off">{{current_status}}</div>
+                    <div class="button_search">
+                        <button class="search_delete" type="submit" value="{{rbs}}" name="search_b">
+                            Обновить данные
+                        </button>
+                    </div>
+                {% endif %}
             {% endif %}
-        {% endif %}
-		</div>
-		<br>
+        </div>
+        <br>
         <b><label for="text_memo">История подключения услуги по карте {{mask}}:</label><br></b>
         <div class="scroll-table">
             {% if data %}
@@ -60,4 +61,46 @@
             {% endif %}
         </div>
     </form>
+
+    <!-- Модальное окно для подтверждения -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <p>Вы точно хотите отключить услугу?</p>
+            <button onclick="confirmAction()">Да</button>
+            <button onclick="closeModal()">Нет</button>
+        </div>
+    </div>
+
+    <!-- Форма для отправки данных -->
+    <form id="deleteForm" method="post" action="/details/{{rbs}}" style="display: none;">
+        <input type="hidden" name="delete_b" id="delete_b" value="">
+    </form>
+
+    <!-- JavaScript для управления модальным окном -->
+    <script>
+        // Функция для открытия модального окна
+        function openModal(value) {
+            document.getElementById('delete_b').value = value; // Устанавливаем значение для скрытого поля
+            document.getElementById('confirmationModal').style.display = 'block'; // Показываем модальное окно
+        }
+
+        // Функция для закрытия модального окна
+        function closeModal() {
+            document.getElementById('confirmationModal').style.display = 'none'; // Скрываем модальное окно
+        }
+
+        // Функция для подтверждения действия
+        function confirmAction() {
+            document.getElementById('deleteForm').submit(); // Отправляем форму
+            closeModal(); // Закрываем модальное окно
+        }
+
+        // Закрытие модального окна при клике вне его области
+        window.onclick = function(event) {
+            var modal = document.getElementById('confirmationModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
 {% endblock %}
