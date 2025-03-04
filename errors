@@ -65,9 +65,9 @@
     <!-- Модальное окно для подтверждения -->
     <div id="confirmationModal" class="modal">
         <div class="modal-content">
-            <p>Вы точно хотите отключить услугу?</p>
-            <button onclick="confirmAction()">Да</button>
-            <button onclick="closeModal()">Нет</button>
+            <p id="modalQuestion">Вы точно хотите отключить услугу?</p>
+            <button onclick="handleConfirmation(true)">Да</button>
+            <button onclick="handleConfirmation(false)">Нет</button>
         </div>
     </div>
 
@@ -78,9 +78,18 @@
 
     <!-- JavaScript для управления модальным окном -->
     <script>
+        let confirmationStep = 0; // Текущий шаг подтверждения
+        const questions = [
+            "Вы точно хотите отключить услугу?",
+            "Вы хорошо подумали?",
+            "Еще есть возможность передумать, все равно отключить?"
+        ];
+
         // Функция для открытия модального окна
         function openModal(value) {
+            confirmationStep = 0; // Сбрасываем шаг подтверждения
             document.getElementById('delete_b').value = value; // Устанавливаем значение для скрытого поля
+            document.getElementById('modalQuestion').textContent = questions[confirmationStep]; // Устанавливаем первый вопрос
             document.getElementById('confirmationModal').style.display = 'block'; // Показываем модальное окно
         }
 
@@ -89,10 +98,22 @@
             document.getElementById('confirmationModal').style.display = 'none'; // Скрываем модальное окно
         }
 
-        // Функция для подтверждения действия
-        function confirmAction() {
-            document.getElementById('deleteForm').submit(); // Отправляем форму
-            closeModal(); // Закрываем модальное окно
+        // Функция для обработки подтверждения
+        function handleConfirmation(isConfirmed) {
+            if (isConfirmed) {
+                confirmationStep++; // Переходим к следующему шагу
+                if (confirmationStep < questions.length) {
+                    // Показываем следующий вопрос
+                    document.getElementById('modalQuestion').textContent = questions[confirmationStep];
+                } else {
+                    // Если все шаги пройдены, отправляем форму
+                    document.getElementById('deleteForm').submit();
+                    closeModal();
+                }
+            } else {
+                // Если пользователь нажал "Нет", закрываем модальное окно
+                closeModal();
+            }
         }
 
         // Закрытие модального окна при клике вне его области
