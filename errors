@@ -1,24 +1,63 @@
-172.30.74.142 - - [28/Feb/2025 11:53:17] "POST /update_data HTTP/1.1" 500 -
-Traceback (most recent call last):
-  File "/home/way4/.local/lib/python3.12/site-packages/flask/app.py", line 1498, in __call__
-    return self.wsgi_app(environ, start_response)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/way4/.local/lib/python3.12/site-packages/flask/app.py", line 1476, in wsgi_app
-    response = self.handle_exception(e)
-               ^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/way4/.local/lib/python3.12/site-packages/flask/app.py", line 1473, in wsgi_app
-    response = self.full_dispatch_request()
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/way4/.local/lib/python3.12/site-packages/flask/app.py", line 882, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/way4/.local/lib/python3.12/site-packages/flask/app.py", line 880, in full_dispatch_request
-    rv = self.dispatch_request()
-         ^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/way4/.local/lib/python3.12/site-packages/flask/app.py", line 865, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/way4/admin_console/app.py", line 61, in update_data
-    ''', (data['mail'], data['status'], data['grants'], data['id']))
-          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-KeyError: 'mail'
+{% extends "ip_base.html" %}
+
+{% block content %}
+    <h1 class="username"></h1>
+    <form method="post" action="/details/{{rbs}}">
+        <br>
+		<div id="status_button">
+        {% if current_status != 0 %}
+            <label>Текущий статус услуги:</label>
+            {% if 'ON' in current_status %}
+                <div class="status-on">{{current_status}}</div>
+                <div class="button_search">
+				<button class="search_delete" type="submit" value="{{rbs}}" name="search_b">
+                        Обновить данные
+                    </button>
+                    <button class="search_delete" type="submit" value="{{rbs}}" name="delete_b">
+                        Отключить услугу
+                    </button>
+                </div>
+            {% else %}
+                <div class="status-off">{{current_status}}</div>
+				<div class="button_search">
+				<button class="search_delete" type="submit" value="{{rbs}}" name="search_b">
+                        Обновить данные
+                    </button>
+                </div>
+            {% endif %}
+        {% endif %}
+		</div>
+		<br>
+        <b><label for="text_memo">История подключения услуги по карте {{mask}}:</label><br></b>
+        <div class="scroll-table">
+            {% if data %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Дата, время</th>
+                            <th>Маска карты</th>
+                            <th>RQUID/Пользователь</th>
+                            <th>CARD ID</th>
+                            <th>Номер телефона</th>
+                            <th>Статус</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for element in data %}
+                            <tr>
+                                <td>{{element[0]}}</td>
+                                <td>{{element[1]}}</td>
+                                <td>{{element[2]}}</td>
+                                <td>{{element[3]}}</td>
+                                <td>{{element[4]}}</td>
+                                <td class="status-{{element[5] | lower}}">{{element[5]}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <b><label class="not_conn">Услуга не подключалась</label><br></b>
+            {% endif %}
+        </div>
+    </form>
+{% endblock %}
