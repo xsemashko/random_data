@@ -1,42 +1,59 @@
-// Функция для получения значений alias из таблицы apps
-function getAliases() {
-    const appsBody = document.getElementById('applications_body');
-    const aliases = [];
+let aliases = []; // Глобальная переменная для хранения значений alias
 
-    // Проходим по всем строкам таблицы apps
-    appsBody.querySelectorAll('tr').forEach(row => {
-        const alias = row.querySelector('td:nth-child(3)').textContent;
-        if (alias) {
-            aliases.push(alias);
-        }
-    });
-
-    return aliases;
+// Функция для загрузки значений alias
+function loadAliases() {
+    fetch('/get_data')
+        .then(response => response.json())
+        .then(data => {
+            aliases = data.apps.map(app => app[2]); // Извлекаем значения alias
+        });
 }
+
+// Вызываем загрузку данных при загрузке страницы
+document.addEventListener('DOMContentLoaded', function() {
+    loadAliases();
+    document.getElementsByClassName('tablink')[0].click();
+});
+
+
 
 // Функция для отображения выпадающего списка
 function showDropdown(id) {
     const dropdown = document.getElementById(`dropdown-${id}`);
     dropdown.style.display = 'block';
 
-    // Если выпадающий список еще не заполнен, добавляем значения
-    if (!dropdown.querySelector('label:not(:first-child)')) {
-        const aliases = getAliases(); // Получаем значения alias
-        aliases.forEach(alias => {
-            const label = document.createElement('label');
-            label.innerHTML = `<input type="checkbox" value="${alias}" onchange="updateGrants('${id}')"> ${alias}`;
-            dropdown.appendChild(label);
-        });
-    }
+    // Очищаем старые значения (кроме ADMIN)
+    dropdown.innerHTML = '<label><input type="checkbox" value="ADMIN" onchange="updateGrants(\'' + id + '\')"> ADMIN</label>';
+
+    // Добавляем значения alias
+    aliases.forEach(alias => {
+        const label = document.createElement('label');
+        label.innerHTML = `<input type="checkbox" value="${alias}" onchange="updateGrants('${id}')"> ${alias}`;
+        dropdown.appendChild(label);
+    });
+
+    // Устанавливаем галочки для уже выбранных значений
+    const grantsInput = document.querySelector(`tr[data-id="${id}"] input[name="grants"]`);
+    const selectedValues = grantsInput.value.split(';').filter(Boolean); // Убираем пустые строки
+
+    dropdown.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        if (selectedValues.includes(checkbox.value)) {
+            checkbox.checked = true;
+        }
+    });
 }
 
-// Функция для скрытия выпадающего списка
-function hideDropdown(id) {
-    setTimeout(() => {
-        const dropdown = document.getElementById(`dropdown-${id}`);
-        dropdown.style.display = 'none';
-    }, 200); // Задержка для возможности выбора значения
-}
+
+
+// Закрытие дропдауна при клике вне его области
+document.addEventListener('click', function(event) {
+    const dropdowns = document.querySelectorAll('.dropdown-content');
+    dropdowns.forEach(dropdown => {
+        if (!dropdown.contains(event.target) && !dropdown.previousElementSibling.contains(event.target)) {
+            dropdown.style.display = 'none';
+        }
+    });
+});
 
 // Функция для обновления значения поля Grants
 function updateGrants(id) {
@@ -47,3 +64,14 @@ function updateGrants(id) {
     const selectedValues = Array.from(checkboxes).map(checkbox => checkbox.value);
     grantsInput.value = selectedValues.join(';') + ';'; // Добавляем точку с запятой в конце
 }
+
+
+<td>
+    <input type="text" name="grants" value="${row[8]}" onfocus="showDropdown('${row[0]}')">
+    <div id="dropdown-${row[0]}" class="dropdown-content">
+        <label><input type="checkbox" value="ADMIN" onchange="updateGrants('${row[0]}')"> ADMIN</label>
+        <!-- Динамически добавляем значения из таблицы apps -->
+    </div>
+</td>
+
+
