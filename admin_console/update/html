@@ -1,0 +1,7 @@
+<td>
+    <input type="text" name="grants" value="${row[8]}" onfocus="showDropdown('${row[0]}')" onblur="hideDropdown('${row[0]}')">
+    <div id="dropdown-${row[0]}" class="dropdown-content">
+        <label><input type="checkbox" value="ADMIN" onchange="updateGrants('${row[0]}')"> ADMIN</label>
+        <!-- Динамически добавляем значения из таблицы apps -->
+    </div>
+</td>
