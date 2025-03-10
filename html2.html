@@ -1,5 +1,133 @@
----css
-/* Добавьте эти стили в ваш файл admin_styles.css */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+.tabs {
+    overflow: hidden;
+    background-color: #333;
+}
+
+.tablink {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+    color: white;
+}
+
+.tablink:hover {
+    background-color: #555;
+}
+
+.tablink.active {
+    background-color: #666;
+}
+
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #333;
+    color: white;
+    position: sticky;
+    top: 0;
+}
+
+tbody {
+    display: block;
+    height: 400px;
+    overflow-y: auto;
+}
+
+thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    box-sizing: border-box;
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.controls {
+    margin-bottom: 10px;
+}
+
+.controls label {
+    margin-right: 10px;
+}
+
+.controls input {
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.controls button {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.controls button:hover {
+    background-color: #45a049;
+}
+
+.notification-button {
+    margin: 20px;
+    text-align: center;
+}
+
+.notification-button button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.notification-button button:hover {
+    background-color: #0056b3;
+}
 
 .dropdown-content {
     display: none;
@@ -8,8 +136,10 @@
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
-    top: 100%; /* Позиционирование дропдауна под полем */
+    top: 100%;
     left: 0;
+	border: 1px solid #ccc;
+	padding: 10px;
 }
 
 .dropdown-content label {
@@ -21,67 +151,3 @@
 .dropdown-content label:hover {
     background-color: #f1f1f1;
 }
------------
--------html
-<td>
-    <div style="position: relative;">
-        <input type="text" name="grants" value="${row[8]}" onfocus="showDropdown('${row[0]}')">
-        <div id="dropdown-${row[0]}" class="dropdown-content">
-            <label><input type="checkbox" value="ADMIN" onchange="updateGrants('${row[0]}')"> ADMIN</label>
-            <!-- Динамически добавляем значения из таблицы apps -->
-        </div>
-    </div>
-</td>
-----------------
---------js
-function showDropdown(id) {
-    const dropdown = document.getElementById(`dropdown-${id}`);
-    dropdown.style.display = 'block';
-
-    // Очищаем старые значения (кроме ADMIN)
-    dropdown.innerHTML = '<label><input type="checkbox" value="ADMIN" onchange="updateGrants(\'' + id + '\')"> ADMIN</label>';
-
-    // Добавляем значения alias
-    aliases.forEach(alias => {
-        const label = document.createElement('label');
-        label.innerHTML = `<input type="checkbox" value="${alias}" onchange="updateGrants('${id}')"> ${alias}`;
-        dropdown.appendChild(label);
-    });
-
-    // Устанавливаем галочки для уже выбранных значений
-    const grantsInput = document.querySelector(`tr[data-id="${id}"] input[name="grants"]`);
-    const selectedValues = grantsInput.value.split(';').filter(Boolean); // Убираем пустые строки
-
-    dropdown.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        if (selectedValues.includes(checkbox.value)) {
-            checkbox.checked = true;
-        }
-    });
-
-    // Позиционируем дропдаун относительно поля ввода
-    const inputField = document.querySelector(`tr[data-id="${id}"] input[name="grants"]`);
-    const inputRect = inputField.getBoundingClientRect();
-    dropdown.style.top = `${inputRect.bottom}px`;
-    dropdown.style.left = `${inputRect.left}px`;
-}
-
-
-
-function hideDropdown(id) {
-    setTimeout(() => {
-        const dropdown = document.getElementById(`dropdown-${id}`);
-        dropdown.style.display = 'none';
-    }, 200); // Задержка для возможности выбора значения
-}
-
-
-
-
-document.addEventListener('click', function(event) {
-    const dropdowns = document.querySelectorAll('.dropdown-content');
-    dropdowns.forEach(dropdown => {
-        if (!dropdown.contains(event.target) {
-            dropdown.style.display = 'none';
-        }
-    });
-});
