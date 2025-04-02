@@ -5,74 +5,58 @@
 <link rel="stylesheet" type="text/css" href="/static/css/login_submit_button.css">
 <link rel="stylesheet" type="text/css" href="/static/css/underglow_login_form.css">
 
-<style>
-    /* Только позиционирование и анимации */
-    .page-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        min-height: 100vh;
-        padding-top: 50px;
-    }
-    .header {
-        text-align: center;
-        margin-bottom: 40px;
-    }
-    .login-container {
-        width: 450px;
-        margin-bottom: 40px;
-        position: relative;
-    }
-    footer {
-        text-align: center;
-        padding: 20px;
-        color: #aaa;
-    }
-</style>
+<p class="main_h1 animate-fade-in">WEB-Платформа</p>
+<p class="main_h2 animate-fade-in delay-1">ВИЮ</p>
 
-<div class="page-content">
-    <div class="header animate">
-        <h1 class="main_h1">WEB-Платформа</h1>
-        <h2 class="main_h2">ВИЮ</h2>
-    </div>
-
-    <div class="login-container animate delay-1">
-        <form class="login_form" action="" method="post" novalidate="">
-            {{ form.hidden_tag()}}
-            <div>
-                <h1 id="w_text">Добро пожаловать!</h1>
-                <p id="s_text">На Web-платформу процессинга "ВИЮ", дом для мини web-приложений.</p>
-                <p id="s_text">Для входа на Web-платформу используется доменная авторизация.</p>
-            </div>
-            
-            <div class="login_inputs">
-                <p>
-                    {{ form.username.label }}<br>
-                    {{ form.username(size=32, placeholder='В домене belpsb.by') }}
-                </p>
-                
-                {% for error in form.username.errors %}
-                <script>
-                    new Toast({
-                        title: false,
-                        text: '{{ error }}',
-                        theme: 'danger',
-                        autohide: true,
-                        interval: 5000
-                    });
-                </script>
-                {% endfor %}
-                
-                <p>
-                    {{ form.password.label }}<br>
-                    {{ form.password(size=32, placeholder='') }}
-                </p>
-                
-                <p>{{ form.submit() }}</p>
-            </div>
-        </form>
+<form class="login_form animate-fade-in delay-2" action="" method="post" novalidate="">
+    {{ form.hidden_tag()}}
+    <div>
+        <h1 id="w_text" style="color: white;" class="animate-fade-in delay-1">Добро пожаловать!</h1>
+        <p id="s_text" class="animate-fade-in delay-2">На Web-платформу процессинга "ВИЮ", дом для мини web-приложений.</p>
+        <p id="s_text" class="animate-fade-in delay-3">Для входа на Web-платформу используется доменная авторизация.</p>
     </div>
     
-    <footer class="animate delay-2">Разработано командой Процессинга. 2024-2025.</footer>
-</div>
+    <div class="login_inputs animate-fade-in delay-3">
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(size=32, placeholder='В домене belpsb.by') }}
+        </p>
+        
+        {% for error in form.username.errors %}
+        <script>
+            new Toast({
+                title: false,
+                text: '{{ error }}',
+                theme: 'danger',
+                autohide: true,
+                interval: 5000
+            });
+        </script>
+        {% endfor %}
+        
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(size=32, placeholder='') }}
+        </p>
+        
+        <p>{{ form.submit() }}</p>
+    </div>
+</form>
+
+<footer class="animate-fade-in delay-4">Разработано командой Процессинга. 2024-2025.</footer>
+
+<style>
+    /* Дополнительные стили для анимации формы */
+    .login_form {
+        transition: all 0.5s ease-out;
+    }
+    
+    .login_inputs input {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .login_inputs input:focus {
+        transform: scale(1.02);
+    }
+</style>
 {% endblock %}
