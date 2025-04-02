@@ -1,0 +1,27 @@
+@font-face {
+  font-family: 'OpenSans';
+  src: url('/static/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+}
+
+#submit {
+  background: hsl(0, 0%, 100%);
+  padding: 16px 24px;
+  position: relative;
+  border-radius: 8px;
+  box-shadow: 0 0 0 1px rgba(0,0,0,.01);
+  width: 220px;
+  height: 60px;
+  color: grey;
+  top: 15px;
+  font-family: 'OpenSans';
+  font-size: 13px;
+}
+
+#submit:hover{
+  color: black;
+}
+
+#submit:active {
+  background: black;
+  color: #fff;
+}
