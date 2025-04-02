@@ -5,27 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>WEB-платформа</title>
     <link href="/static/css/toast.min.css" rel="stylesheet">
-    <link href="/static/css/username_block.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/static/css/loginform_navigation_bar.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/contact_dialog.css">
+    <script src="/static/js/toast.js"></script>
+    <script src="/static/js/p5.min.js"></script>
     <style>
-        /* Базовые стили для плавной загрузки */
+        /* Основные стили */
         body {
+            margin: 0;
+            padding: 0;
+            font-family: 'OpenSans', sans-serif;
+            background-color: #eae8ed;
+            background-image: url("/static/login_background.jpg");
+            background-size: cover;
+            background-attachment: fixed;
+            color: white;
             opacity: 0;
-            transition: opacity 0.8s ease-in;
+            transition: opacity 1s ease;
         }
         
         body.loaded {
             opacity: 1;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+        /* Навигация */
+        nav {
+            background: rgba(0,0,0,0.7);
+            padding: 15px;
+            text-align: center;
         }
         
-        .animate-fade-in {
-            animation: fadeIn 0.8s ease-out forwards;
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 16px;
+        }
+        
+        /* Анимации */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate {
+            animation: fadeInUp 0.8s ease forwards;
             opacity: 0;
         }
         
@@ -34,91 +56,17 @@
         .delay-3 { animation-delay: 0.6s; }
         .delay-4 { animation-delay: 0.8s; }
     </style>
-    <script src="/static/js/toast.js"></script>
-    <script src="/static/js/p5.min.js"></script>
 </head>
 <body>
     {% block content %}{% endblock %}
     
-    {% if current_user.is_authenticated %}
-    <nav id="index_nav" class="animate-fade-in delay-3">
-        <a id="first_nav_but" href="{{ url_for('admin_console') }}">Консоль</a>
-        <a href="#" onclick="showDialog()">Контакты</a>
-        <a href="{{ url_for('presentation') }}">Презентация</a>
-        <a href="{{ url_for('logout') }}" style="float:right">Выход</a>
-        <span id="index_span"></span>
-    </nav>
-    <nav class="username_block animate-fade-in delay-4">
-        <a id="username_block" href="#">{{ current_user.username }}</a>
-    </nav>
-    {% else %}
-    <nav class="animate-fade-in delay-3">
-        <a href="{{ url_for('login') }}">Вход</a>
-        <a class="nav_first" href="#" onclick="showDialog()">Контакты</a>
-        <a href="{{ url_for('presentation') }}">Презентация</a>
-        <a href="*"></a>
-        <span></span>
-    </nav>
-    {% endif %}
-    
-    <dialog id="contactsDialog">
-        <p id="hh">Команда разрабоки и сопровождения платформы.</p>
-        <div>
-            <h3>Коваленко Юрий Дмитриевич</h3>
-            <p>Руководитель проекта. Идея, Backend/Frontend разработка.</p>
-            <p>Email: YUDKovalenko@sber-bank.by</p>
-            <p>Телефон: 88-359-7973</p>
-        </div>
-        <div>
-            <h3>Лазарук Андрей Сергеевич</h3>
-            <p>Главный специалист. Инфраструктура, SQL разработка.</p>
-            <p>Email: ASLazaruk@sber-bank.by</p>
-            <p>Телефон: 88-359-7963</p>
-        </div>
-        <div></div>
-        <button id="closeDialogButton" onclick="closeDialog()">Закрыть</button>
-    </dialog>
-
     <script>
         // Плавная загрузка страницы
         document.addEventListener('DOMContentLoaded', function() {
-            // Предзагрузка фонового изображения
-            const bgImage = new Image();
-            bgImage.src = '/static/login_background.jpg';
-            
-            bgImage.onload = function() {
-                document.body.classList.add('loaded');
-            };
-            
-            // На случай, если изображение не загрузится
             setTimeout(function() {
                 document.body.classList.add('loaded');
-            }, 1000);
-        });
-        
-        const dialog = document.getElementById("contactsDialog");
-        
-        function showDialog() {
-            dialog.show();
-            document.getElementById("contactsDialog").style.display = "grid";
-        }
-        
-        function closeDialog() {
-            dialog.close();
-            document.getElementById("contactsDialog").style.display = "none";
-        }
-    </script>
-    
-    {% for message in get_flashed_messages(with_categories=true) %}
-    <script>
-        new Toast({
-            title: false,
-            text: '{{ message[1] }}',
-            theme: '{{ message[0] }}',
-            autohide: true,
-            interval: 5000
+            }, 300);
         });
     </script>
-    {% endfor %}
 </body>
 </html>
