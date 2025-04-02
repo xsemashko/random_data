@@ -1,0 +1,61 @@
+.login_form::after {
+    position: absolute;
+    content: "";
+    top: 5px;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    transform: scale(1) translateZ(0);
+    border-radius: 16px;
+    filter: blur(7px);
+    padding: 3px 0px;
+
+    background: linear-gradient(
+      to left,
+      #f8f102,
+      #00abdf,
+      #04d500
+    );
+    background-size: 200% 200%;
+    animation: animateGlow 5s linear;
+    animation-iteration-count: 2;
+  }
+
+.signup_form::after {
+    position: absolute;
+    content: "";
+    top: 5px;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    transform: scale(1) translateZ(0);
+    border-radius: 16px;
+    filter: blur(7px);
+    padding: 3px 0px;
+
+    background: linear-gradient(
+      to left,
+      #f8f102,
+      #00abdf,
+      #04d500
+    );
+    background-size: 200% 200%;
+    animation: animateGlow 5s linear;
+    animation-iteration-count: 2;
+  }
+
+@keyframes animateGlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  
+  100% {
+    background-position: 0% 50%;
+  }
