@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/loginform_navigation_bar.css">
     <link rel="stylesheet" type="text/css" href="/static/css/contact_dialog.css">
     <style>
-        /* Анимации и стили для плавной загрузки */
+        /* Базовые стили для плавной загрузки */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -25,6 +25,8 @@
             overflow-x: hidden;
             transition: opacity 0.8s ease-in;
             line-height: 1.6;
+            position: relative;
+            min-height: 100vh;
         }
         
         body.loaded {
@@ -32,7 +34,7 @@
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
@@ -93,22 +95,20 @@
     </dialog>
 
     <script>
-        // Плавная загрузка страницы
+        // Плавная загрузка страницы с предзагрузкой фона
         document.addEventListener('DOMContentLoaded', function() {
-            // Предзагрузка фона (если используется изображение)
-            if (document.querySelector('link[href*="login_page_background.css"]')) {
-                const bgImage = new Image();
-                const bgStyle = document.createElement('link');
-                bgStyle.rel = 'stylesheet';
-                bgStyle.href = '/static/css/login_page_background.css';
-                document.head.appendChild(bgStyle);
-                
-                setTimeout(function() {
-                    document.body.classList.add('loaded');
-                }, 300);
-            } else {
+            // Предзагрузка фонового изображения
+            const bgImage = new Image();
+            bgImage.src = '/static/login_background.jpg';
+            
+            bgImage.onload = function() {
                 document.body.classList.add('loaded');
-            }
+            };
+            
+            // На случай, если изображение не загрузится
+            setTimeout(function() {
+                document.body.classList.add('loaded');
+            }, 1000);
         });
         
         const dialog = document.getElementById("contactsDialog");
