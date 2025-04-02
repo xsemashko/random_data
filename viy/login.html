@@ -1,97 +1,178 @@
 {% extends "base.html" %}
 
 {% block content %}
-<link rel="stylesheet" type="text/css" href="/static/css/login_page_background.css">
-<link rel="stylesheet" type="text/css" href="/static/css/login_submit_button.css">
-<link rel="stylesheet" type="text/css" href="/static/css/underglow_login_form.css">
-
 <style>
-    /* Стили только для анимации, без изменения позиции */
-    .main_h1 {
-        animation: fadeIn 0.8s ease-out 0.2s forwards;
-        opacity: 0;
+    /* Стили для страницы входа */
+    .login-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding-top: 50px;
+    }
+    
+    .header {
         text-align: center;
-        margin-top: 50px;
+        margin-bottom: 40px;
+    }
+    
+    .main_h1 {
+        font-size: 2.5rem;
         margin-bottom: 10px;
     }
+    
     .main_h2 {
-        animation: fadeIn 0.8s ease-out 0.3s forwards;
-        opacity: 0;
-        text-align: center;
-        margin-bottom: 50px;
+        font-size: 2rem;
+        margin-top: 0;
     }
-    #w_text {
-        animation: fadeIn 0.8s ease-out 0.4s forwards;
-        opacity: 0;
-    }
-    #s_text {
-        animation: fadeIn 0.8s ease-out 0.5s forwards;
-        opacity: 0;
-    }
+    
     .login-container {
-        animation: fadeIn 0.8s ease-out 0.6s forwards;
-        opacity: 0;
-        width: 450px;
-        margin: 0 auto;
-        padding-top: 30px;
-        padding-bottom: 50px;
         position: relative;
+        width: 450px;
+        margin-bottom: 40px;
     }
+    
     .login_form {
-        background: #000;
-        border-radius: 16px;
+        background: rgba(0,0,0,0.8);
         padding: 30px;
+        border-radius: 16px;
         position: relative;
         z-index: 2;
+        box-shadow: 0 4px 30px rgba(0,0,0,0.5);
     }
-    footer {
-        animation: fadeIn 0.8s ease-out 0.8s forwards;
-        opacity: 0;
+    
+    /* Underglow эффект */
+    .login_form::after {
+        content: "";
+        position: absolute;
+        top: 5px;
+        left: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+        border-radius: 16px;
+        filter: blur(7px);
+        background: linear-gradient(to left, #f8f102, #00abdf, #04d500);
+        background-size: 200% 200%;
+        animation: animateGlow 5s linear infinite;
+    }
+    
+    @keyframes animateGlow {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    
+    /* Стили формы */
+    .login_inputs input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border: 1px solid #444;
+        border-radius: 8px;
+        background: rgba(255,255,255,0.1);
+        color: white;
+    }
+    
+    .login_inputs label {
+        display: block;
+        margin-bottom: 8px;
+        color: #ccc;
+    }
+    
+    /* Стили кнопки */
+    #submit {
+        background: white;
+        padding: 16px 24px;
+        border-radius: 8px;
+        width: 220px;
+        height: 60px;
+        color: grey;
+        border: none;
+        cursor: pointer;
+        font-family: 'OpenSans';
+        font-size: 13px;
+        transition: all 0.3s ease;
+        display: block;
+        margin: 20px auto 0;
+    }
+    
+    #submit:hover {
+        color: black;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    #submit:active {
+        background: black;
+        color: white;
+    }
+    
+    /* Текст */
+    #w_text {
         text-align: center;
-        margin-top: 30px;
-        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+    
+    #s_text {
+        color: #aaa;
+        text-align: center;
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+    
+    footer {
+        text-align: center;
+        padding: 20px;
+        color: #aaa;
+        font-size: 14px;
     }
 </style>
 
-<h1 class="main_h1">WEB-Платформа</h1>
-<h2 class="main_h2">ВИЮ</h2>
-
-<div class="login-container">
-    <form class="login_form" action="" method="post" novalidate="">
-        {{ form.hidden_tag()}}
-        <div>
-            <h1 id="w_text" style="color: white;">Добро пожаловать!</h1>
-            <p id="s_text" style="color: #aaa;">На Web-платформу процессинга "ВИЮ", дом для мини web-приложений.</p>
-            <p id="s_text" style="color: #aaa;">Для входа на Web-платформу используется доменная авторизация.</p>
-        </div>
-        
-        <div class="login_inputs">
-            <p>
-                {{ form.username.label }}<br>
-                {{ form.username(size=32, placeholder='В домене belpsb.by') }}
-            </p>
+<div class="login-wrapper">
+    <div class="header animate">
+        <h1 class="main_h1">WEB-Платформа</h1>
+        <h2 class="main_h2">ВИЮ</h2>
+    </div>
+    
+    <div class="login-container animate delay-1">
+        <form class="login_form" action="" method="post" novalidate="">
+            {{ form.hidden_tag()}}
+            <div>
+                <h1 id="w_text">Добро пожаловать!</h1>
+                <p id="s_text">На Web-платформу процессинга "ВИЮ", дом для мини web-приложений.</p>
+                <p id="s_text">Для входа на Web-платформу используется доменная авторизация.</p>
+            </div>
             
-            {% for error in form.username.errors %}
-            <script>
-                new Toast({
-                    title: false,
-                    text: '{{ error }}',
-                    theme: 'danger',
-                    autohide: true,
-                    interval: 5000
-                });
-            </script>
-            {% endfor %}
-            
-            <p>
-                {{ form.password.label }}<br>
-                {{ form.password(size=32, placeholder='') }}
-            </p>
-            
-            <p>{{ form.submit() }}</p>
-        </div>
-    </form>
+            <div class="login_inputs">
+                <p>
+                    {{ form.username.label }}<br>
+                    {{ form.username(size=32, placeholder='В домене belpsb.by') }}
+                </p>
+                
+                {% for error in form.username.errors %}
+                <script>
+                    new Toast({
+                        title: false,
+                        text: '{{ error }}',
+                        theme: 'danger',
+                        autohide: true,
+                        interval: 5000
+                    });
+                </script>
+                {% endfor %}
+                
+                <p>
+                    {{ form.password.label }}<br>
+                    {{ form.password(size=32, placeholder='') }}
+                </p>
+                
+                <p>{{ form.submit() }}</p>
+            </div>
+        </form>
+    </div>
+    
+    <footer class="animate delay-2">Разработано командой Процессинга. 2024-2025.</footer>
 </div>
-
-<footer>Разработано командой Процессинга. 2024-2025.</footer>
 {% endblock %}
