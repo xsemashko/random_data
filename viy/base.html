@@ -10,23 +10,9 @@
     <link rel="stylesheet" type="text/css" href="/static/css/contact_dialog.css">
     <style>
         /* Базовые стили для плавной загрузки */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        html {
-            scroll-behavior: smooth;
-        }
-        
         body {
             opacity: 0;
-            overflow-x: hidden;
             transition: opacity 0.8s ease-in;
-            line-height: 1.6;
-            position: relative;
-            min-height: 100vh;
         }
         
         body.loaded {
@@ -34,8 +20,8 @@
         }
         
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         
         .animate-fade-in {
@@ -47,7 +33,6 @@
         .delay-2 { animation-delay: 0.4s; }
         .delay-3 { animation-delay: 0.6s; }
         .delay-4 { animation-delay: 0.8s; }
-        .delay-5 { animation-delay: 1s; }
     </style>
     <script src="/static/js/toast.js"></script>
     <script src="/static/js/p5.min.js"></script>
@@ -56,18 +41,18 @@
     {% block content %}{% endblock %}
     
     {% if current_user.is_authenticated %}
-    <nav id="index_nav" class="animate-fade-in delay-4">
+    <nav id="index_nav" class="animate-fade-in delay-3">
         <a id="first_nav_but" href="{{ url_for('admin_console') }}">Консоль</a>
         <a href="#" onclick="showDialog()">Контакты</a>
         <a href="{{ url_for('presentation') }}">Презентация</a>
         <a href="{{ url_for('logout') }}" style="float:right">Выход</a>
         <span id="index_span"></span>
     </nav>
-    <nav class="username_block animate-fade-in delay-5">
+    <nav class="username_block animate-fade-in delay-4">
         <a id="username_block" href="#">{{ current_user.username }}</a>
     </nav>
     {% else %}
-    <nav class="animate-fade-in delay-4">
+    <nav class="animate-fade-in delay-3">
         <a href="{{ url_for('login') }}">Вход</a>
         <a class="nav_first" href="#" onclick="showDialog()">Контакты</a>
         <a href="{{ url_for('presentation') }}">Презентация</a>
@@ -76,7 +61,7 @@
     </nav>
     {% endif %}
     
-    <dialog id="contactsDialog" class="animate-fade-in">
+    <dialog id="contactsDialog">
         <p id="hh">Команда разрабоки и сопровождения платформы.</p>
         <div>
             <h3>Коваленко Юрий Дмитриевич</h3>
@@ -95,7 +80,7 @@
     </dialog>
 
     <script>
-        // Плавная загрузка страницы с предзагрузкой фона
+        // Плавная загрузка страницы
         document.addEventListener('DOMContentLoaded', function() {
             // Предзагрузка фонового изображения
             const bgImage = new Image();
