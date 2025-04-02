@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>WEB-платформа</title>
+	<link href="/static/css/toast.min.css" rel="stylesheet">
+  <link href="/static/css/username_block.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/static/css/loginform_navigation_bar.css">
+	<link rel="stylesheet" type="text/css" href="/static/css/contact_dialog.css">
+	<script src="/static/js/toast.js"></script>
+  <script src="/static/js/p5.min.js"></script>
+</head>
+<body>
+	{% block content %}{% endblock %}
+  {% if current_user.is_authenticated %}
+    
+	<nav id="index_nav">
+		<a id="first_nav_but" href="{{ url_for('admin_console') }}">Консоль</a></li>
+		<a href="#" onclick="showDialog()">Контакты</a></li>
+		<a href="{{ url_for('presentation') }}">Презентация</a></li>
+		<a href="{{ url_for('logout') }}" style="float:right">Выход</a>
+    <span id="index_span"></span>
+	</nav>
+  <nav class="username_block">
+    <a id="username_block" href="#">{{ current_user.username }}</a></li>
+  </nav>
+	{% else %}
+	<nav>
+    <a href="{{ url_for('login') }}">Вход</a>
+		<a class="nav_first" href="#" onclick="showDialog()">Контакты</a>
+		<a href="{{ url_for('presentation') }}">Презентация</a>
+    <a href="*"></a>
+		<span></span>
+	</nav>
+  {% endif %}
+  
+ <dialog id="contactsDialog">
+  <p id="hh">Команда разрабоки и сопровождения платформы.</p>
+  <div>
+	<h3>Коваленко Юрий Дмитриевич</h3>
+	<p>Руководитель проекта. Идея, Backend/Frontend разработка.</p>
+	<p>Email: YUDKovalenko@sber-bank.by</p>
+	<p>Телефон: 88-359-7973</p>
+  </div>
+  <div>
+	<h3>Лазарук Андрей Сергеевич</h3>
+	<p>Главный специалист. Инфраструктура, SQL разработка.</p>
+	<p>Email: ASLazaruk@sber-bank.by</p>
+	<p>Телефон: 88-359-7963</p>
+  </div>
+  <div></div>
+  <button id="closeDialogButton" onclick="closeDialog()">Закрыть</button>
+ </dialog>
+
+<script>
+  const dialog = document.getElementById("contactsDialog");
+  
+  function showDialog() {
+	dialog.show();
+	document.getElementById("contactsDialog").style.display = "grid";
+  }
+  
+  function closeDialog() {
+	dialog.close();
+	document.getElementById("contactsDialog").style.display = "none";
+  }
+ </script>
+ {% for message in get_flashed_messages(with_categories=true) %}
+		<script>
+			new Toast({
+				  title: false,
+				  text: '{{ message[1] }}',
+				  theme: '{{ message[0] }}',
+				  autohide: true,
+				  interval: 5000
+				});
+		</script>
+	{% endfor %}
+</body>
+</html>
