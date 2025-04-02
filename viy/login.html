@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <link rel="stylesheet" type="text/css" href="/static/css/login_page_background.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/login_submit_button.css">
+  <link rel="stylesheet" type="text/css" href="/static/css/underglow_login_form.css">
+  <p class="main_h1">WEB-Платформа</p>
+  <p class="main_h2">ВИЮ</p>
+	<form class="login_form" action="" method="post" novalidate="">
+		{{ form.hidden_tag()}}
+    <div>
+    <h1 id="w_text" style="color: white;">Добро пожаловать!</h1>
+    <p id="s_text">На Web-платформу процессинга "ВИЮ", дом для мини web-приложений.</p>
+	<p id="s_text">Для входа на Web-платформу используется доменная авторизация.</p>
+    </div>
+		<div class="login_inputs"><p>
+			{{ form.username.label }}<br>
+			{{ form.username(size=32, placeholder='В домене belpsb.by') }}
+		</p>
+   		{% for error in form.username.errors %}
+		<script>
+		new Toast({
+			  title: false,
+			  text: '{{ error }}',
+			  theme: 'danger',
+			  autohide: true,
+			  interval: 5000
+			});
+    </script>
+		{% endfor %}
+		<p>
+			{{ form.password.label }}<br>
+			{{ form.password(size=32, placeholder='') }}
+		</p>
+		<p>{{ form.submit() }}</p></div>
+	</form>
+ <footer>Разработано командой Процессинга. 2024-2025.</footer>
+{% endblock %}
