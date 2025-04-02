@@ -6,89 +6,46 @@
 <link rel="stylesheet" type="text/css" href="/static/css/underglow_login_form.css">
 
 <style>
-    /* Дополнительные стили для анимации с учётом существующего дизайна */
-    .main_h1, .main_h2 {
-        position: relative;
-        z-index: 1;
-        text-align: center;
-        margin: 0;
-    }
-    
+    /* Только анимации, без изменения позиционирования */
     .main_h1 {
-        font-size: 2.5rem;
-        color: #333;
-        padding-top: 40px;
+        animation: fadeIn 0.8s ease-out 0.2s forwards;
+        opacity: 0;
     }
-    
     .main_h2 {
-        font-size: 2rem;
-        color: #444;
-        margin-bottom: 30px;
+        animation: fadeIn 0.8s ease-out 0.4s forwards;
+        opacity: 0;
     }
-    
-    .login_form {
-        position: relative;
-        max-width: 450px;
-        margin: 0 auto;
-        padding: 30px;
-        background: white;
-        border-radius: 16px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        z-index: 1;
-    }
-    
     #w_text {
-        text-align: center;
-        margin-bottom: 20px;
+        animation: fadeIn 0.8s ease-out 0.4s forwards;
+        opacity: 0;
     }
-    
     #s_text {
-        color: #666;
-        text-align: center;
-        margin-bottom: 15px;
-        font-size: 0.95rem;
+        animation: fadeIn 0.8s ease-out 0.6s forwards;
+        opacity: 0;
     }
-    
-    .login_inputs {
-        margin-top: 20px;
+    .login_form {
+        animation: fadeIn 0.8s ease-out 0.6s forwards;
+        opacity: 0;
+        position: relative; /* Важно для underglow эффекта */
     }
-    
-    .login_inputs input {
-        width: 100%;
-        padding: 12px;
-        margin-bottom: 15px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        transition: all 0.3s ease;
-    }
-    
-    .login_inputs input:focus {
-        border-color: #00abdf;
-        outline: none;
-        box-shadow: 0 0 0 2px rgba(0,171,223,0.2);
-    }
-    
     footer {
-        text-align: center;
-        margin-top: 40px;
-        padding-bottom: 20px;
-        color: #666;
-        font-size: 0.9rem;
+        animation: fadeIn 0.8s ease-out 0.8s forwards;
+        opacity: 0;
     }
 </style>
 
-<p class="main_h1 animate-fade-in">WEB-Платформа</p>
-<p class="main_h2 animate-fade-in delay-1">ВИЮ</p>
+<p class="main_h1">WEB-Платформа</p>
+<p class="main_h2">ВИЮ</p>
 
-<form class="login_form animate-fade-in delay-2" action="" method="post" novalidate="">
+<form class="login_form" action="" method="post" novalidate="">
     {{ form.hidden_tag()}}
     <div>
-        <h1 id="w_text" class="animate-fade-in delay-1">Добро пожаловать!</h1>
-        <p id="s_text" class="animate-fade-in delay-2">На Web-платформу процессинга "ВИЮ", дом для мини web-приложений.</p>
-        <p id="s_text" class="animate-fade-in delay-3">Для входа на Web-платформу используется доменная авторизация.</p>
+        <h1 id="w_text" style="color: white;">Добро пожаловать!</h1>
+        <p id="s_text">На Web-платформу процессинга "ВИЮ", дом для мини web-приложений.</p>
+        <p id="s_text">Для входа на Web-платформу используется доменная авторизация.</p>
     </div>
     
-    <div class="login_inputs animate-fade-in delay-3">
+    <div class="login_inputs">
         <p>
             {{ form.username.label }}<br>
             {{ form.username(size=32, placeholder='В домене belpsb.by') }}
@@ -115,5 +72,5 @@
     </div>
 </form>
 
-<footer class="animate-fade-in delay-4">Разработано командой Процессинга. 2024-2025.</footer>
+<footer>Разработано командой Процессинга. 2024-2025.</footer>
 {% endblock %}
