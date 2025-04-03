@@ -11,6 +11,7 @@
     border-radius: 16px;
     filter: blur(7px);
     padding: 3px 0px;
+    opacity: 0; /* Начальное состояние - невидим */
 
     background: linear-gradient(
       to left,
@@ -19,49 +20,25 @@
       #04d500
     );
     background-size: 200% 200%;
-    animation: animateGlow 5s linear;
-    animation-iteration-count: 2;
-  }
+    
+    /* Анимация появления */
+    animation: 
+        glowOn 1s ease-in 1s forwards, /* Появление через 1 секунду */
+        animateGlow 5s linear 2s 2; /* Анимация градиента через 2 секунды (1s задержка glowOn + 1s его длительность) */
+}
 
-.signup_form::after {
-    position: absolute;
-    content: "";
-    top: 5px;
-    left: 0;
-    right: 0;
-    z-index: -1;
-    height: 100%;
-    width: 100%;
-    transform: scale(1) translateZ(0);
-    border-radius: 16px;
-    filter: blur(7px);
-    padding: 3px 0px;
-
-    background: linear-gradient(
-      to left,
-      #f8f102,
-      #00abdf,
-      #04d500
-    );
-    background-size: 200% 200%;
-    animation: animateGlow 5s linear;
-    animation-iteration-count: 2;
-
-  }
+@keyframes glowOn {
+    to { opacity: 1; }
+}
 
 @keyframes animateGlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  
-  100% {
-    background-position: 0% 50%;
-  }
-  
- @keyframes glowOn {
-            from { opacity: 0; }
-            to { opacity: 1;}
-        }
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
