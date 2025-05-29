@@ -1,64 +1,11 @@
-auth_enabled: false
-
-target: distributor,ingester,querier,query-frontend
-
-server:
-  http_listen_port: 3100
-
-common:
-  compactor_grpc_address: 172.30.81.209:9095
-  path_prefix: /data/loki
-  storage:
-    filesystem:
-      chunks_directory: /data/loki/chunks
-      rules_directory: /data/loki/rules
-  replication_factor: 1
-  ring:
-    instance_addr: 172.30.81.208
-    kvstore:
-      store: memberlist
-
-memberlist:
-  join_members:
-    - "172.30.81.208"
-    - "172.30.81.209"
-  bind_port: 7946
-
-limits_config:
-  allow_structured_metadata: false
-  retention_period: 0s                # РџРѕР»РЅРѕСЃС‚СЊСЋ РѕС‚РєР»СЋС‡Р°РµРј Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРѕРµ СѓРґР°Р»РµРЅРёРµ РґР°РЅРЅС‹С…
-  allow_deletes: false                # Р—Р°РїСЂРµС‰Р°РµРј DELETE-Р·Р°РїСЂРѕСЃС‹ С‡РµСЂРµР· API
-  retention_stream: []                # РћС‡РёС‰Р°РµРј СЃРїРёСЃРѕРє РїРѕС‚РѕРєРѕРІ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ (РµСЃР»Рё РїРѕРґРґРµСЂР¶РёРІР°РµС‚СЃСЏ)
-  #enforce_metric_name: false          # Р”РѕРїРѕР»РЅРёС‚РµР»СЊРЅР°СЏ РѕРїС†РёСЏ РґР»СЏ СЃРѕРІРјРµСЃС‚РёРјРѕСЃС‚Рё
-
-schema_config:
-  configs:
-    - from: 2020-10-24
-      store: tsdb                     # РСЃРїРѕР»СЊР·СѓРµРј TSDB (РјРµРЅРµРµ Р·Р°РІРёСЃРёРј РѕС‚ Compactor)
-      object_store: filesystem
-      schema: v12
-      index:
-        prefix: index_
-        period: 24h
-
-storage_config:
-  tsdb_shipper:
-    active_index_directory: /data/loki/tsdb-index
-    cache_location: /data/loki/tsdb-cache
-    # enable_retention: false           # РЇРІРЅРѕ РѕС‚РєР»СЋС‡Р°РµРј retention РІ TSDB
-
-
-
-level=error ts=2025-04-02T07:09:27.531546204Z caller=ring_watcher.go:56 component=querier component=querier-scheduler-worker msg="error getting addresses from ring" err="empty ring"
-level=error ts=2025-04-02T07:09:30.531539684Z caller=ring_watcher.go:56 component=querier component=querier-scheduler-worker msg="error getting addresses from ring" err="empty ring"
-level=error ts=2025-04-02T07:09:33.53168091Z caller=ring_watcher.go:56 component=querier component=querier-scheduler-worker msg="error getting addresses from ring" err="empty ring"
-level=error ts=2025-04-02T07:09:34.532189066Z caller=ring_watcher.go:56 component=frontend-scheduler-worker msg="error getting addresses from ring" err="empty ring"
-level=error ts=2025-04-02T07:09:36.531654052Z caller=ring_watcher.go:56 component=querier component=querier-scheduler-worker msg="error getting addresses from ring" err="empty ring"
-level=error ts=2025-04-02T07:09:39.531776371Z caller=ring_watcher.go:56 component=querier component=querier-scheduler-worker msg="error getting addresses from ring" err="empty ring"
-level=error ts=2025-04-02T07:09:42.532191363Z caller=ring_watcher.go:56 component=querier component=querier-scheduler-worker msg="error getting addresses from ring" err="empty ring"
-level=error ts=2025-04-02T07:09:44.531837211Z caller=ring_watcher.go:56 component=frontend-scheduler-worker msg="error getting addresses from ring" err="empty ring"
-level=error ts=2025-04-02T07:09:45.532240701Z caller=ring_watcher.go:56 component=querier component=querier-scheduler-worker msg="error getting addresses from ring" err="empty ring"
-level=error ts=2025-04-02T07:09:48.532042587Z caller=ring_watcher.go:56 component=querier component=querier-scheduler-worker msg="error getting addresses from ring" err="empty ring"
-level=error ts=2025-04-02T07:09:51.531976232Z caller=ring_watcher.go:56 component=querier component=querier-scheduler-worker msg="error getting addresses from ring" err="empty ring"
-level=error ts=2025-04-02T07:09:54.531724898Z caller=ring_watcher.go:56 component=frontend-scheduler-worker msg="error getting addresses from ring" err="empty ring"
-level=error ts=2025-04-02T07:09:54.531769221Z caller=ring_watcher.go:56 component=querier component=querier-scheduler-worker msg="error getting addresses from ring" err="empty ring"
+Faulting application name: PosGateIPC.Service.exe, version: 0.0.0.0, time stamp: 0x666f21b9
+Faulting module name: xen.core-0.25.dll, version: 0.0.0.0, time stamp: 0x666f214c
+Exception code: 0xc0000005
+Fault offset: 0x00121d36
+Faulting process id: 0xfd0
+Faulting application start time: 0x01dbd06dfc5b6c7b
+Faulting application path: c:\PosGateIPC\PosGateIPC.Service.exe
+Faulting module path: c:\PosGateIPC\xen.core-0.25.dll
+Report Id: 80bce661-4b1d-477a-ace4-94451c3986cb
+Faulting package full name: 
+Faulting package-relative application ID:
