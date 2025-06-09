@@ -51,6 +51,7 @@
             font-weight: 500;
             letter-spacing: 0.05em;
             position: sticky;
+			text-transform: uppercase;
             top: 0; /* Фиксируем шапку */
             z-index: 1; /* Убедимся, что шапка поверх строк */
         }
@@ -173,7 +174,8 @@
             <div class="tabs">
 				<button class="tablinks active" onclick="openTab(event, 'tab0')">Первая успешная попытка токенизации карты Банка</button>
 				<button class="tablinks" onclick="openTab(event, 'tab2')">Первая успешная операция по новому токену Банка</button>
-                <button class="tablinks" onclick="openTab(event, 'tab1')">Успешные операции по токенам Банка</button> 
+                <button class="tablinks" onclick="openTab(event, 'tab1')">Успешные операции по токенам Банка</button>
+                <button class="tablinks" onclick="openTab(event, 'tab3')">Статистика по картам и пользователям</button>
             </div>
 			
 			<!-- Основная вкладка -->
@@ -182,7 +184,7 @@
                     <table id="data-table">
             <thead>
                 <tr>
-                    <th>Месяц в котором была выполнена первая успешная попытка токенизации по карте</th>
+                    <th>Месяц в котором была выполнена первая успешная попытка токенизации карты</th>
                     <th>Белкарт Сберкарты</th>
                     <th>Белкарт</th>
                     <th>Visa</th>
@@ -267,6 +269,38 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Новая вкладка -->
+            <div id="tab3" class="tabcontent">
+                <div class="table-container">
+                    <table id="data-table3">
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Количество уникальных карт</th>
+                                <th>Сберкарты</th>
+                                <th>Белкарт</th>
+                                <th>Visa</th>
+                                <th>Mastercard</th>
+                                <th>Количество уникальных пользователей</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data3 %}
+                            <tr data-date="{{ row[0] }}">
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>{{ row[2] }}</td>
+                                <td>{{ row[3] }}</td>
+                                <td>{{ row[4] }}</td>
+                                <td>{{ row[5] }}</td>
+                                <td>{{ row[6] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -296,6 +330,96 @@
 
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
+
+            // Если открывается третья вкладка, сортируем таблицу
+            if (tabName === 'tab3') {
+                sortTable3();
+            }
+        }
+
+        // Функция сортировки для третьей таблицы
+        function sortTable3() {
+            const table = document.getElementById('data-table3');
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            // Сортируем строки
+            rows.sort((a, b) => {
+                const dateA = a.getAttribute('data-date');
+                const dateB = b.getAttribute('data-date');
+
+                // "За всё время" всегда наверху
+                if (dateA === 'За всё время') return -1;
+                if (dateB === 'За всё время') return 1;
+
+                // Разбираем кварталы (например: "2025 1 квартал")
+                const quarterMatchA = dateA.match(/(\d{4}) (\d) квартал/);
+                const quarterMatchB = dateB.match(/(\d{4}) (\d) квартал/);
+
+                // Разбираем месяцы (например: "2025-03")
+                const monthMatchA = dateA.match(/(\d{4})-(\d{2})/);
+                const monthMatchB = dateB.match(/(\d{4})-(\d{2})/);
+
+                // Если обе строки - кварталы
+                if (quarterMatchA && quarterMatchB) {
+                    const yearA = parseInt(quarterMatchA[1]);
+                    const quarterA = parseInt(quarterMatchA[2]);
+                    const yearB = parseInt(quarterMatchB[1]);
+                    const quarterB = parseInt(quarterMatchB[2]);
+
+                    if (yearA !== yearB) return yearB - yearA;
+                    return quarterB - quarterA;
+                }
+
+                // Если одна строка - квартал, а другая - месяц
+                if (quarterMatchA && monthMatchB) {
+                    const yearA = parseInt(quarterMatchA[1]);
+                    const quarterA = parseInt(quarterMatchA[2]);
+                    const yearB = parseInt(monthMatchB[1]);
+                    const monthB = parseInt(monthMatchB[2]);
+                    const quarterB = Math.floor((monthB - 1) / 3) + 1;
+
+                    if (yearA !== yearB) return yearB - yearA;
+                    if (quarterA !== quarterB) return quarterB - quarterA;
+                    return 1; // Квартал должен быть выше месяцев
+                }
+
+                if (monthMatchA && quarterMatchB) {
+                    const yearA = parseInt(monthMatchA[1]);
+                    const monthA = parseInt(monthMatchA[2]);
+                    const quarterA = Math.floor((monthA - 1) / 3) + 1;
+                    const yearB = parseInt(quarterMatchB[1]);
+                    const quarterB = parseInt(quarterMatchB[2]);
+
+                    if (yearA !== yearB) return yearB - yearA;
+                    if (quarterA !== quarterB) return quarterB - quarterA;
+                    return -1; // Квартал должен быть выше месяцев
+                }
+
+                // Если обе строки - месяцы
+                if (monthMatchA && monthMatchB) {
+                    const yearA = parseInt(monthMatchA[1]);
+                    const monthA = parseInt(monthMatchA[2]);
+                    const yearB = parseInt(monthMatchB[1]);
+                    const monthB = parseInt(monthMatchB[2]);
+
+                    if (yearA !== yearB) return yearB - yearA;
+                    return monthB - monthA;
+                }
+
+                // Если формат не распознан, оставляем как есть
+                return 0;
+            });
+
+            // Удаляем все строки из tbody
+            while (tbody.firstChild) {
+                tbody.removeChild(tbody.firstChild);
+            }
+
+            // Добавляем отсортированные строки обратно
+            rows.forEach(row => {
+                tbody.appendChild(row);
+            });
         }
 
         // Функция для форматирования текста
@@ -308,7 +432,8 @@
             const tables = [
 				{node: document.getElementById('data-table'), name: '1-я успеш_попытка токен_карты'},
 				{node: document.getElementById('data-table2'), name: '1-я успешая опер_по нов_токену'},
-                {node: document.getElementById('data-table1'), name: 'Успешные операции по токенам'}
+                {node: document.getElementById('data-table1'), name: 'Успешные операции по токенам'},
+                {node: document.getElementById('data-table3'), name: 'Статистика по картам и пользователям'}
             ];
 
             const workbook = XLSX.utils.book_new();
@@ -371,6 +496,13 @@
         setTimeout(() => {
             closeToast();
         }, 15000); // 15 секунд
+
+        // Сортируем таблицу при загрузке страницы, если открыта третья вкладка
+        document.addEventListener('DOMContentLoaded', function() {
+            if (document.getElementById('tab3').style.display === 'block') {
+                sortTable3();
+            }
+        });
     </script>
 </body>
 </html>
