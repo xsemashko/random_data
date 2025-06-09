@@ -3,295 +3,409 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Администрирование</title>
-    <link rel="stylesheet" type="text/css" href="/static/css/admin_styles.css">
+    <title>Токенизация.Статистика</title>
+    <script src="/static/js/xlsx.full.min.js"></script>
+    <style>
+        /* Общие стили */
+        @font-face {
+			font-family: 'OpenSans';
+			src: url('/static/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
+		}
+		
+        body {
+            font-family: 'OpenSans';
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        
+		h1 {
+            text-align: center;
+            font-weight: 500;
+            color: #2c3e50;
+			margin-top: 15px;
+        }
+		
+		.table-container {
+            width: 100%;
+            max-width: 1200px;
+            max-height: calc(100vh - 350px); /* Ограничиваем высоту таблицы */
+            overflow-y: auto; /* Добавляем вертикальную прокрутку */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            background-color: #fff;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            position: relative;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #2c3e50;
+            color: #fff;
+            font-weight: 500;
+            letter-spacing: 0.05em;
+            position: sticky;
+			text-transform: uppercase;
+            top: 0; /* Фиксируем шапку */
+            z-index: 1; /* Убедимся, что шапка поверх строк */
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #e9ecef;
+            transition: background-color 0.3s ease;
+        }
+        .export-button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #2c3e50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        .export-button:hover {
+            background-color: #1a252f;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 14px;
+            color: #777;
+        }
+		
+        /* Стили вкладок */
+        .tab-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .tabs {
+            margin-bottom: 20px;
+        }
+        
+        .tablinks {
+            background-color: #f1f1f1;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 16px;
+            border-radius: 5px 5px 5px 5px;
+            margin-right: 5px;
+			margin-bottom: 5px;
+        }
+        
+        .tablinks.active {
+            background-color: #2c3e50;
+            color: white;
+        }
+        
+        .tabcontent {
+            display: none;
+            animation: fadeEffect 0.5s;
+        }
+        
+        @keyframes fadeEffect {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        /* Стили для всплывающего уведомления */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+			left: 20px;
+            background-color: #2c3e50;
+            color: #fff;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideIn 0.5s ease-out;
+			font-size: 15px;
+			opacity: 0.9;
+        }
+        .toast button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-left: 20px;
+        }
+        .toast button:hover {
+            opacity: 0.8;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+    </style>
 </head>
 <body>
-    <div class="tabs">
-        <button class="tablink" onclick="openTab(event, 'reg_requests')">Запросы на регистрацию</button>
-        <button class="tablink" onclick="openTab(event, 'users')">Пользователи</button>
-        <button class="tablink" onclick="openTab(event, 'applications')">Приложения</button>
-        <a class="tablink" style="text-decoration: none;" href="/">Вернуться в меню</a>
-    </div>
-
-    <div id="reg_requests" class="tabcontent">
-        <div>Запросы, требующие обработки имеют статус A, уже обработанные запросы имеют статус I. Статус меняется автоматически после отправки уведомления о выдаче грантов пользователю. Если это не произошло изменить статус стоит вручную и нажать Сохранить.
-        Сохранить необходимо нажимать для каждой записи отдельно.
-        В поле text указано куда необходимо пользователю предоставить доступ. Если там написано, что-то по чему не понятно куда пользователь хочет попасть или поле пустое, необходимо уточнить у пользователя или проверить должность по справочнику и попытаться самому понять. Например сотрудники ЦКП часто запрашивают доступ только к БИП.</div>
-        <br>
-        <div class="controls">
-            <label for="search_reg_requests">Поиск по Username:</label>
-            <input type="text" id="search_reg_requests" oninput="fetchData('reg_requests')">
-            <button onclick="toggleSort('reg_requests')">Сортировать по ID</button>
-        </div>
-        <table>
+{% include 'toolbar_with_opacity.html' %}
+    <div class="container">
+        <h1>Токенизация Белкарт PAY. Статистика.</h1>
+        <button class="export-button" onclick="exportToExcel()">Экспорт в Excel</button>
+        
+        <div class="tab-container">
+            <div class="tabs">
+				<button class="tablinks active" onclick="openTab(event, 'tab0')">Первая успешная попытка токенизации карты Банка</button>
+				<button class="tablinks" onclick="openTab(event, 'tab2')">Первая успешная операция по новому токену Банка</button>
+                <button class="tablinks" onclick="openTab(event, 'tab1')">Успешные операции по токенам Банка</button>
+                <button class="tablinks" onclick="openTab(event, 'tab3')">Статистика по картам и пользователям</button>
+            </div>
+			
+			<!-- Основная вкладка -->
+            <div id="tab0" class="tabcontent" style="display:block;">
+                <div class="table-container">
+                    <table id="data-table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Request Type</th>
-                    <th>Text</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>Actions</th>
+                    <th>Месяц в котором была выполнена первая успешная попытка токенизации карты</th>
+                    <th>Белкарт Сберкарты</th>
+                    <th>Белкарт</th>
+                    <th>Visa</th>
+                    <th>Mastercard</th>
+                    <th>Все карты Банка</th>
                 </tr>
             </thead>
-            <tbody id="reg_requests_body"></tbody>
+            <tbody>
+                {% for row in data %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[3] }}</td>
+                    <td>{{ row[4] }}</td>
+                    <td>{{ row[5] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
         </table>
+                </div>
+            </div>
+
+            <!-- Первая вкладка -->
+            <div id="tab1" class="tabcontent">
+                <div class="table-container">
+                    <table id="data-table1">
+                        <!-- Первая таблица -->
+						<thead>
+                    <tr>
+                        <th>Месяц</th>
+						<th>Количество успешных операций с использованием токена</th>
+                        <th>Белкарт Сберкарты</th>
+                        <th>Белкарт</th>
+                        <th>Visa</th>
+                        <th>Mastercard</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data1 %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Вторая вкладка -->
+            <div id="tab2" class="tabcontent">
+                <div class="table-container">
+                    <table id="data-table2">
+                        <!-- Вторая таблица -->
+						<thead>
+                    <tr>
+                        <th>Месяц в котором была выполнена первая успешная операция по токену</th>
+						<th>Количество токенов, по которым появилась хоть одна успешная операция</th>
+                        <th>Белкарт Сберкарты</th>
+                        <th>Белкарт</th>
+                        <th>Visa</th>
+                        <th>Mastercard</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data2 %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                        <td>{{ row[3] }}</td>
+                        <td>{{ row[4] }}</td>
+                        <td>{{ row[5] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Новая вкладка -->
+            <div id="tab3" class="tabcontent">
+                <div class="table-container">
+                    <table id="data-table3">
+                        <thead>
+                            <tr>
+                                <th>Дата</th>
+                                <th>Количество уникальных карт</th>
+                                <th>Сберкарты</th>
+                                <th>Белкарт</th>
+                                <th>Visa</th>
+                                <th>Mastercard</th>
+                                <th>Количество уникальных пользователей</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data3 %}
+                            <tr>
+                                <td>{{ row[0] }}</td>
+                                <td>{{ row[1] }}</td>
+                                <td>{{ row[2] }}</td>
+                                <td>{{ row[3] }}</td>
+                                <td>{{ row[4] }}</td>
+                                <td>{{ row[5] }}</td>
+                                <td>{{ row[6] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div id="users" class="tabcontent">
-        <div>В поле Grants необходимо указать роль (сокращение приложения из вкладки Приложения). Для того, чтобы дать полный доступ ко всему можно указать ADMIN. Если пользователю необходимо несколько ролей их необходимо указывать через точку с запятой, в конце можно ставить можно нет: PM;IP;TS;
-        Кнопку Сохранить необходимо нажимать для каждой записи. После сохранения грантов необходимо нажать на Отправить уведомления. После отработки скрипта пользователю уйдет уведомление о успешности выдачи прав, а поле Status изменится на А (для отображения изменений желательно обновить страницу).
-        Нажимать кнопку Отправить уведомления можно для всех пользователей сразу, которым были выданы гранты.
-        </div>
-        <br>
-        <div class="notification-button">
-            <button onclick="sendNotifications()">Отправить уведомления</button>
-        </div>
-        <div class="controls">
-            <label for="search_users">Поиск по Username:</label>
-            <input type="text" id="search_users" oninput="fetchData('users')">
-            <button onclick="toggleSort('users')">Сортировать по ID</button>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Father's Name</th>
-                    <th>Mail</th>
-                    <th>Status</th>
-                    <th>Last Login</th>
-                    <th>Grants</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="users_body"></tbody>
-        </table>
+	<div class="footer">
+        <p>Разработано командой процессинга. 2025.</p>
     </div>
 
-    <div id="applications" class="tabcontent">
-        <div class="controls">
-            <button onclick="toggleSort('applications')">Сортировать по ID</button>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>App</th>
-                    <th>Alias</th>
-                </tr>
-            </thead>
-            <tbody id="applications_body"></tbody>
-        </table>
+<!-- Всплывающее уведомление -->
+    <div id="toast" class="toast">
+        <span>В статистику включены только те карты, которые были активны на момент токенизации. Реальное количество токенизированных карт будет меньше, так как Клиенту ещё необходимо пройти путь в приложении Белкарт Pay и успешно ввести смс код. Точными данными обладает только ПС Белкарт.</span>
+        <button onclick="closeToast()">&times;</button>
     </div>
 
     <script>
-        let sortOrder = 'DESC'; // По умолчанию сортировка по убыванию
-        let aliases = []; // Глобальная переменная для хранения значений alias
-
-        // Функция для загрузки значений alias
-        function loadAliases() {
-            fetch('/get_data')
-                .then(response => response.json())
-                .then(data => {
-                    aliases = data.apps.map(app => app[2]); // Извлекаем значения alias
-                });
-        }
-
+        // Логика вкладок
         function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
+            const tabcontent = document.getElementsByClassName("tabcontent");
+            const tablinks = document.getElementsByClassName("tablinks");
+
+            for (let i = 0; i < tabcontent.length; i++) {
                 tabcontent[i].style.display = "none";
             }
-            tablinks = document.getElementsByClassName("tablink");
-            for (i = 0; i < tablinks.length; i++) {
+
+            for (let i = 0; i < tablinks.length; i++) {
                 tablinks[i].className = tablinks[i].className.replace(" active", "");
             }
+
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
-
-            // Загружаем данные для активной вкладки
-            fetchData(tabName);
         }
 
-        function fetchData(table) {
-            const searchInput = table === 'reg_requests' 
-                ? document.getElementById('search_reg_requests').value 
-                : table === 'users' 
-                ? document.getElementById('search_users').value 
-                : '';
+        // Функция для форматирования текста
+        function formatHeaderText(text) {
+            return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+        }
+
+        // Модифицированная функция экспорта
+        function exportToExcel() {
+            const tables = [
+				{node: document.getElementById('data-table'), name: '1-я успеш_попытка токен_карты'},
+				{node: document.getElementById('data-table2'), name: '1-я успешая опер_по нов_токену'},
+                {node: document.getElementById('data-table1'), name: 'Успешные операции по токенам'},
+                {node: document.getElementById('data-table3'), name: 'Статистика по картам и пользователям'}
+            ];
+
+            const workbook = XLSX.utils.book_new();
             
-            fetch(`/get_data?sort=${sortOrder}&search=${searchInput}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (table === 'reg_requests') {
-                        const regRequestsBody = document.getElementById('reg_requests_body');
-                        regRequestsBody.innerHTML = data.reg_requests.map(row => `
-                            <tr data-id="${row[0]}">
-                                <td>${row[0]}</td>
-                                <td>${row[1]}</td>
-                                <td>${row[2]}</td>
-                                <td>${row[3]}</td>
-                                <td><input type="text" name="status" value="${row[4]}" onchange="updateField('reg_requests', ${row[0]}, 'status', this.value)"></td>
-                                <td>${row[5]}</td>
-                                <td><button onclick="saveChanges('reg_requests', ${row[0]})">Сохранить</button></td>
-                            </tr>
-                        `).join('');
-                    } else if (table === 'users') {
-                        const usersBody = document.getElementById('users_body');
-                        usersBody.innerHTML = data.users.map(row => `
-                            <tr data-id="${row[0]}">
-                                <td>${row[0]}</td>
-                                <td>${row[1]}</td>
-                                <td>${row[2]}</td>
-                                <td>${row[3]}</td>
-                                <td>${row[4]}</td>
-                                <td><input type="text" name="mail" value="${row[5]}" onchange="updateField('users', ${row[0]}, 'mail', this.value)"></td>
-                                <td><input type="text" name="status" value="${row[6]}" onchange="updateField('users', ${row[0]}, 'status', this.value)"></td>
-                                <td>${row[7]}</td>
-                                <td>
-                                    <div style="position: relative;">
-                                        <input type="text" name="grants" value="${row[8]}" onfocus="showDropdown('${row[0]}')">
-                                        <div id="dropdown-${row[0]}" class="dropdown-content">
-                                            <label><input type="checkbox" value="ADMIN" onchange="updateGrants('${row[0]}')"> ADMIN</label>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td><button onclick="saveChanges('users', ${row[0]})">Сохранить</button></td>
-                            </tr>
-                        `).join('');
-                    } else if (table === 'applications') {
-                        const applicationsBody = document.getElementById('applications_body');
-                        applicationsBody.innerHTML = data.apps.map(row => `
-                            <tr data-id="${row[0]}">
-                                <td>${row[0]}</td>
-                                <td>${row[1]}</td>
-                                <td>${row[2]}</td>
-                            </tr>
-                        `).join('');
-                    }
+            tables.forEach((table, index) => {
+                const data = [];
+                const rows = table.node.querySelectorAll("tr");
+                
+                rows.forEach((row) => {
+                    const rowData = [];
+                    const cells = row.querySelectorAll("th, td");
+                    
+                    cells.forEach((cell, cellIndex) => {
+                        if (index === 0 && row.rowIndex === 0) {
+                            // Форматируем заголовки первой таблицы
+                            rowData.push(formatHeaderText(cell.innerText));
+                        } else {
+                            rowData.push(cell.innerText);
+                        }
+                    });
+                    data.push(rowData);
                 });
-        }
-
-        function showDropdown(id) {
-            const dropdown = document.getElementById(`dropdown-${id}`);
-            dropdown.style.display = 'block';
-
-            // Очищаем старые значения (кроме ADMIN)
-            dropdown.innerHTML = '<label><input type="checkbox" value="ADMIN" onchange="updateGrants(\'' + id + '\')"> ADMIN</label>';
-
-            // Добавляем значения alias
-            aliases.forEach(alias => {
-                const label = document.createElement('label');
-                label.innerHTML = `<input type="checkbox" value="${alias}" onchange="updateGrants('${id}')"> ${alias}`;
-                dropdown.appendChild(label);
+                
+                const worksheet = XLSX.utils.aoa_to_sheet(data);
+                XLSX.utils.book_append_sheet(workbook, worksheet, table.name);
             });
 
-            // Устанавливаем галочки для уже выбранных значений
-            const grantsInput = document.querySelector(`tr[data-id="${id}"] input[name="grants"]`);
-            const selectedValues = grantsInput.value.split(';').filter(Boolean); // Убираем пустые строки
-
-            dropdown.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                if (selectedValues.includes(checkbox.value)) {
-                    checkbox.checked = true;
-                }
-            });
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            saveAsExcelFile(excelBuffer);
         }
 
-        function updateGrants(id) {
-            const dropdown = document.getElementById(`dropdown-${id}`);
-            const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]:checked');
-            const grantsInput = document.querySelector(`tr[data-id="${id}"] input[name="grants"]`);
+        function saveAsExcelFile(buffer) {
+            const now = new Date();
+            const formattedDate = [
+                now.getFullYear(),
+                String(now.getMonth() + 1).padStart(2, '0'),
+                String(now.getDate()).padStart(2, '0'),
+                String(now.getHours()).padStart(2, '0'),
+                String(now.getMinutes()).padStart(2, '0')
+            ].join('-');
 
-            const selectedValues = Array.from(checkboxes).map(checkbox => checkbox.value);
-            grantsInput.value = selectedValues.join(';') + ';'; // Добавляем точку с запятой в конце
+            const blob = new Blob([buffer], { type: 'application/octet-stream' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = `Аналитика_по_токенизациям_${formattedDate}.xlsx`;
+            link.click();
+            
+            setTimeout(() => {
+                URL.revokeObjectURL(link.href);
+            }, 100);
+        }
+		
+		// Функция для закрытия уведомления
+        function closeToast() {
+            const toast = document.getElementById("toast");
+            toast.style.display = "none";
         }
 
-        function toggleSort(table) {
-            sortOrder = sortOrder === 'DESC' ? 'ASC' : 'DESC';
-            fetchData(table);
-        }
-
-        function updateField(table, id, field, value) {
-            if (!window.changes) window.changes = {};
-            if (!window.changes[table]) window.changes[table] = {};
-            if (!window.changes[table][id]) window.changes[table][id] = {};
-            window.changes[table][id][field] = value;
-        }
-
-        function saveChanges(table, id) {
-            const changes = window.changes?.[table]?.[id] || {};
-            const row = document.querySelector(`#${table}_body tr[data-id="${id}"]`);
-
-            const data = {
-                table: table,
-                id: id,
-                ...changes
-            };
-
-            // Добавляем обязательные поля, если они не были изменены
-            if (table === 'users') {
-                if (!data.mail) data.mail = row.querySelector('input[name="mail"]').value;
-                if (!data.status) data.status = row.querySelector('input[name="status"]').value;
-                if (!data.grants) data.grants = row.querySelector('input[name="grants"]').value;
-            } else if (table === 'reg_requests') {
-                if (!data.status) data.status = row.querySelector('input[name="status"]').value;
-            }
-
-            fetch('/update_data', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            }).then(response => response.json())
-              .then(data => {
-                  if (data.success) {
-                      alert('Changes saved successfully');
-                      fetchData(table);
-                  } else {
-                      alert('Error: ' + data.error);
-                  }
-              });
-        }
-
-        function sendNotifications() {
-            fetch('/send_notifications', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    alert(data.message);
-                } else {
-                    alert('Ошибка: ' + data.error);
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Открываем первую вкладку и загружаем данные
-            loadAliases();
-            document.getElementsByClassName('tablink')[0].click();
-        });
-
-        // Закрытие дропдауна при клике вне его области
-        document.addEventListener('click', function(event) {
-            const dropdowns = document.querySelectorAll('.dropdown-content');
-            dropdowns.forEach(dropdown => {
-                if (!dropdown.contains(event.target) && !dropdown.previousElementSibling.contains(event.target)) {
-                    dropdown.style.display = 'none';
-                }
-            });
-        });
+        // Автоматическое закрытие уведомления через 10 секунд
+        setTimeout(() => {
+            closeToast();
+        }, 15000); // 15 секунд
     </script>
 </body>
 </html>
