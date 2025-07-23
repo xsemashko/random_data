@@ -1,11 +1,716 @@
-Faulting application name: PosGateIPC.Service.exe, version: 0.0.0.0, time stamp: 0x666f21b9
-Faulting module name: xen.core-0.25.dll, version: 0.0.0.0, time stamp: 0x666f214c
-Exception code: 0xc0000005
-Fault offset: 0x00121d36
-Faulting process id: 0xfd0
-Faulting application start time: 0x01dbd06dfc5b6c7b
-Faulting application path: c:\PosGateIPC\PosGateIPC.Service.exe
-Faulting module path: c:\PosGateIPC\xen.core-0.25.dll
-Report Id: 80bce661-4b1d-477a-ace4-94451c3986cb
-Faulting package full name: 
-Faulting package-relative application ID:
+Jul 23 06:12:20 lpc-impc-rez systemd[1]: session-c1236366.scope: Deactivated successfully.
+Jul 23 06:12:21 lpc-impc-rez systemd[1]: Started Session c1236367 of User way4.
+Jul 23 06:12:21 lpc-impc-rez systemd[8961]: Started podman-2810282.scope.
+Jul 23 06:12:21 lpc-impc-rez systemd[1]: session-c1236367.scope: Deactivated successfully.
+Jul 23 06:12:22 lpc-impc-rez systemd[1]: Started Session c1236368 of User way4.
+Jul 23 06:12:22 lpc-impc-rez systemd[8961]: Started podman-2810324.scope.
+Jul 23 06:12:22 lpc-impc-rez systemd[1]: session-c1236368.scope: Deactivated successfully.
+Jul 23 06:12:39 lpc-impc-rez systemd[1]: Started Session c1236369 of User way4.
+Jul 23 06:12:40 lpc-impc-rez systemd[8961]: Started podman-2810398.scope.
+Jul 23 06:12:40 lpc-impc-rez systemd[1]: session-c1236369.scope: Deactivated successfully.
+Jul 23 06:12:40 lpc-impc-rez systemd[1]: Started Session c1236370 of User way4.
+Jul 23 06:12:40 lpc-impc-rez systemd[8961]: Started podman-2810418.scope.
+Jul 23 06:12:40 lpc-impc-rez systemd[1]: session-c1236370.scope: Deactivated successfully.
+Jul 23 06:12:41 lpc-impc-rez systemd[1]: Started Session c1236371 of User way4.
+Jul 23 06:12:41 lpc-impc-rez systemd[8961]: Started podman-2810442.scope.
+Jul 23 06:12:41 lpc-impc-rez systemd[1]: session-c1236371.scope: Deactivated successfully.
+Jul 23 06:12:42 lpc-impc-rez systemd[1]: Started Session c1236372 of User way4.
+Jul 23 06:12:43 lpc-impc-rez systemd[8961]: Started podman-2810461.scope.
+Jul 23 06:12:43 lpc-impc-rez systemd[1]: session-c1236372.scope: Deactivated successfully.
+Jul 23 06:12:59 lpc-impc-rez systemd[1]: Started Session c1236373 of User way4.
+Jul 23 06:12:59 lpc-impc-rez systemd[8961]: Started podman-2810497.scope.
+Jul 23 06:12:59 lpc-impc-rez systemd[1]: session-c1236373.scope: Deactivated successfully.
+Jul 23 06:13:00 lpc-impc-rez systemd[1]: Started Session c1236374 of User way4.
+Jul 23 06:13:00 lpc-impc-rez systemd[8961]: Started podman-2810522.scope.
+Jul 23 06:13:00 lpc-impc-rez systemd[1]: session-c1236374.scope: Deactivated successfully.
+Jul 23 06:13:01 lpc-impc-rez systemd[1]: Started Session c1236375 of User way4.
+Jul 23 06:13:01 lpc-impc-rez systemd[8961]: Started podman-2810550.scope.
+Jul 23 06:13:01 lpc-impc-rez systemd[1]: session-c1236375.scope: Deactivated successfully.
+Jul 23 06:13:02 lpc-impc-rez systemd[1]: Started Session c1236376 of User way4.
+Jul 23 06:13:02 lpc-impc-rez systemd[8961]: Started podman-2810572.scope.
+Jul 23 06:13:02 lpc-impc-rez systemd[1]: session-c1236376.scope: Deactivated successfully.
+Jul 23 06:13:19 lpc-impc-rez systemd[1]: Started Session c1236377 of User way4.
+Jul 23 06:13:19 lpc-impc-rez systemd[8961]: Started podman-2810598.scope.
+Jul 23 06:13:19 lpc-impc-rez systemd[1]: session-c1236377.scope: Deactivated successfully.
+Jul 23 06:13:20 lpc-impc-rez systemd[1]: Started Session c1236378 of User way4.
+Jul 23 06:13:20 lpc-impc-rez systemd[8961]: Started podman-2810621.scope.
+Jul 23 06:13:20 lpc-impc-rez systemd[1]: session-c1236378.scope: Deactivated successfully.
+Jul 23 06:13:21 lpc-impc-rez systemd[1]: Started Session c1236379 of User way4.
+Jul 23 06:13:21 lpc-impc-rez systemd[8961]: Started podman-2810646.scope.
+Jul 23 06:13:21 lpc-impc-rez systemd[1]: session-c1236379.scope: Deactivated successfully.
+Jul 23 06:13:22 lpc-impc-rez systemd[1]: Started Session c1236380 of User way4.
+Jul 23 06:13:22 lpc-impc-rez systemd[8961]: Started podman-2810668.scope.
+Jul 23 06:13:22 lpc-impc-rez systemd[1]: session-c1236380.scope: Deactivated successfully.
+Jul 23 06:13:39 lpc-impc-rez systemd[1]: Started Session c1236381 of User way4.
+Jul 23 06:13:39 lpc-impc-rez systemd[8961]: Started podman-2810691.scope.
+Jul 23 06:13:39 lpc-impc-rez systemd[1]: session-c1236381.scope: Deactivated successfully.
+Jul 23 06:13:40 lpc-impc-rez systemd[1]: Started Session c1236382 of User way4.
+Jul 23 06:13:40 lpc-impc-rez systemd[8961]: Started podman-2810710.scope.
+Jul 23 06:13:40 lpc-impc-rez systemd[1]: session-c1236382.scope: Deactivated successfully.
+Jul 23 06:13:41 lpc-impc-rez systemd[1]: Started Session c1236383 of User way4.
+Jul 23 06:13:41 lpc-impc-rez systemd[8961]: Started podman-2810731.scope.
+Jul 23 06:13:41 lpc-impc-rez systemd[1]: session-c1236383.scope: Deactivated successfully.
+Jul 23 06:13:42 lpc-impc-rez systemd[1]: Started Session c1236384 of User way4.
+Jul 23 06:13:42 lpc-impc-rez systemd[8961]: Started podman-2810757.scope.
+Jul 23 06:13:42 lpc-impc-rez systemd[1]: session-c1236384.scope: Deactivated successfully.
+Jul 23 06:13:59 lpc-impc-rez systemd[1]: Started Session c1236385 of User way4.
+Jul 23 06:13:59 lpc-impc-rez systemd[8961]: Started podman-2810782.scope.
+Jul 23 06:13:59 lpc-impc-rez systemd[1]: session-c1236385.scope: Deactivated successfully.
+Jul 23 06:14:00 lpc-impc-rez systemd[1]: Started Session c1236386 of User way4.
+Jul 23 06:14:00 lpc-impc-rez systemd[8961]: Started podman-2810802.scope.
+Jul 23 06:14:00 lpc-impc-rez systemd[1]: session-c1236386.scope: Deactivated successfully.
+Jul 23 06:14:01 lpc-impc-rez systemd[1]: Started Session c1236387 of User way4.
+Jul 23 06:14:01 lpc-impc-rez systemd[8961]: Started podman-2810826.scope.
+Jul 23 06:14:01 lpc-impc-rez systemd[1]: session-c1236387.scope: Deactivated successfully.
+Jul 23 06:14:02 lpc-impc-rez systemd[1]: Started Session c1236388 of User way4.
+Jul 23 06:14:02 lpc-impc-rez systemd[8961]: Started podman-2810848.scope.
+Jul 23 06:14:02 lpc-impc-rez systemd[1]: session-c1236388.scope: Deactivated successfully.
+Jul 23 06:14:19 lpc-impc-rez systemd[1]: Started Session c1236389 of User way4.
+Jul 23 06:14:19 lpc-impc-rez systemd[8961]: Started podman-2810875.scope.
+Jul 23 06:14:19 lpc-impc-rez systemd[1]: session-c1236389.scope: Deactivated successfully.
+Jul 23 06:14:20 lpc-impc-rez systemd[1]: Started Session c1236390 of User way4.
+Jul 23 06:14:20 lpc-impc-rez systemd[8961]: Started podman-2810897.scope.
+Jul 23 06:14:20 lpc-impc-rez systemd[1]: session-c1236390.scope: Deactivated successfully.
+Jul 23 06:14:21 lpc-impc-rez systemd[1]: Started Session c1236391 of User way4.
+Jul 23 06:14:21 lpc-impc-rez systemd[8961]: Started podman-2810923.scope.
+Jul 23 06:14:21 lpc-impc-rez systemd[1]: session-c1236391.scope: Deactivated successfully.
+Jul 23 06:14:22 lpc-impc-rez systemd[1]: Started Session c1236392 of User way4.
+Jul 23 06:14:22 lpc-impc-rez systemd[8961]: Started podman-2810945.scope.
+Jul 23 06:14:22 lpc-impc-rez systemd[1]: session-c1236392.scope: Deactivated successfully.
+Jul 23 06:14:39 lpc-impc-rez systemd[1]: Started Session c1236393 of User way4.
+Jul 23 06:14:39 lpc-impc-rez systemd[8961]: Started podman-2810967.scope.
+Jul 23 06:14:39 lpc-impc-rez systemd[1]: session-c1236393.scope: Deactivated successfully.
+Jul 23 06:14:40 lpc-impc-rez systemd[1]: Started Session c1236394 of User way4.
+Jul 23 06:14:40 lpc-impc-rez systemd[8961]: Started podman-2810987.scope.
+Jul 23 06:14:40 lpc-impc-rez systemd[1]: session-c1236394.scope: Deactivated successfully.
+Jul 23 06:14:41 lpc-impc-rez systemd[1]: Started Session c1236395 of User way4.
+Jul 23 06:14:41 lpc-impc-rez systemd[8961]: Started podman-2811007.scope.
+Jul 23 06:14:41 lpc-impc-rez systemd[1]: session-c1236395.scope: Deactivated successfully.
+Jul 23 06:14:42 lpc-impc-rez systemd[1]: Started Session c1236396 of User way4.
+Jul 23 06:14:42 lpc-impc-rez systemd[8961]: Started podman-2811032.scope.
+Jul 23 06:14:42 lpc-impc-rez systemd[1]: session-c1236396.scope: Deactivated successfully.
+Jul 23 06:14:59 lpc-impc-rez systemd[1]: Started Session c1236397 of User way4.
+Jul 23 06:14:59 lpc-impc-rez systemd[8961]: Started podman-2811091.scope.
+Jul 23 06:14:59 lpc-impc-rez systemd[1]: session-c1236397.scope: Deactivated successfully.
+Jul 23 06:15:00 lpc-impc-rez systemd[1]: Started Session c1236398 of User way4.
+Jul 23 06:15:00 lpc-impc-rez systemd[8961]: Started podman-2811153.scope.
+Jul 23 06:15:00 lpc-impc-rez systemd[1]: session-c1236398.scope: Deactivated successfully.
+Jul 23 06:15:01 lpc-impc-rez systemd[1]: Started Session c1236399 of User way4.
+Jul 23 06:15:01 lpc-impc-rez systemd[8961]: Started podman-2811190.scope.
+Jul 23 06:15:01 lpc-impc-rez systemd[1]: session-c1236399.scope: Deactivated successfully.
+Jul 23 06:15:01 lpc-impc-rez systemd[1]: Started Session 20805 of User way4.
+Jul 23 06:15:01 lpc-impc-rez systemd[1]: Started Session 20806 of User way4.
+Jul 23 06:15:01 lpc-impc-rez crond[2811229]: sendmail: fatal: parameter inet_interfaces: no local interface found for ::1
+Jul 23 06:15:01 lpc-impc-rez systemd[1]: session-20806.scope: Deactivated successfully.
+Jul 23 06:15:02 lpc-impc-rez systemd[8961]: Started podman-2811224.scope.
+Jul 23 06:15:02 lpc-impc-rez podman[2811224]: 2025-07-23 06:15:02.154641145 +0300 +03 m=+0.158533193 container init 0413409ea2b200ea930c5194f1ab25c85bea161b7ecd8e3fce4d8b57ca71d1ab (image=localhost/py_ora_iso:latest, name=TPPS_PIMGLe, io.buildah.version=1.33.7)
+Jul 23 06:15:02 lpc-impc-rez podman[2811224]: 2025-07-23 06:15:02.162440573 +0300 +03 m=+0.166332584 container start 0413409ea2b200ea930c5194f1ab25c85bea161b7ecd8e3fce4d8b57ca71d1ab (image=localhost/py_ora_iso:latest, name=TPPS_PIMGLe, io.buildah.version=1.33.7)
+Jul 23 06:15:02 lpc-impc-rez crond[2811289]: sendmail: fatal: parameter inet_interfaces: no local interface found for ::1
+Jul 23 06:15:02 lpc-impc-rez systemd[1]: session-20805.scope: Deactivated successfully.
+Jul 23 06:15:02 lpc-impc-rez podman[208249]: @ - - [08/Jul/2025:11:49:56 +0300] "GET /v1.12/libpod/events? HTTP/1.1" 200 16882 "" ""
+Jul 23 06:15:02 lpc-impc-rez systemd[1]: session-14767.scope: Deactivated successfully.
+Jul 23 06:15:02 lpc-impc-rez systemd[1]: session-14767.scope: Consumed 3h 11min 4.632s CPU time.
+Jul 23 06:15:02 lpc-impc-rez systemd-logind[2113]: Session 14767 logged out. Waiting for processes to exit.
+Jul 23 06:15:02 lpc-impc-rez systemd-logind[2113]: Removed session 14767.
+Jul 23 06:15:02 lpc-impc-rez systemd[1]: Started Session c1236400 of User way4.
+Jul 23 06:15:02 lpc-impc-rez systemd[8961]: Started podman-2811307.scope.
+Jul 23 06:15:02 lpc-impc-rez systemd[1]: session-c1236400.scope: Deactivated successfully.
+Jul 23 06:15:07 lpc-impc-rez podman[208249]: time="2025-07-23T06:15:07+03:00" level=info msg="Received shutdown.Stop(), terminating!" PID=208249
+Jul 23 06:15:07 lpc-impc-rez systemd[8961]: podman.service: Consumed 2h 14min 24.197s CPU time.
+Jul 23 06:15:13 lpc-impc-rez systemd[1]: Stopping User Manager for UID 1001...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Activating special unit Exit the Session...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopping libcrun container...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopping libcrun container...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopping libcrun container...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopping libcrun container...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopping libpod-conmon-152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023.scope...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopping libpod-conmon-87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a.scope...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopping libpod-conmon-a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a.scope...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopping libpod-conmon-dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c.scope...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopping libcrun container...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopping podman-2811224.scope...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopping podman-pause-68e9feca.scope...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopped target Main User Target.
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopping Podman Start All Containers With Restart Policy Set To Always...
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopped podman-pause-68e9feca.scope.
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopped libcrun container.
+Jul 23 06:15:13 lpc-impc-rez podman[2811565]: 2025-07-23 06:15:13.157213226 +0300 +03 m=+0.031754292 container died 249e8e2bf6f957d0aed474b7b7912439626a5966fd0f38e7db8bf7b8f080071a (image=localhost/podman-pause:5.2.2-1742216634, name=3f91f171ea81-infra, io.buildah.version=1.37.6)
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopped libcrun container.
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: libpod-152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023.scope: Consumed 4d 9h 14min 49.588s CPU time.
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopped libcrun container.
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: libpod-dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c.scope: Consumed 4d 13h 56min 59.272s CPU time.
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopped libcrun container.
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: libpod-a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a.scope: Consumed 3d 7h 14min 55.311s CPU time.
+Jul 23 06:15:13 lpc-impc-rez conmon[4083760]: conmon 152d3789e701662eef30 <nwarn>: Failed to open cgroups file: /sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/user.slice/user-libpod_pod_3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649.slice/libpod-152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023.scope/container/memory.events
+Jul 23 06:15:13 lpc-impc-rez podman[2811565]: 2025-07-23 06:15:13.200757039 +0300 +03 m=+0.075298084 container cleanup 249e8e2bf6f957d0aed474b7b7912439626a5966fd0f38e7db8bf7b8f080071a (image=localhost/podman-pause:5.2.2-1742216634, name=3f91f171ea81-infra, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.37.6)
+Jul 23 06:15:13 lpc-impc-rez podman[2811566]: 2025-07-23 06:15:13.212726275 +0300 +03 m=+0.082287223 container died a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a (image=localhost/py_mqc:1, name=im_bip, io.buildah.version=1.33.5)
+Jul 23 06:15:13 lpc-impc-rez podman[2811566]: 2025-07-23 06:15:13.221403616 +0300 +03 m=+0.090964563 container died 152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023 (image=localhost/py_mqc:1, name=im_partner_balance_list, io.buildah.version=1.33.5)
+Jul 23 06:15:13 lpc-impc-rez podman[2811566]: 2025-07-23 06:15:13.230853444 +0300 +03 m=+0.100414391 container died dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c (image=localhost/py_mqc:1, name=im_balance_list, io.buildah.version=1.33.5)
+Jul 23 06:15:13 lpc-impc-rez podman[2811603]: 2025-07-23 06:15:13.257426732 +0300 +03 m=+0.052173793 container restart dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c (image=localhost/py_mqc:1, name=im_balance_list, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:15:13 lpc-impc-rez podman[2811606]: 2025-07-23 06:15:13.257704583 +0300 +03 m=+0.043402460 container restart 152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023 (image=localhost/py_mqc:1, name=im_partner_balance_list, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:15:13 lpc-impc-rez podman[2811604]: 2025-07-23 06:15:13.290824417 +0300 +03 m=+0.083560376 container restart a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a (image=localhost/py_mqc:1, name=im_bip, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopped libpod-conmon-dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c.scope.
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopped libpod-conmon-a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a.scope.
+Jul 23 06:15:13 lpc-impc-rez systemd[8961]: Stopped libpod-conmon-152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023.scope.
+Jul 23 06:15:13 lpc-impc-rez sh[2811562]: time="2025-07-23T06:15:13+03:00" level=info msg="/usr/bin/podman filtering at log level info"
+Jul 23 06:15:13 lpc-impc-rez sh[2811562]: time="2025-07-23T06:15:13+03:00" level=info msg="Using sqlite as database backend"
+Jul 23 06:15:13 lpc-impc-rez sh[2811562]: time="2025-07-23T06:15:13+03:00" level=info msg="Setting parallel job count to 97"
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: libpod-87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a.scope: Stopping timed out. Killing.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: libpod-87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a.scope: Killing process 4083754 (python) with signal SIGKILL.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: libpod-87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a.scope: Killing process 4083779 (python) with signal SIGKILL.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: libpod-87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a.scope: Failed with result 'timeout'.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Stopped libcrun container.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: libpod-87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a.scope: Consumed 5min 14.951s CPU time.
+Jul 23 06:15:23 lpc-impc-rez podman[2811562]: 2025-07-23 06:15:23.327422714 +0300 +03 m=+9.962206721 container stop 87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a (image=localhost/py_mqc:1, name=im_rpa_asoi, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:15:23 lpc-impc-rez conmon[4083751]: conmon 87b354990613b5befd03 <nwarn>: Failed to open cgroups file: /sys/fs/cgroup/user.slice/user-1001.slice/user@1001.service/user.slice/user-libpod_pod_3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649.slice/libpod-87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a.scope/container/memory.events
+Jul 23 06:15:23 lpc-impc-rez podman[2811562]: 2025-07-23 06:15:23.332504196 +0300 +03 m=+9.967288202 container died 87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a (image=localhost/py_mqc:1, name=im_rpa_asoi, io.buildah.version=1.33.5)
+Jul 23 06:15:23 lpc-impc-rez podman[2811562]: 2025-07-23 06:15:23.356858645 +0300 +03 m=+9.991642644 container cleanup 87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a (image=localhost/py_mqc:1, name=im_rpa_asoi, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:15:23 lpc-impc-rez sh[2811562]: 87b354990613
+Jul 23 06:15:23 lpc-impc-rez sh[2811562]: time="2025-07-23T06:15:23+03:00" level=info msg="Received shutdown.Stop(), terminating!" PID=2811562
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Stopped Podman Start All Containers With Restart Policy Set To Always.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: podman-restart.service: Consumed 7h 25min 21.588s CPU time.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Stopped target Basic System.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Stopped target Paths.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Stopped target Sockets.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Stopped target Timers.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Stopped Mark boot as successful after the user session has run 2 minutes.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Closed PipeWire PulseAudio.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Closed PipeWire Multimedia System Sockets.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Closed Podman API Socket.
+Jul 23 06:15:23 lpc-impc-rez dbus-broker[9032]: Dispatched 29676991 messages @ 4(±4)μs / message.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Stopping D-Bus User Message Bus...
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Stopped libpod-conmon-87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a.scope.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Removed slice cgroup user-libpod_pod_3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649.slice.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: user-libpod_pod_3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649.slice: Consumed 1month 3w 5d 8h 58min 39.711s CPU time.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Stopped D-Bus User Message Bus.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: dbus-broker.service: Consumed 21min 14.527s CPU time.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Closed D-Bus User Message Bus Socket.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: Removed slice User Application Slice.
+Jul 23 06:15:23 lpc-impc-rez systemd[8961]: app.slice: Consumed 11h 54min 2.771s CPU time.
+Jul 23 06:16:02 lpc-impc-rez systemd[1]: realmd.service: Deactivated successfully.
+Jul 23 06:16:43 lpc-impc-rez systemd[8961]: podman-2811224.scope: Stopping timed out. Killing.
+Jul 23 06:16:43 lpc-impc-rez systemd[8961]: podman-2811224.scope: Killing process 2811259 (conmon) with signal SIGKILL.
+Jul 23 06:16:43 lpc-impc-rez systemd[8961]: podman-2811224.scope: Failed with result 'timeout'.
+Jul 23 06:16:43 lpc-impc-rez systemd[8961]: Stopped podman-2811224.scope.
+Jul 23 06:16:43 lpc-impc-rez systemd[8961]: Removed slice Slice /user.
+Jul 23 06:16:43 lpc-impc-rez systemd[8961]: user.slice: Consumed 1month 3w 6d 1h 28min 24.142s CPU time.
+Jul 23 06:16:43 lpc-impc-rez systemd[8961]: Reached target Shutdown.
+Jul 23 06:16:43 lpc-impc-rez systemd[8961]: Finished Exit the Session.
+Jul 23 06:16:43 lpc-impc-rez systemd[8961]: Reached target Exit the Session.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: user@1001.service: Killing process 2811271 (python) with signal SIGKILL.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: user@1001.service: Killing process 2811299 (python) with signal SIGKILL.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: user@1001.service: Killing process 2811303 (python) with signal SIGKILL.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: user@1001.service: Killing process 2811304 (python) with signal SIGKILL.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: user@1001.service: Killing process 2811324 (python) with signal SIGKILL.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: user@1001.service: Killing process 2811325 (python) with signal SIGKILL.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: user@1001.service: Deactivated successfully.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: user@1001.service: Consumed 1month 3w 6d 14h 7min 56.006s CPU time.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: Starting User Manager for UID 1001...
+Jul 23 06:16:43 lpc-impc-rez systemd[2811761]: Queued start job for default target Main User Target.
+Jul 23 06:16:43 lpc-impc-rez systemd[2811761]: Created slice User Application Slice.
+Jul 23 06:16:43 lpc-impc-rez systemd[2811761]: Started Mark boot as successful after the user session has run 2 minutes.
+Jul 23 06:16:43 lpc-impc-rez systemd[2811761]: Reached target Paths.
+Jul 23 06:16:43 lpc-impc-rez systemd[2811761]: Reached target Timers.
+Jul 23 06:16:43 lpc-impc-rez systemd[2811761]: Starting D-Bus User Message Bus Socket...
+Jul 23 06:16:43 lpc-impc-rez systemd[2811761]: Listening on PipeWire PulseAudio.
+Jul 23 06:16:43 lpc-impc-rez systemd[2811761]: Listening on PipeWire Multimedia System Sockets.
+Jul 23 06:16:43 lpc-impc-rez systemd[2811761]: Listening on Podman API Socket.
+Jul 23 06:16:43 lpc-impc-rez systemd[2811761]: Listening on D-Bus User Message Bus Socket.
+Jul 23 06:16:43 lpc-impc-rez systemd[2811761]: Reached target Sockets.
+Jul 23 06:16:43 lpc-impc-rez systemd[2811761]: Reached target Basic System.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: Started User Manager for UID 1001.
+Jul 23 06:16:43 lpc-impc-rez systemd[2811761]: Starting Podman Start All Containers With Restart Policy Set To Always...
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: Started Session c1236401 of User way4.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: Started Session c1236402 of User way4.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: Started Session c1236403 of User way4.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: Started Session c1236404 of User way4.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: Started Session c1236405 of User way4.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: Started Session c1236406 of User way4.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: Started Session c1236407 of User way4.
+Jul 23 06:16:43 lpc-impc-rez systemd[1]: Started Session c1236408 of User way4.
+Jul 23 06:16:44 lpc-impc-rez systemd[1]: session-c1236402.scope: Deactivated successfully.
+Jul 23 06:16:44 lpc-impc-rez systemd[1]: session-c1236406.scope: Deactivated successfully.
+Jul 23 06:16:44 lpc-impc-rez systemd[1]: session-c1236405.scope: Deactivated successfully.
+Jul 23 06:16:44 lpc-impc-rez systemd[1]: session-c1236404.scope: Deactivated successfully.
+Jul 23 06:16:44 lpc-impc-rez systemd[1]: session-c1236407.scope: Deactivated successfully.
+Jul 23 06:16:44 lpc-impc-rez systemd[1]: session-c1236403.scope: Deactivated successfully.
+Jul 23 06:16:44 lpc-impc-rez systemd[1]: session-c1236408.scope: Deactivated successfully.
+Jul 23 06:16:44 lpc-impc-rez systemd[1]: session-c1236401.scope: Deactivated successfully.
+Jul 23 06:16:44 lpc-impc-rez podman[2811779]: time="2025-07-23T06:16:44+03:00" level=info msg="/usr/bin/podman filtering at log level info"
+Jul 23 06:16:44 lpc-impc-rez podman[2811779]: time="2025-07-23T06:16:44+03:00" level=info msg="Using sqlite as database backend"
+Jul 23 06:16:44 lpc-impc-rez podman[2811779]: time="2025-07-23T06:16:44+03:00" level=info msg="Setting parallel job count to 97"
+Jul 23 06:16:44 lpc-impc-rez podman[2811779]: time="2025-07-23T06:16:44+03:00" level=error msg="invalid internal status, try resetting the pause process with \"/usr/bin/podman system migrate\": could not find any running process: no such process"
+Jul 23 06:16:44 lpc-impc-rez systemd[2811761]: podman-restart.service: Main process exited, code=exited, status=1/FAILURE
+Jul 23 06:16:44 lpc-impc-rez systemd[2811761]: podman-restart.service: Failed with result 'exit-code'.
+Jul 23 06:16:44 lpc-impc-rez systemd[2811761]: Failed to start Podman Start All Containers With Restart Policy Set To Always.
+Jul 23 06:16:44 lpc-impc-rez systemd[2811761]: Reached target Main User Target.
+Jul 23 06:16:44 lpc-impc-rez systemd[2811761]: Startup finished in 548ms.
+Jul 23 06:16:49 lpc-impc-rez systemd[1]: Started Session c1236409 of User way4.
+Jul 23 06:16:49 lpc-impc-rez systemd[1]: session-c1236409.scope: Deactivated successfully.
+Jul 23 06:16:49 lpc-impc-rez systemd[1]: Started Session c1236410 of User way4.
+Jul 23 06:16:49 lpc-impc-rez systemd[1]: Started Session c1236411 of User way4.
+Jul 23 06:16:49 lpc-impc-rez systemd[1]: session-c1236410.scope: Deactivated successfully.
+Jul 23 06:16:49 lpc-impc-rez systemd[1]: Started Session c1236412 of User way4.
+Jul 23 06:16:49 lpc-impc-rez systemd[1]: session-c1236411.scope: Deactivated successfully.
+Jul 23 06:16:49 lpc-impc-rez systemd[1]: session-c1236412.scope: Deactivated successfully.
+Jul 23 06:16:59 lpc-impc-rez systemd[1]: Started Session c1236413 of User way4.
+Jul 23 06:16:59 lpc-impc-rez systemd[1]: session-c1236413.scope: Deactivated successfully.
+Jul 23 06:17:00 lpc-impc-rez systemd[1]: Started Session c1236414 of User way4.
+Jul 23 06:17:00 lpc-impc-rez systemd[1]: session-c1236414.scope: Deactivated successfully.
+Jul 23 06:17:01 lpc-impc-rez systemd[1]: Started Session c1236415 of User way4.
+Jul 23 06:17:02 lpc-impc-rez systemd[1]: session-c1236415.scope: Deactivated successfully.
+Jul 23 06:17:02 lpc-impc-rez systemd[1]: Started Session c1236416 of User way4.
+Jul 23 06:17:02 lpc-impc-rez systemd[1]: session-c1236416.scope: Deactivated successfully.
+Jul 23 06:17:12 lpc-impc-rez systemd[1]: Stopping User Manager for UID 1001...
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Activating special unit Exit the Session...
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Stopped target Main User Target.
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Stopped target Basic System.
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Stopped target Paths.
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Stopped target Sockets.
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Stopped target Timers.
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Stopped Mark boot as successful after the user session has run 2 minutes.
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Closed D-Bus User Message Bus Socket.
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Closed PipeWire PulseAudio.
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Closed PipeWire Multimedia System Sockets.
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Closed Podman API Socket.
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Removed slice User Application Slice.
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Reached target Shutdown.
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Finished Exit the Session.
+Jul 23 06:17:12 lpc-impc-rez systemd[2811761]: Reached target Exit the Session.
+Jul 23 06:17:12 lpc-impc-rez systemd[1]: user@1001.service: Deactivated successfully.
+Jul 23 06:17:12 lpc-impc-rez systemd[1]: Stopped User Manager for UID 1001.
+Jul 23 06:17:12 lpc-impc-rez systemd[1]: Stopping User Runtime Directory /run/user/1001...
+Jul 23 06:17:12 lpc-impc-rez systemd[1]: run-user-1001.mount: Deactivated successfully.
+Jul 23 06:17:12 lpc-impc-rez systemd[1]: user-runtime-dir@1001.service: Deactivated successfully.
+Jul 23 06:17:12 lpc-impc-rez systemd[1]: Stopped User Runtime Directory /run/user/1001.
+Jul 23 06:17:12 lpc-impc-rez systemd[1]: Removed slice User Slice of UID 1001.
+Jul 23 06:17:12 lpc-impc-rez systemd[1]: user-1001.slice: Consumed 1month 4w 2d 2h 51min 15.381s CPU time.
+Jul 23 06:17:19 lpc-impc-rez systemd[1]: Created slice User Slice of UID 1001.
+Jul 23 06:17:19 lpc-impc-rez systemd[1]: Starting User Runtime Directory /run/user/1001...
+Jul 23 06:17:19 lpc-impc-rez systemd[1]: Finished User Runtime Directory /run/user/1001.
+Jul 23 06:17:19 lpc-impc-rez systemd[1]: Starting User Manager for UID 1001...
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Queued start job for default target Main User Target.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Created slice User Application Slice.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Started Mark boot as successful after the user session has run 2 minutes.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Reached target Paths.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Reached target Timers.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Starting D-Bus User Message Bus Socket...
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Listening on PipeWire PulseAudio.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Listening on PipeWire Multimedia System Sockets.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Listening on Podman API Socket.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Listening on D-Bus User Message Bus Socket.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Reached target Sockets.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Reached target Basic System.
+Jul 23 06:17:19 lpc-impc-rez systemd[1]: Started User Manager for UID 1001.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Starting Podman Start All Containers With Restart Policy Set To Always...
+Jul 23 06:17:19 lpc-impc-rez systemd[1]: Started Session c1236417 of User way4.
+Jul 23 06:17:19 lpc-impc-rez podman[2812066]: time="2025-07-23T06:17:19+03:00" level=info msg="/usr/bin/podman filtering at log level info"
+Jul 23 06:17:19 lpc-impc-rez podman[2812066]: time="2025-07-23T06:17:19+03:00" level=info msg="Using sqlite as database backend"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=info msg="/usr/bin/podman filtering at log level info"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=info msg="Using sqlite as database backend"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=error msg="Refreshing container 0413409ea2b200ea930c5194f1ab25c85bea161b7ecd8e3fce4d8b57ca71d1ab: acquiring lock 7 for container 0413409ea2b200ea930c5194f1ab25c85bea161b7ecd8e3fce4d8b57ca71d1ab: file exists"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=error msg="Refreshing container 249e8e2bf6f957d0aed474b7b7912439626a5966fd0f38e7db8bf7b8f080071a: acquiring lock 1 for container 249e8e2bf6f957d0aed474b7b7912439626a5966fd0f38e7db8bf7b8f080071a: file exists"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=error msg="Refreshing container a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a: acquiring lock 2 for container a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a: file exists"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=error msg="Refreshing container 87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a: acquiring lock 3 for container 87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a: file exists"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=error msg="Refreshing container 152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023: acquiring lock 4 for container 152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023: file exists"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=error msg="Refreshing container dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c: acquiring lock 8 for container dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c: file exists"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=error msg="Refreshing container 336f26c8807ca74dc6b5cafb95f7b710e1bcb370c05bb39839fbc5435bf2d2eb: acquiring lock 5 for container 336f26c8807ca74dc6b5cafb95f7b710e1bcb370c05bb39839fbc5435bf2d2eb: file exists"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=error msg="Refreshing pod 3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649: retrieving lock 0 for pod 3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649: file exists"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: 2025-07-23 06:17:19.446551745 +0300 +03 m=+0.078916541 system refresh
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=info msg="Setting parallel job count to 97"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: 2025-07-23 06:17:19.449087073 +0300 +03 m=+0.081451874 container restart 249e8e2bf6f957d0aed474b7b7912439626a5966fd0f38e7db8bf7b8f080071a (image=localhost/podman-pause:5.2.2-1742216634, name=3f91f171ea81-infra, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.37.6)
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Starting D-Bus User Message Bus...
+Jul 23 06:17:19 lpc-impc-rez dbus-broker-launch[2812144]: Policy to allow eavesdropping in /usr/share/dbus-1/session.conf +31: Eavesdropping is deprecated and ignored
+Jul 23 06:17:19 lpc-impc-rez dbus-broker-launch[2812144]: Policy to allow eavesdropping in /usr/share/dbus-1/session.conf +33: Eavesdropping is deprecated and ignored
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Started D-Bus User Message Bus.
+Jul 23 06:17:19 lpc-impc-rez dbus-broker-lau[2812144]: Ready
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Created slice Slice /user.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: podman-2812124.scope: unit configures an IP firewall, but not running as root.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: (This warning is only shown for the first unit using IP firewalling.)
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Started podman-2812124.scope.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Created slice cgroup user-libpod_pod_3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649.slice.
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Started libcrun container.
+Jul 23 06:17:19 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/09043ce6fc197020421c91daac9ae47e208f562c74bf4c979c19477949aa4d4f/merged/home/way4/keystore supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=info msg="Got Conmon PID as 2812162"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: 2025-07-23 06:17:19.784969572 +0300 +03 m=+0.417334392 container init 249e8e2bf6f957d0aed474b7b7912439626a5966fd0f38e7db8bf7b8f080071a (image=localhost/podman-pause:5.2.2-1742216634, name=3f91f171ea81-infra, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.37.6)
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: 2025-07-23 06:17:19.789786429 +0300 +03 m=+0.422151209 container start 249e8e2bf6f957d0aed474b7b7912439626a5966fd0f38e7db8bf7b8f080071a (image=localhost/podman-pause:5.2.2-1742216634, name=3f91f171ea81-infra, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.37.6)
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Started libcrun container.
+Jul 23 06:17:19 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/4388da83b9f0ffb6dbc42baeea56d7ab5d2fa1904a27eba774426c341679c51c/merged/home/way4/app supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:19 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/4388da83b9f0ffb6dbc42baeea56d7ab5d2fa1904a27eba774426c341679c51c/merged/home/way4/keystore supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=info msg="Got Conmon PID as 2812168"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: 2025-07-23 06:17:19.847574944 +0300 +03 m=+0.479939740 container init a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a (image=localhost/py_mqc:1, name=im_bip, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: 2025-07-23 06:17:19.852188862 +0300 +03 m=+0.484553643 container start a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a (image=localhost/py_mqc:1, name=im_bip, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Started libcrun container.
+Jul 23 06:17:19 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/65496e23ff34ef2f7ec0460294c7dc9c70073cb2b10d22567fbed7793e88252f/merged/home/way4/app supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:19 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/65496e23ff34ef2f7ec0460294c7dc9c70073cb2b10d22567fbed7793e88252f/merged/home/way4/keystore supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=info msg="Got Conmon PID as 2812176"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: 2025-07-23 06:17:19.906608131 +0300 +03 m=+0.538972936 container init 87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a (image=localhost/py_mqc:1, name=im_rpa_asoi, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: 2025-07-23 06:17:19.91153301 +0300 +03 m=+0.543897806 container start 87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a (image=localhost/py_mqc:1, name=im_rpa_asoi, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:19 lpc-impc-rez systemd[2812032]: Started libcrun container.
+Jul 23 06:17:19 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/58fa6ce6b4e1a5c5c3355889e532d0ae89b3d53e96f75ddddddad0b98c5e76ae/merged/home/way4/app supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:19 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/58fa6ce6b4e1a5c5c3355889e532d0ae89b3d53e96f75ddddddad0b98c5e76ae/merged/home/way4/keystore supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:19+03:00" level=info msg="Got Conmon PID as 2812181"
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: 2025-07-23 06:17:19.959846653 +0300 +03 m=+0.592211453 container init 152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023 (image=localhost/py_mqc:1, name=im_partner_balance_list, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:19 lpc-impc-rez podman[2812082]: 2025-07-23 06:17:19.964192152 +0300 +03 m=+0.596556947 container start 152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023 (image=localhost/py_mqc:1, name=im_partner_balance_list, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:19 lpc-impc-rez kernel: overlayfs: upperdir is in-use as upperdir/workdir of another mount, accessing files from both mounts will result in undefined behavior.
+Jul 23 06:17:19 lpc-impc-rez kernel: overlayfs: workdir is in-use as upperdir/workdir of another mount, accessing files from both mounts will result in undefined behavior.
+Jul 23 06:17:20 lpc-impc-rez systemd[2812032]: Started libcrun container.
+Jul 23 06:17:20 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/0a6daf1bbb23c6adb2beca6c6fe0d700a3f40eadcf384305de80e0480aa2caf9/merged/home/way4/app supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:20 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/0a6daf1bbb23c6adb2beca6c6fe0d700a3f40eadcf384305de80e0480aa2caf9/merged/home/way4/keystore supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:20 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:20+03:00" level=info msg="Got Conmon PID as 2812202"
+Jul 23 06:17:20 lpc-impc-rez podman[2812082]: 2025-07-23 06:17:20.016506262 +0300 +03 m=+0.648871067 container init dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c (image=localhost/py_mqc:1, name=im_balance_list, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:20 lpc-impc-rez podman[2812082]: 2025-07-23 06:17:20.021678637 +0300 +03 m=+0.654043427 container start dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c (image=localhost/py_mqc:1, name=im_balance_list, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:20 lpc-impc-rez podman[2812082]: a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a
+Jul 23 06:17:20 lpc-impc-rez podman[2812082]: 87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a
+Jul 23 06:17:20 lpc-impc-rez podman[2812082]: 152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023
+Jul 23 06:17:20 lpc-impc-rez podman[2812082]: dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c
+Jul 23 06:17:20 lpc-impc-rez podman[2812082]: time="2025-07-23T06:17:20+03:00" level=info msg="Received shutdown.Stop(), terminating!" PID=2812082
+Jul 23 06:17:20 lpc-impc-rez systemd[2812032]: Started podman-pause-8274b311.scope.
+Jul 23 06:17:20 lpc-impc-rez systemd[2812032]: Started podman-pause-df775ffb.scope.
+Jul 23 06:17:20 lpc-impc-rez systemd[2812032]: Finished Podman Start All Containers With Restart Policy Set To Always.
+Jul 23 06:17:20 lpc-impc-rez systemd[2812032]: Reached target Main User Target.
+Jul 23 06:17:20 lpc-impc-rez systemd[2812032]: Startup finished in 925ms.
+Jul 23 06:17:20 lpc-impc-rez systemd[1]: session-c1236417.scope: Deactivated successfully.
+Jul 23 06:17:20 lpc-impc-rez systemd[1]: Started Session c1236418 of User way4.
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: <?xml version="1.0" ?>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: <InqBalListRs>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011<RqUID>123</RqUID>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011<Status>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011<StatusCode>0</StatusCode>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011<AdditionalStatus>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011#011<StatusCode>0</StatusCode>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011</AdditionalStatus>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011</Status>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011<AccountInfoList>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011<AccountInfoEntry>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011#011<CardId>0</CardId>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011#011<PINInfo>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011#011#011<MaxPINTries>0</MaxPINTries>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011#011#011<WrongPINCount>0</WrongPINCount>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011#011</PINInfo>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011</AccountInfoEntry>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011<AccountInfoEntry>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011#011<CardId>1</CardId>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011#011<PINInfo>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011#011#011<MaxPINTries>1</MaxPINTries>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011#011#011<WrongPINCount>1</WrongPINCount>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011#011</PINInfo>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011#011</AccountInfoEntry>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011</AccountInfoList>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: #011<AuthenticityCode>RTEBNBJAKSGD</AuthenticityCode>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: </InqBalListRs>
+Jul 23 06:17:20 lpc-impc-rez im_bip[2812168]: 
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: <?xml version="1.0" ?>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: <InqBalListRs>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011<RqUID>123</RqUID>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011<Status>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011<StatusCode>0</StatusCode>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011<AdditionalStatus>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011#011<StatusCode>0</StatusCode>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011</AdditionalStatus>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011</Status>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011<AccountInfoList>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011<AccountInfoEntry>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011#011<CardId>0</CardId>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011#011<PINInfo>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011#011#011<MaxPINTries>0</MaxPINTries>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011#011#011<WrongPINCount>0</WrongPINCount>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011#011</PINInfo>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011</AccountInfoEntry>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011<AccountInfoEntry>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011#011<CardId>1</CardId>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011#011<PINInfo>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011#011#011<MaxPINTries>1</MaxPINTries>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011#011#011<WrongPINCount>1</WrongPINCount>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011#011</PINInfo>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011#011</AccountInfoEntry>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011</AccountInfoList>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: #011<AuthenticityCode>RTEBNBJAKSGD</AuthenticityCode>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: </InqBalListRs>
+Jul 23 06:17:20 lpc-impc-rez im_partner_balance_list[2812181]: 
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: <?xml version="1.0" ?>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: <InqBalListRs>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011<RqUID>123</RqUID>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011<Status>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011<StatusCode>0</StatusCode>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011<AdditionalStatus>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011#011<StatusCode>0</StatusCode>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011</AdditionalStatus>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011</Status>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011<AccountInfoList>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011<AccountInfoEntry>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011#011<CardId>0</CardId>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011#011<PINInfo>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011#011#011<MaxPINTries>0</MaxPINTries>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011#011#011<WrongPINCount>0</WrongPINCount>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011#011</PINInfo>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011</AccountInfoEntry>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011<AccountInfoEntry>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011#011<CardId>1</CardId>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011#011<PINInfo>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011#011#011<MaxPINTries>1</MaxPINTries>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011#011#011<WrongPINCount>1</WrongPINCount>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011#011</PINInfo>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011#011</AccountInfoEntry>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011</AccountInfoList>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: #011<AuthenticityCode>RTEBNBJAKSGD</AuthenticityCode>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: </InqBalListRs>
+Jul 23 06:17:20 lpc-impc-rez im_balance_list[2812202]: 
+Jul 23 06:17:20 lpc-impc-rez systemd[2812032]: Started podman-2812217.scope.
+Jul 23 06:17:20 lpc-impc-rez systemd[1]: session-c1236418.scope: Deactivated successfully.
+Jul 23 06:17:20 lpc-impc-rez im_rpa_asoi[2812176]: * Serving Flask app 'im_rpa_asoi'
+Jul 23 06:17:20 lpc-impc-rez im_rpa_asoi[2812176]: * Debug mode: off
+Jul 23 06:17:21 lpc-impc-rez systemd[1]: Started Session c1236419 of User way4.
+Jul 23 06:17:21 lpc-impc-rez systemd[2812032]: Started podman-2812277.scope.
+Jul 23 06:17:21 lpc-impc-rez systemd[1]: session-c1236419.scope: Deactivated successfully.
+Jul 23 06:17:22 lpc-impc-rez systemd[1]: Started Session c1236420 of User way4.
+Jul 23 06:17:22 lpc-impc-rez systemd[2812032]: Started podman-2812313.scope.
+Jul 23 06:17:22 lpc-impc-rez systemd[1]: session-c1236420.scope: Deactivated successfully.
+Jul 23 06:17:32 lpc-impc-rez systemd[1]: Stopping User Manager for UID 1001...
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Activating special unit Exit the Session...
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Stopping libcrun container...
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Stopping libcrun container...
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Stopping libcrun container...
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Stopping libcrun container...
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Stopping libcrun container...
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Stopping podman-pause-df775ffb.scope...
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Stopped target Main User Target.
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Stopping Podman Start All Containers With Restart Policy Set To Always...
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Stopped podman-pause-df775ffb.scope.
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Stopped libcrun container.
+Jul 23 06:17:32 lpc-impc-rez podman[2812491]: 2025-07-23 06:17:32.620475724 +0300 +03 m=+0.030650844 container died 249e8e2bf6f957d0aed474b7b7912439626a5966fd0f38e7db8bf7b8f080071a (image=localhost/podman-pause:5.2.2-1742216634, name=3f91f171ea81-infra, io.buildah.version=1.37.6)
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Stopped libcrun container.
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: libpod-152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023.scope: Consumed 3.445s CPU time.
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Stopped libcrun container.
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: libpod-a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a.scope: Consumed 3.450s CPU time.
+Jul 23 06:17:32 lpc-impc-rez podman[2812491]: 2025-07-23 06:17:32.645547954 +0300 +03 m=+0.055723030 container cleanup 249e8e2bf6f957d0aed474b7b7912439626a5966fd0f38e7db8bf7b8f080071a (image=localhost/podman-pause:5.2.2-1742216634, name=3f91f171ea81-infra, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.37.6)
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: Stopped libcrun container.
+Jul 23 06:17:32 lpc-impc-rez systemd[2812032]: libpod-dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c.scope: Consumed 4.072s CPU time.
+Jul 23 06:17:32 lpc-impc-rez podman[2812500]: 2025-07-23 06:17:32.660178523 +0300 +03 m=+0.043100014 container died a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a (image=localhost/py_mqc:1, name=im_bip, io.buildah.version=1.33.5)
+Jul 23 06:17:32 lpc-impc-rez podman[2812500]: 2025-07-23 06:17:32.668455538 +0300 +03 m=+0.051377027 container died 152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023 (image=localhost/py_mqc:1, name=im_partner_balance_list, io.buildah.version=1.33.5)
+Jul 23 06:17:32 lpc-impc-rez podman[2812500]: 2025-07-23 06:17:32.678178283 +0300 +03 m=+0.061099772 container died dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c (image=localhost/py_mqc:1, name=im_balance_list, io.buildah.version=1.33.5)
+Jul 23 06:17:32 lpc-impc-rez podman[2812545]: 2025-07-23 06:17:32.702179207 +0300 +03 m=+0.032993558 container restart dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c (image=localhost/py_mqc:1, name=im_balance_list, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:32 lpc-impc-rez podman[2812531]: 2025-07-23 06:17:32.709275422 +0300 +03 m=+0.050037610 container restart a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a (image=localhost/py_mqc:1, name=im_bip, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:32 lpc-impc-rez podman[2812530]: 2025-07-23 06:17:32.779981844 +0300 +03 m=+0.126211211 container restart 152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023 (image=localhost/py_mqc:1, name=im_partner_balance_list, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:32 lpc-impc-rez sh[2812490]: time="2025-07-23T06:17:32+03:00" level=info msg="/usr/bin/podman filtering at log level info"
+Jul 23 06:17:32 lpc-impc-rez sh[2812490]: time="2025-07-23T06:17:32+03:00" level=info msg="Using sqlite as database backend"
+Jul 23 06:17:32 lpc-impc-rez sh[2812490]: time="2025-07-23T06:17:32+03:00" level=info msg="Setting parallel job count to 97"
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: libpod-87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a.scope: Stopping timed out. Killing.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: libpod-87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a.scope: Killing process 2812178 (python) with signal SIGKILL.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: libpod-87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a.scope: Killing process 2812212 (n/a) with signal SIGKILL.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: libpod-87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a.scope: Failed with result 'timeout'.
+Jul 23 06:17:42 lpc-impc-rez conmon[2812176]: conmon 87b354990613b5befd03 <ninfo>: container 2812178 exited with status 137
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Stopped libcrun container.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Removed slice cgroup user-libpod_pod_3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649.slice.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: user-libpod_pod_3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649.slice: Consumed 11.347s CPU time.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Removed slice Slice /user.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: user.slice: Consumed 11.435s CPU time.
+Jul 23 06:17:42 lpc-impc-rez podman[2812490]: 2025-07-23 06:17:42.833388772 +0300 +03 m=+10.007133903 container died 87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a (image=localhost/py_mqc:1, name=im_rpa_asoi, io.buildah.version=1.33.5)
+Jul 23 06:17:42 lpc-impc-rez podman[2812490]: 2025-07-23 06:17:42.857611965 +0300 +03 m=+10.031357086 container cleanup 87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a (image=localhost/py_mqc:1, name=im_rpa_asoi, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:42 lpc-impc-rez sh[2812490]: 87b354990613
+Jul 23 06:17:42 lpc-impc-rez sh[2812490]: time="2025-07-23T06:17:42+03:00" level=info msg="Received shutdown.Stop(), terminating!" PID=2812490
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Stopped Podman Start All Containers With Restart Policy Set To Always.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: podman-restart.service: Consumed 1.123s CPU time.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Stopped target Basic System.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Stopped target Paths.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Stopped target Sockets.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Stopped target Timers.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Stopped Mark boot as successful after the user session has run 2 minutes.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Closed PipeWire PulseAudio.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Closed PipeWire Multimedia System Sockets.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Closed Podman API Socket.
+Jul 23 06:17:42 lpc-impc-rez dbus-broker[2812159]: Dispatched 531 messages @ 3(±3)μs / message.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Stopping D-Bus User Message Bus...
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Stopped D-Bus User Message Bus.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Closed D-Bus User Message Bus Socket.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Removed slice User Application Slice.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: app.slice: Consumed 1.162s CPU time.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Reached target Shutdown.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Finished Exit the Session.
+Jul 23 06:17:42 lpc-impc-rez systemd[2812032]: Reached target Exit the Session.
+Jul 23 06:17:42 lpc-impc-rez systemd[1]: user@1001.service: Deactivated successfully.
+Jul 23 06:17:42 lpc-impc-rez systemd[1]: user@1001.service: Consumed 12.783s CPU time.
+Jul 23 06:17:42 lpc-impc-rez systemd[1]: user@1001.service: Start request repeated too quickly.
+Jul 23 06:17:42 lpc-impc-rez systemd[1]: user@1001.service: Failed with result 'start-limit-hit'.
+Jul 23 06:17:42 lpc-impc-rez systemd[1]: Failed to start User Manager for UID 1001.
+Jul 23 06:17:42 lpc-impc-rez systemd[1]: Started Session c1236421 of User way4.
+Jul 23 06:17:42 lpc-impc-rez systemd[1]: Started Session c1236422 of User way4.
+Jul 23 06:17:42 lpc-impc-rez systemd[1]: Started Session c1236423 of User way4.
+Jul 23 06:17:42 lpc-impc-rez systemd[1]: Started Session c1236424 of User way4.
+Jul 23 06:17:42 lpc-impc-rez systemd[1]: session-c1236421.scope: Deactivated successfully.
+Jul 23 06:17:43 lpc-impc-rez systemd[1]: session-c1236422.scope: Deactivated successfully.
+Jul 23 06:17:43 lpc-impc-rez systemd[1]: session-c1236423.scope: Deactivated successfully.
+Jul 23 06:17:59 lpc-impc-rez systemd[1]: Starting User Manager for UID 1001...
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Queued start job for default target Main User Target.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Created slice User Application Slice.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Started Mark boot as successful after the user session has run 2 minutes.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Reached target Paths.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Reached target Timers.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Starting D-Bus User Message Bus Socket...
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Listening on PipeWire PulseAudio.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Listening on PipeWire Multimedia System Sockets.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Listening on Podman API Socket.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Listening on D-Bus User Message Bus Socket.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Reached target Sockets.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Reached target Basic System.
+Jul 23 06:17:59 lpc-impc-rez systemd[1]: Started User Manager for UID 1001.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Starting Podman Start All Containers With Restart Policy Set To Always...
+Jul 23 06:17:59 lpc-impc-rez systemd[1]: Started Session c1236425 of User way4.
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: time="2025-07-23T06:17:59+03:00" level=info msg="/usr/bin/podman filtering at log level info"
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: time="2025-07-23T06:17:59+03:00" level=info msg="Using sqlite as database backend"
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: time="2025-07-23T06:17:59+03:00" level=info msg="Setting parallel job count to 97"
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: 2025-07-23 06:17:59.61971154 +0300 +03 m=+0.032097154 container restart 249e8e2bf6f957d0aed474b7b7912439626a5966fd0f38e7db8bf7b8f080071a (image=localhost/podman-pause:5.2.2-1742216634, name=3f91f171ea81-infra, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.37.6)
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Starting D-Bus User Message Bus...
+Jul 23 06:17:59 lpc-impc-rez dbus-broker-launch[2812859]: Policy to allow eavesdropping in /usr/share/dbus-1/session.conf +31: Eavesdropping is deprecated and ignored
+Jul 23 06:17:59 lpc-impc-rez dbus-broker-launch[2812859]: Policy to allow eavesdropping in /usr/share/dbus-1/session.conf +33: Eavesdropping is deprecated and ignored
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Started D-Bus User Message Bus.
+Jul 23 06:17:59 lpc-impc-rez dbus-broker-lau[2812859]: Ready
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Created slice Slice /user.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: podman-2812829.scope: unit configures an IP firewall, but not running as root.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: (This warning is only shown for the first unit using IP firewalling.)
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Started podman-2812829.scope.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Created slice cgroup user-libpod_pod_3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649.slice.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Started libcrun container.
+Jul 23 06:17:59 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/09043ce6fc197020421c91daac9ae47e208f562c74bf4c979c19477949aa4d4f/merged/home/way4/keystore supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: time="2025-07-23T06:17:59+03:00" level=info msg="Got Conmon PID as 2812868"
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: 2025-07-23 06:17:59.711618387 +0300 +03 m=+0.124003996 container init 249e8e2bf6f957d0aed474b7b7912439626a5966fd0f38e7db8bf7b8f080071a (image=localhost/podman-pause:5.2.2-1742216634, name=3f91f171ea81-infra, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.37.6)
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: 2025-07-23 06:17:59.716122191 +0300 +03 m=+0.128507784 container start 249e8e2bf6f957d0aed474b7b7912439626a5966fd0f38e7db8bf7b8f080071a (image=localhost/podman-pause:5.2.2-1742216634, name=3f91f171ea81-infra, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.37.6)
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Started libcrun container.
+Jul 23 06:17:59 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/4388da83b9f0ffb6dbc42baeea56d7ab5d2fa1904a27eba774426c341679c51c/merged/home/way4/app supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:59 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/4388da83b9f0ffb6dbc42baeea56d7ab5d2fa1904a27eba774426c341679c51c/merged/home/way4/keystore supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: time="2025-07-23T06:17:59+03:00" level=info msg="Got Conmon PID as 2812886"
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: 2025-07-23 06:17:59.773069071 +0300 +03 m=+0.185454688 container init a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a (image=localhost/py_mqc:1, name=im_bip, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: 2025-07-23 06:17:59.777526669 +0300 +03 m=+0.189912263 container start a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a (image=localhost/py_mqc:1, name=im_bip, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Started libcrun container.
+Jul 23 06:17:59 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/65496e23ff34ef2f7ec0460294c7dc9c70073cb2b10d22567fbed7793e88252f/merged/home/way4/app supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:59 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/65496e23ff34ef2f7ec0460294c7dc9c70073cb2b10d22567fbed7793e88252f/merged/home/way4/keystore supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: time="2025-07-23T06:17:59+03:00" level=info msg="Got Conmon PID as 2812900"
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: 2025-07-23 06:17:59.828300195 +0300 +03 m=+0.240685820 container init 87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a (image=localhost/py_mqc:1, name=im_rpa_asoi, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: 2025-07-23 06:17:59.833137871 +0300 +03 m=+0.245523466 container start 87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a (image=localhost/py_mqc:1, name=im_rpa_asoi, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Started libcrun container.
+Jul 23 06:17:59 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/58fa6ce6b4e1a5c5c3355889e532d0ae89b3d53e96f75ddddddad0b98c5e76ae/merged/home/way4/app supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:59 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/58fa6ce6b4e1a5c5c3355889e532d0ae89b3d53e96f75ddddddad0b98c5e76ae/merged/home/way4/keystore supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: time="2025-07-23T06:17:59+03:00" level=info msg="Got Conmon PID as 2812911"
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: 2025-07-23 06:17:59.893631666 +0300 +03 m=+0.306017301 container init 152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023 (image=localhost/py_mqc:1, name=im_partner_balance_list, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: 2025-07-23 06:17:59.899265309 +0300 +03 m=+0.311650945 container start 152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023 (image=localhost/py_mqc:1, name=im_partner_balance_list, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:59 lpc-impc-rez kernel: overlayfs: upperdir is in-use as upperdir/workdir of another mount, accessing files from both mounts will result in undefined behavior.
+Jul 23 06:17:59 lpc-impc-rez kernel: overlayfs: workdir is in-use as upperdir/workdir of another mount, accessing files from both mounts will result in undefined behavior.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Started libcrun container.
+Jul 23 06:17:59 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/0a6daf1bbb23c6adb2beca6c6fe0d700a3f40eadcf384305de80e0480aa2caf9/merged/home/way4/app supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:59 lpc-impc-rez kernel: xfs filesystem being remounted at /home/way4/.local/share/containers/storage/overlay/0a6daf1bbb23c6adb2beca6c6fe0d700a3f40eadcf384305de80e0480aa2caf9/merged/home/way4/keystore supports timestamps until 2038 (0x7fffffff)
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: time="2025-07-23T06:17:59+03:00" level=info msg="Got Conmon PID as 2812922"
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: 2025-07-23 06:17:59.954042504 +0300 +03 m=+0.366428121 container init dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c (image=localhost/py_mqc:1, name=im_balance_list, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: 2025-07-23 06:17:59.958580922 +0300 +03 m=+0.370966515 container start dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c (image=localhost/py_mqc:1, name=im_balance_list, pod_id=3f91f171ea8180cc861f0471f4887b5375b137393a608e07f7f8a9c697b80649, io.buildah.version=1.33.5)
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: a212e01588eb8912c8dbdbdb859cc53c24f4fc47f3d707c066300d09348f818a
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: 87b354990613b5befd03282d511f81ce20e5d792ca1f38d65dacc558844ca41a
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: 152d3789e701662eef30c4e53d9e758d52dafe4829a1ec797a3df7a7ca829023
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: dd0fe00aaada07fbb8fa0e4f00150744852a4f893f99c4393309bc96c3b8333c
+Jul 23 06:17:59 lpc-impc-rez podman[2812812]: time="2025-07-23T06:17:59+03:00" level=info msg="Received shutdown.Stop(), terminating!" PID=2812812
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Finished Podman Start All Containers With Restart Policy Set To Always.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Reached target Main User Target.
+Jul 23 06:17:59 lpc-impc-rez systemd[2812797]: Startup finished in 536ms.
+Jul 23 06:17:59 lpc-impc-rez systemd[1]: session-c1236425.scope: Deactivated successfully.
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: <?xml version="1.0" ?>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: <InqBalListRs>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011<RqUID>123</RqUID>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011<Status>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011<StatusCode>0</StatusCode>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011<AdditionalStatus>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011#011<StatusCode>0</StatusCode>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011</AdditionalStatus>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011</Status>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011<AccountInfoList>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011<AccountInfoEntry>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011#011<CardId>0</CardId>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011#011<PINInfo>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011#011#011<MaxPINTries>0</MaxPINTries>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011#011#011<WrongPINCount>0</WrongPINCount>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011#011</PINInfo>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011</AccountInfoEntry>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011<AccountInfoEntry>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011#011<CardId>1</CardId>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011#011<PINInfo>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011#011#011<MaxPINTries>1</MaxPINTries>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011#011#011<WrongPINCount>1</WrongPINCount>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011#011</PINInfo>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011#011</AccountInfoEntry>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011</AccountInfoList>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: #011<AuthenticityCode>RTEBNBJAKSGD</AuthenticityCode>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: </InqBalListRs>
+Jul 23 06:18:00 lpc-impc-rez im_bip[2812886]: 
+Jul 23 06:18:00 lpc-impc-rez im_rpa_asoi[2812900]: * Serving Flask app 'im_rpa_asoi'
+Jul 23 06:18:00 lpc-impc-rez im_rpa_asoi[2812900]: * Debug mode: off
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: <?xml version="1.0" ?>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: <InqBalListRs>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011<RqUID>123</RqUID>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011<Status>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011<StatusCode>0</StatusCode>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011<AdditionalStatus>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011#011<StatusCode>0</StatusCode>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011</AdditionalStatus>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011</Status>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011<AccountInfoList>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011<AccountInfoEntry>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011#011<CardId>0</CardId>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011#011<PINInfo>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011#011#011<MaxPINTries>0</MaxPINTries>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011#011#011<WrongPINCount>0</WrongPINCount>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011#011</PINInfo>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011</AccountInfoEntry>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011<AccountInfoEntry>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011#011<CardId>1</CardId>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011#011<PINInfo>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011#011#011<MaxPINTries>1</MaxPINTries>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011#011#011<WrongPINCount>1</WrongPINCount>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011#011</PINInfo>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011#011</AccountInfoEntry>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011</AccountInfoList>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: #011<AuthenticityCode>RTEBNBJAKSGD</AuthenticityCode>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: </InqBalListRs>
+Jul 23 06:18:00 lpc-impc-rez im_partner_balance_list[2812911]: 
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: <?xml version="1.0" ?>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: <InqBalListRs>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011<RqUID>123</RqUID>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011<Status>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011<StatusCode>0</StatusCode>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011<AdditionalStatus>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011#011<StatusCode>0</StatusCode>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011</AdditionalStatus>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011</Status>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011<AccountInfoList>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011<AccountInfoEntry>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011#011<CardId>0</CardId>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011#011<PINInfo>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011#011#011<MaxPINTries>0</MaxPINTries>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011#011#011<WrongPINCount>0</WrongPINCount>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011#011</PINInfo>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011</AccountInfoEntry>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011<AccountInfoEntry>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011#011<CardId>1</CardId>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011#011<PINInfo>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011#011#011<MaxPINTries>1</MaxPINTries>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011#011#011<WrongPINCount>1</WrongPINCount>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011#011</PINInfo>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011#011</AccountInfoEntry>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011</AccountInfoList>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: #011<AuthenticityCode>RTEBNBJAKSGD</AuthenticityCode>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: </InqBalListRs>
+Jul 23 06:18:00 lpc-impc-rez im_balance_list[2812922]: 
+Jul 23 06:18:00 lpc-impc-rez systemd[1]: Started Session c1236426 of User way4.
+Jul 23 06:18:00 lpc-impc-rez systemd[2812797]: Started podman-2812983.scope.
+Jul 23 06:18:00 lpc-impc-rez systemd[1]: session-c1236426.scope: Deactivated successfully.
+Jul 23 06:18:01 lpc-impc-rez systemd[1]: Started Session c1236427 of User way4.
+Jul 23 06:18:02 lpc-impc-rez systemd[2812797]: Started podman-2813026.scope.
+Jul 23 06:18:02 lpc-impc-rez systemd[1]: session-c1236427.scope: Deactivated successfully.
+Jul 23 06:18:02 lpc-impc-rez systemd[1]: Started Session c1236428 of User way4.
+Jul 23 06:18:02 lpc-impc-rez systemd[2812797]: Started podman-2813082.scope.
+Jul 23 06:18:02 lpc-impc-rez systemd[1]: session-c1236428.scope: Deactivated successfully.
+Jul 23 06:18:19 lpc-impc-rez systemd[1]: Started Session c1236429 of User way4.
+Jul 23 06:18:19 lpc-impc-rez systemd[2812797]: Started podman-2813362.scope.
+Jul 23 06:18:19 lpc-impc-rez systemd[1]: session-c1236429.scope: Deactivated successfully.
+Jul 23 06:18:20 lpc-impc-rez systemd[1]: Started Session c1236430 of User way4.
+Jul 23 06:18:20 lpc-impc-rez systemd[2812797]: Started podman-2813399.scope.
+Jul 23 06:18:20 lpc-impc-rez systemd[1]: session-c1236430.scope: Deactivated successfully.
+Jul 23 06:18:21 lpc-impc-rez systemd[1]: Started Session c1236431 of User way4.
+Jul 23 06:18:21 lpc-impc-rez systemd[2812797]: Started podman-2813446.scope.
+Jul 23 06:18:21 lpc-impc-rez systemd[1]: session-c1236431.scope: Deactivated successfully.
