@@ -1,52 +1,82 @@
-{% extends "ip_base.html" %}
+У меня есть проект, написанный на Python Flask. Ниже представлен код главной страницы. Он работает хорошо ничего менять не нужно, хочу добавить следующий функционал.
+Я сделал импровизированную кнопку:
+
+<div>
+      <a id="app_button" href="{{ url_for('index') }}"><img id="app_logo" src="/static/store_icon.png"></a>
+      <label for="app_button">Приложения</label>
+    </div>
+
+При нажатии на нее не должен осуществляться переход по href="{{ url_for('index') }}", а должно появляться всплывающее окно со списком всех приложений, которые есть в проекте
+и пользователь через это окно должен увидеть к каким приложениям у него есть доступ и выбрать приложения к которым он дополнительно хочет получить доступ и запросить его по нажатию
+на кнопку.
+
+Чтобы было понятнее расскажу сут проекта. Он из себя представляет веб страницу на подобиее окно операционной системы, в этом окне есть иконки приложений, по сути переходы на другие страницы.
+У каждого пользователя есть доаступ только к отдельным страницам и чтобы получить доступ к новым доступ нужно запросить.
+
+Теперь давай с технической точки зрения.
+По нажатию на кнопку указанную выше, должно появиться всплывающее окно, в нем в виде кнопок должны быть указаны все имеющиеся приложения, список можно получить из БД селектом:
+SELECT * FROM webplatform.apps
+ORDER BY id ASC 
+
+Селект выдаст 3 столбца: id, app и alias. Нам интересен app. В этом поле содержится имя приложения. Соответственно нужно вывести все имена например на сером фоне черным текстом,
+а те приложения к которым у польователя есть доступ можно отобразить на черном фоне белым текстам.
+Получить все приложения к которым у пользователя ест доступ можно селектом:
+SELECT grants FROM webplatform.users WHERE username = {{ current_user.username }}
+
+Этим селектом ты получишь список alias приложений (каждому имени приложения соответствует свое сокращенное имя alias), если пользователю даны права на несколько приложений
+то алиасы будут указаны через точку с запятой, например: RT;IP;. В самом конце точки с запятой может не быть. Также тут может быть указано ADMIN, это значит что пользователь имеет права ко всем приложениям.
+
+Данные для подключения к БД postgresql находятся в корневой папке проекта файл config.ini, блок [POSTGRESQL], параметры host, port, database, user, password.
+
+После того как пользователь выберет все нужные права, необходимо выполнить insert в базу данных:
+
+INSERT INTO webplatform.reg_requests (username, req_type, text, status) VALUES ({{ current_user.username }}, 'ACCESS', 'Тут через точку с запятой нужно указать все алиасы приложений к кторомы пользователь хочет получть доступ', 'A')
+
+Ну и естественно нужно сделать коммит чтобы применить изменения.
+
+Ниже прикладываю код страницы в которой всё это нужно сделать:
+
+{% extends "base.html" %}
 
 {% block content %}
-    <h1 class="username"></h1>
-    <form method="post" action="/details/{{rbs}}">
-        <br>
-        {% if current_status != 0 %}
-            <b><label>Текущий статус услуги:</label></b>
-            {% if 'ON' in current_status %}
-                <p class="status-on">{{current_status}}</p>
-                <div class="button_search">
-                    <button class="search_delete" type="submit" value="{{rbs}}" name="delete_b">
-                        Отключить услугу
-                    </button>
-                </div>
-            {% else %}
-                <p class="status-off">{{current_status}}</p>
-            {% endif %}
-        {% endif %}
-        <b><label for="text_memo">История подключения услуги по карте {{mask}}:</label><br></b>
-        <div class="scroll-table">
-            {% if data %}
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Дата, время</th>
-                            <th>Маска карты</th>
-                            <th>RQUID/Пользователь</th>
-                            <th>CARD ID</th>
-                            <th>Номер телефона</th>
-                            <th>Статус</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for element in data %}
-                            <tr>
-                                <td>{{element[0]}}</td>
-                                <td>{{element[1]}}</td>
-                                <td>{{element[2]}}</td>
-                                <td>{{element[3]}}</td>
-                                <td>{{element[4]}}</td>
-                                <td class="status-{{element[5] | lower}}">{{element[5]}}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                <b><label class="not_conn">Услуга не подключена</label><br></b>
-            {% endif %}
-        </div>
-    </form>
+ 
+<link rel="stylesheet" type="text/css" href="/static/css/index.css">
+<link rel="stylesheet" type="text/css" href="/static/css/index_background.css">
+
+{% include 'toolbar.html' %}
+
+  <form id="form{{ form_template }}">
+	<div>
+      <a id="app_button" href="{{ url_for('index') }}"><img id="app_logo" src="/static/store_icon.png"></a>
+      <label for="app_button">Приложения</label>
+    </div>
+    <div>
+      <a id="app_button" href="{{ url_for('product_maximum') }}"><img id="app_logo" src="/static/pm_logo.png"></a>
+      <label for="app_button">Продукты Максимум</label>
+    </div>
+    <div>
+      <a id="app_button" href="{{ url_for('internet_password') }}"><img id="app_logo" src="/static/ip_logo.png"></a>
+      <label for="app_button">Интернет Пароль (БИП)</label>
+    </div>
+    <div>
+      <a id="app_button" href="{{ url_for('tokenization_statistic') }}"><img id="app_logo" src="/static/tokenization_statistic-icon.png"></a>
+      <label for="app_button">Токенизация.Статистика</label>
+    </div>
+    <div>
+      <a id="app_button" href="{{ url_for('terminal_info') }}"><img id="app_logo" src="/static/reestr_terminal_logo.png"></a>
+      <label for="app_button">Реестр терминалов</label>
+    </div>
+    <div>
+      <a id="app_button" href="{{ url_for('momentum_info') }}"><img id="app_logo" src="/static/momentum.png"></a>
+      <label for="app_button">Моментум</label>
+    </div>
+	<div>
+      <a id="app_button" href="{{ url_for('notification_type') }}"><img id="app_logo" src="/static/sms_statistic.png"></a>
+      <label for="app_button">Оповещения.Статистика</label>
+    </div>
+	<div>
+      <a id="app_button" href="{{ url_for('BP_report') }}"><img id="app_logo" src="/static/Belkart_pay.png"></a>
+      <label for="app_button">Belkart pay.Статистика</label>
+    </div>	
+  </form>
 {% endblock %}
