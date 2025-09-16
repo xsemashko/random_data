@@ -1,411 +1,77 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Токенизация.Статистика</title>
-    <script src="/static/js/xlsx.full.min.js"></script>
-    <style>
-        /* Общие стили */
-        @font-face {
-			font-family: 'OpenSans';
-			src: url('/static/OpenSans-VariableFont_wdth,wght.ttf') format('truetype');
-		}
-		
-        body {
-            font-family: 'OpenSans';
-            background-color: #f9f9f9;
-            margin: 0;
-            padding: 20px;
-            color: #333;
-        }
+import psycopg2
+import configparser
+from flask import jsonify, request
+import json
+
+def read_db_config():
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    return {
+        'host': config['POSTGRESQL']['host'],
+        'port': config['POSTGRESQL']['port'],
+        'database': config['POSTGRESQL']['database'],
+        'user': config['POSTGRESQL']['user'],
+        'password': config['POSTGRESQL']['password']
+    }
+
+def get_db_connection():
+    db_config = read_db_config()
+    return psycopg2.connect(**db_config)
+
+@app.route('/get_apps_data')
+@login_required
+def get_apps_data():
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
         
-		h1 {
-            text-align: center;
-            font-weight: 500;
-            color: #2c3e50;
-			margin-top: 15px;
-        }
-		
-		.table-container {
-            width: 100%;
-            max-width: 1200px;
-            max-height: calc(100vh - 350px); /* Ограничиваем высоту таблицы */
-            overflow-y: auto; /* Добавляем вертикальную прокрутку */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            background-color: #fff;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            position: relative;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-        }
-        th {
-            background-color: #2c3e50;
-            color: #fff;
-            font-weight: 500;
-            letter-spacing: 0.05em;
-            position: sticky;
-			text-transform: uppercase;
-            top: 0; /* Фиксируем шапку */
-            z-index: 1; /* Убедимся, что шапка поверх строк */
-        }
-        tr:nth-child(even) {
-            background-color: #f8f9fa;
-        }
-        tr:hover {
-            background-color: #e9ecef;
-            transition: background-color 0.3s ease;
-        }
-        .export-button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            background-color: #2c3e50;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s ease;
-        }
-        .export-button:hover {
-            background-color: #1a252f;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 14px;
-            color: #777;
-        }
-		
-        /* Стили вкладок */
-        .tab-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        # Получаем все приложения
+        cursor.execute("SELECT id, app, alias FROM webplatform.apps ORDER BY id ASC")
+        apps = [{'id': row[0], 'app': row[1], 'alias': row[2]} for row in cursor.fetchall()]
         
-        .tabs {
-            margin-bottom: 20px;
-        }
+        # Получаем права пользователя
+        cursor.execute("SELECT grants FROM webplatform.users WHERE username = %s", (current_user.username,))
+        user_grants = cursor.fetchone()
+        user_grants = user_grants[0] if user_grants else ''
         
-        .tablinks {
-            background-color: #f1f1f1;
-            border: none;
-            outline: none;
-            cursor: pointer;
-            padding: 14px 16px;
-            transition: 0.3s;
-            font-size: 16px;
-            border-radius: 5px 5px 5px 5px;
-            margin-right: 5px;
-			margin-bottom: 5px;
-        }
+        cursor.close()
+        conn.close()
         
-        .tablinks.active {
-            background-color: #2c3e50;
-            color: white;
-        }
+        return jsonify({
+            'apps': apps,
+            'user_grants': user_grants
+        })
         
-        .tabcontent {
-            display: none;
-            animation: fadeEffect 0.5s;
-        }
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/request_access', methods=['POST'])
+@login_required
+def request_access():
+    try:
+        data = request.get_json()
+        requested_apps = data.get('apps', [])
         
-        @keyframes fadeEffect {
-            from {opacity: 0;}
-            to {opacity: 1;}
-        }
-
-        /* Стили для всплывающего уведомления */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-			left: 20px;
-            background-color: #2c3e50;
-            color: #fff;
-            padding: 15px 20px;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            animation: slideIn 0.5s ease-out;
-			font-size: 15px;
-			opacity: 0.9;
-        }
-        .toast button {
-            background: none;
-            border: none;
-            color: #fff;
-            font-size: 16px;
-            cursor: pointer;
-            margin-left: 20px;
-        }
-        .toast button:hover {
-            opacity: 0.8;
-        }
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-    </style>
-</head>
-<body>
-{% include 'toolbar_with_opacity.html' %}
-    <div class="container">
-        <h1>Токенизация Белкарт PAY. Статистика.</h1>
-        <button class="export-button" onclick="exportToExcel()">Экспорт в Excel</button>
+        if not requested_apps:
+            return jsonify({'success': False, 'error': 'No apps selected'})
         
-        <div class="tab-container">
-            <div class="tabs">
-				<button class="tablinks active" onclick="openTab(event, 'tab0')">Первая успешная попытка токенизации карты Банка</button>
-				<button class="tablinks" onclick="openTab(event, 'tab2')">Первая успешная операция по новому токену Банка</button>
-                <button class="tablinks" onclick="openTab(event, 'tab1')">Успешные операции по токенам Банка</button>
-                <button class="tablinks" onclick="openTab(event, 'tab3')">Статистика по картам и пользователям</button>
-            </div>
-			
-			<!-- Основная вкладка -->
-            <div id="tab0" class="tabcontent" style="display:block;">
-                <div class="table-container">
-                    <table id="data-table">
-            <thead>
-                <tr>
-                    <th>Месяц в котором была выполнена первая успешная попытка токенизации карты</th>
-                    <th>Белкарт Сберкарты</th>
-                    <th>Белкарт</th>
-                    <th>Visa</th>
-                    <th>Mastercard</th>
-                    <th>Все карты Банка</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in data %}
-                <tr>
-                    <td>{{ row[0] }}</td>
-                    <td>{{ row[1] }}</td>
-                    <td>{{ row[2] }}</td>
-                    <td>{{ row[3] }}</td>
-                    <td>{{ row[4] }}</td>
-                    <td>{{ row[5] }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-                </div>
-            </div>
-
-            <!-- Первая вкладка -->
-            <div id="tab1" class="tabcontent">
-                <div class="table-container">
-                    <table id="data-table1">
-                        <!-- Первая таблица -->
-						<thead>
-                    <tr>
-                        <th>Месяц</th>
-						<th>Количество успешных операций с использованием токена</th>
-                        <th>Белкарт Сберкарты</th>
-                        <th>Белкарт</th>
-                        <th>Visa</th>
-                        <th>Mastercard</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in data1 %}
-                    <tr>
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] }}</td>
-                        <td>{{ row[5] }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Вторая вкладка -->
-            <div id="tab2" class="tabcontent">
-                <div class="table-container">
-                    <table id="data-table2">
-                        <!-- Вторая таблица -->
-						<thead>
-                    <tr>
-                        <th>Месяц в котором была выполнена первая успешная операция по токену</th>
-						<th>Количество токенов, по которым появилась хоть одна успешная операция</th>
-                        <th>Белкарт Сберкарты</th>
-                        <th>Белкарт</th>
-                        <th>Visa</th>
-                        <th>Mastercard</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in data2 %}
-                    <tr>
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                        <td>{{ row[4] }}</td>
-                        <td>{{ row[5] }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Новая вкладка -->
-            <div id="tab3" class="tabcontent">
-                <div class="table-container">
-                    <table id="data-table3">
-                        <thead>
-                            <tr>
-                                <th>Дата</th>
-                                <th>Количество уникальных карт</th>
-                                <th>Сберкарты</th>
-                                <th>Белкарт</th>
-                                <th>Visa</th>
-                                <th>Mastercard</th>
-                                <th>Количество уникальных пользователей</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for row in data3 %}
-                            <tr>
-                                <td>{{ row[0] }}</td>
-                                <td>{{ row[1] }}</td>
-                                <td>{{ row[2] }}</td>
-                                <td>{{ row[3] }}</td>
-                                <td>{{ row[4] }}</td>
-                                <td>{{ row[5] }}</td>
-                                <td>{{ row[6] }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-
-	<div class="footer">
-        <p>Разработано командой процессинга. 2025.</p>
-    </div>
-
-<!-- Всплывающее уведомление -->
-    <div id="toast" class="toast">
-        <span>В статистику включены только те карты, которые были активны на момент токенизации. Реальное количество токенизированных карт будет меньше, так как Клиенту ещё необходимо пройти путь в приложении Белкарт Pay и успешно ввести смс код. Точными данными обладает только ПС Белкарт.</span>
-        <button onclick="closeToast()">&times;</button>
-    </div>
-
-    <script>
-        // Логика вкладок
-        function openTab(evt, tabName) {
-            const tabcontent = document.getElementsByClassName("tabcontent");
-            const tablinks = document.getElementsByClassName("tablinks");
-
-            for (let i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-
-            for (let i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
-
-        // Функция для форматирования текста
-        function formatHeaderText(text) {
-            return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
-        }
-
-        // Модифицированная функция экспорта
-        function exportToExcel() {
-            const tables = [
-				{node: document.getElementById('data-table'), name: '1-я успеш_попытка токен_карты'},
-				{node: document.getElementById('data-table2'), name: '1-я успешая опер_по нов_токену'},
-                {node: document.getElementById('data-table1'), name: 'Успешные операции по токенам'},
-                {node: document.getElementById('data-table3'), name: 'Статистика по картам и пользователям'}
-            ];
-
-            const workbook = XLSX.utils.book_new();
-            
-            tables.forEach((table, index) => {
-                const data = [];
-                const rows = table.node.querySelectorAll("tr");
-                
-                rows.forEach((row) => {
-                    const rowData = [];
-                    const cells = row.querySelectorAll("th, td");
-                    
-                    cells.forEach((cell, cellIndex) => {
-                        if (index === 0 && row.rowIndex === 0) {
-                            // Форматируем заголовки первой таблицы
-                            rowData.push(formatHeaderText(cell.innerText));
-                        } else {
-                            rowData.push(cell.innerText);
-                        }
-                    });
-                    data.push(rowData);
-                });
-                
-                const worksheet = XLSX.utils.aoa_to_sheet(data);
-                XLSX.utils.book_append_sheet(workbook, worksheet, table.name);
-            });
-
-            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-            saveAsExcelFile(excelBuffer);
-        }
-
-        function saveAsExcelFile(buffer) {
-            const now = new Date();
-            const formattedDate = [
-                now.getFullYear(),
-                String(now.getMonth() + 1).padStart(2, '0'),
-                String(now.getDate()).padStart(2, '0'),
-                String(now.getHours()).padStart(2, '0'),
-                String(now.getMinutes()).padStart(2, '0')
-            ].join('-');
-
-            const blob = new Blob([buffer], { type: 'application/octet-stream' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = `Аналитика_по_токенизациям_${formattedDate}.xlsx`;
-            link.click();
-            
-            setTimeout(() => {
-                URL.revokeObjectURL(link.href);
-            }, 100);
-        }
-		
-		// Функция для закрытия уведомления
-        function closeToast() {
-            const toast = document.getElementById("toast");
-            toast.style.display = "none";
-        }
-
-        // Автоматическое закрытие уведомления через 10 секунд
-        setTimeout(() => {
-            closeToast();
-        }, 15000); // 15 секунд
-    </script>
-</body>
-</html>
+        # Формируем строку с алиасами через точку с запятой
+        apps_string = ';'.join(requested_apps)
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Вставляем запрос на доступ
+        cursor.execute(
+            "INSERT INTO webplatform.reg_requests (username, req_type, text, status) VALUES (%s, %s, %s, %s)",
+            (current_user.username, 'ACCESS', apps_string, 'A')
+        )
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+        
+        return jsonify({'success': True})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
