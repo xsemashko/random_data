@@ -337,6 +337,22 @@ def get_db_connection():
 </body>
 </html>
 
+ также вот текст функции get_data
 
-Тебе скорее всего нужно будет добавить функцию на стороне питон файла, сделай ей нестандартное имя и чтобы она использовалась только для этой вкладки, то есть не пользуйся существующей get_data
-html файл сделай сразу готовый со старым и новым кодом, чтобы я просто скопировал его и вставил.
+@app.route('/get_data')
+@login_required
+@priviliges_check('ADMIN')
+def get_data():
+	# Получаем параметры сортировки и поиска из запроса
+	sort_order = request.args.get('sort', 'DESC')  # По умолчанию сортировка по убыванию
+	search_username = request.args.get('search', '')
+
+	reg_requests, users, apps = pdbw.admin_console_get(sort_order,search_username)
+
+	return jsonify({
+		'reg_requests': reg_requests,
+		'users': users,
+		'apps': apps
+	})
+
+файл html и функцию представь уже сразу в готовом виде чтобы я просто скопировал и вставил
