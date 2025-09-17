@@ -16,7 +16,29 @@
     </div>
 
     <div id="reg_requests" class="tabcontent">
-        <!-- существующий код -->
+        <div>Запросы, требующие обработки имеют статус A, уже обработанные запросы имеют статус I. Статус меняется автоматически после отправки уведомления о выдаче грантов пользователю. Если это не произошло изменить статус стоит вручную и нажать Сохранить.
+        Сохранить необходимо нажимать для каждой записи отдельно.
+        В поле text указано куда необходимо пользователю предоставить доступ. Если там написано, что-то по чему не понятно куда пользователь хочет попасть или поле пустое, необходимо уточнить у пользователя или проверить должность по справочнику и попытаться самому понять. Например сотрудники ЦКП часто запрашивают доступ только к БИП.</div>
+        <br>
+        <div class="controls">
+            <label for="search_reg_requests">Поиск по Username:</label>
+            <input type="text" id="search_reg_requests" oninput="fetchData('reg_requests')">
+            <button onclick="toggleSort('reg_requests')">Сортировать по ID</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Request Type</th>
+                    <th>Text</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="reg_requests_body"></tbody>
+        </table>
     </div>
 
     <div id="access_requests" class="tabcontent">
@@ -45,15 +67,83 @@
     </div>
 
     <div id="users" class="tabcontent">
-        <!-- существующий код -->
+        <div>В поле Grants необходимо указать роль (сокращение приложения из вкладки Приложения). Для того, чтобы дать полный доступ ко всему можно указать ADMIN. Если пользователю необходимо несколько ролей их необходимо указывать через точку с запятой, в конце можно ставить можно нет: PM;IP;TS;
+        Кнопку Сохранить необходимо нажимать для каждой записи. После сохранения грантов необходимо нажать на Отправить уведомления. После отработки скрипта пользователю уйдет уведомление о успешности выдачи прав, а поле Status изменится на А (для отображения изменений желательно обновить страницу).
+        Нажимать кнопку Отправить уведомления можно для всех пользователей сразу, которым были выданы гранты.
+        </div>
+        <br>
+        <div class="notification-button">
+            <button onclick="sendNotifications()">Отправить уведомления</button>
+        </div>
+        <div class="controls">
+            <label for="search_users">Поиск по Username:</label>
+            <input type="text" id="search_users" oninput="fetchData('users')">
+            <button onclick="toggleSort('users')">Сортировать по ID</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Father's Name</th>
+                    <th>Mail</th>
+                    <th>Status</th>
+                    <th>Last Login</th>
+                    <th>Grants</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="users_body"></tbody>
+        </table>
     </div>
 
     <div id="applications" class="tabcontent">
-        <!-- существующий код -->
+        <div class="controls">
+            <button onclick="toggleSort('applications')">Сортировать по ID</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>App</th>
+                    <th>Alias</th>
+                </tr>
+            </thead>
+            <tbody id="applications_body"></tbody>
+        </table>
     </div>
 
     <script>
-        // ... существующий JavaScript код ...
+        let sortOrder = 'DESC'; // По умолчанию сортировка по убыванию
+        let aliases = []; // Глобальная переменная для хранения значений alias
+
+        // Функция для загрузки значений alias
+        function loadAliases() {
+            fetch('/get_data_access')
+                .then(response => response.json())
+                .then(data => {
+                    aliases = data.apps.map(app => app[2]); // Извлекаем значения alias
+                });
+        }
+
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+
+            // Загружаем данные для активной вкладки
+            fetchData(tabName);
+        }
 
         function fetchData(table) {
             const searchInput = table === 'reg_requests' 
@@ -64,11 +154,22 @@
                 ? document.getElementById('search_users').value 
                 : '';
             
-            fetch(`/get_data?sort=${sortOrder}&search=${searchInput}`)
+            fetch(`/get_data_access?sort=${sortOrder}&search=${searchInput}`)
                 .then(response => response.json())
                 .then(data => {
                     if (table === 'reg_requests') {
-                        // ... существующий код ...
+                        const regRequestsBody = document.getElementById('reg_requests_body');
+                        regRequestsBody.innerHTML = data.reg_requests.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                                <td>${row[3]}</td>
+                                <td><input type="text" name="status" value="${row[4]}" onchange="updateField('reg_requests', ${row[0]}, 'status', this.value)"></td>
+                                <td>${row[5]}</td>
+                                <td><button onclick="saveChanges('reg_requests', ${row[0]})">Сохранить</button></td>
+                            </tr>
+                        `).join('');
                     } else if (table === 'access_requests') {
                         const accessRequestsBody = document.getElementById('access_requests_body');
                         accessRequestsBody.innerHTML = data.access_requests.map(row => `
@@ -79,15 +180,142 @@
                                 <td>${row[3]}</td>
                                 <td>${row[4]}</td>
                                 <td>${row[5]}</td>
-                                <td><button onclick="approveRequest(${row[0]}, '${row[1]}', '${row[3]}')">Одобрить</button></td>
+                                <td><button onclick="approveRequest(${row[0]}, '${row[1]}', '${row[3].replace(/'/g, "\\'")}')">Одобрить</button></td>
                             </tr>
                         `).join('');
                     } else if (table === 'users') {
-                        // ... существующий код ...
+                        const usersBody = document.getElementById('users_body');
+                        usersBody.innerHTML = data.users.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                                <td>${row[3]}</td>
+                                <td>${row[4]}</td>
+                                <td><input type="text" name="mail" value="${row[5]}" onchange="updateField('users', ${row[0]}, 'mail', this.value)"></td>
+                                <td><input type="text" name="status" value="${row[6]}" onchange="updateField('users', ${row[0]}, 'status', this.value)"></td>
+                                <td>${row[7]}</td>
+                                <td>
+                                    <div style="position: relative;">
+                                        <input type="text" name="grants" value="${row[8]}" onfocus="showDropdown('${row[0]}')">
+                                        <div id="dropdown-${row[0]}" class="dropdown-content">
+                                            <label><input type="checkbox" value="ADMIN" onchange="updateGrants('${row[0]}')"> ADMIN</label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><button onclick="saveChanges('users', ${row[0]})">Сохранить</button></td>
+                            </tr>
+                        `).join('');
                     } else if (table === 'applications') {
-                        // ... существующий код ...
+                        const applicationsBody = document.getElementById('applications_body');
+                        applicationsBody.innerHTML = data.apps.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                            </tr>
+                        `).join('');
                     }
                 });
+        }
+
+        function showDropdown(id) {
+            const dropdown = document.getElementById(`dropdown-${id}`);
+            dropdown.style.display = 'block';
+
+            // Очищаем старые значения (кроме ADMIN)
+            dropdown.innerHTML = '<label><input type="checkbox" value="ADMIN" onchange="updateGrants(\'' + id + '\')"> ADMIN</label>';
+
+            // Добавляем значения alias
+            aliases.forEach(alias => {
+                const label = document.createElement('label');
+                label.innerHTML = `<input type="checkbox" value="${alias}" onchange="updateGrants('${id}')"> ${alias}`;
+                dropdown.appendChild(label);
+            });
+
+            // Устанавливаем галочки для уже выбранных значений
+            const grantsInput = document.querySelector(`tr[data-id="${id}"] input[name="grants"]`);
+            const selectedValues = grantsInput.value.split(';').filter(Boolean); // Убираем пустые строки
+
+            dropdown.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                if (selectedValues.includes(checkbox.value)) {
+                    checkbox.checked = true;
+                }
+            });
+        }
+
+        function updateGrants(id) {
+            const dropdown = document.getElementById(`dropdown-${id}`);
+            const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]:checked');
+            const grantsInput = document.querySelector(`tr[data-id="${id}"] input[name="grants"]`);
+
+            const selectedValues = Array.from(checkboxes).map(checkbox => checkbox.value);
+            grantsInput.value = selectedValues.join(';') + ';'; // Добавляем точку с запятой в конце
+        }
+
+        function toggleSort(table) {
+            sortOrder = sortOrder === 'DESC' ? 'ASC' : 'DESC';
+            fetchData(table);
+        }
+
+        function updateField(table, id, field, value) {
+            if (!window.changes) window.changes = {};
+            if (!window.changes[table]) window.changes[table] = {};
+            if (!window.changes[table][id]) window.changes[table][id] = {};
+            window.changes[table][id][field] = value;
+        }
+
+        function saveChanges(table, id) {
+            const changes = window.changes?.[table]?.[id] || {};
+            const row = document.querySelector(`#${table}_body tr[data-id="${id}"]`);
+
+            const data = {
+                table: table,
+                id: id,
+                ...changes
+            };
+
+            // Добавляем обязательные поля, если они не были изменены
+            if (table === 'users') {
+                if (!data.mail) data.mail = row.querySelector('input[name="mail"]').value;
+                if (!data.status) data.status = row.querySelector('input[name="status"]').value;
+                if (!data.grants) data.grants = row.querySelector('input[name="grants"]').value;
+            } else if (table === 'reg_requests') {
+                if (!data.status) data.status = row.querySelector('input[name="status"]').value;
+            }
+
+            fetch('/update_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert('Changes saved successfully');
+                      fetchData(table);
+                  } else {
+                      alert('Error: ' + data.error);
+                  }
+              });
+        }
+
+        function sendNotifications() {
+            fetch('/send_notifications', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                } else {
+                    alert('Ошибка: ' + data.error);
+                }
+            });
         }
 
         // Функция для одобрения запроса прав
@@ -116,7 +344,21 @@
             }
         }
 
-        // ... остальной существующий JavaScript код ...
+        document.addEventListener('DOMContentLoaded', function() {
+            // Открываем первую вкладку и загружаем данные
+            loadAliases();
+            document.getElementsByClassName('tablink')[0].click();
+        });
+
+        // Закрытие дропдауна при клике вне его области
+        document.addEventListener('click', function(event) {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                if (!dropdown.contains(event.target) && !dropdown.previousElementSibling.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        });
     </script>
 </body>
 </html>
