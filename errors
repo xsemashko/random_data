@@ -1,90 +1,338 @@
-An SQL error occurred. The SQL script: 
-BEGIN
-  OWS.OPT_BPS_ANALYSIS_REFUND.SET_WAITING_STATUS();
-END;
-ORA-20000: Refund operations analysis check is already active
-ORA-06512: на  "OWS.SY_EXCPT", line 56
-ORA-06512: на  "OWS.STND", line 1072
-ORA-06512: на  "OWS.SY_PROCESS", line 1961
-ORA-06512: на  "OWS.GLOB", line 1341
-ORA-06512: на  "OWS.GLOB", line 1352
-ORA-06512: на  "OWS.OPT_BPS_ANALYSIS_REFUND", line 312
-ORA-06512: на  line 2
- (20000)
-Oracle database exception: ORA-20000: Refund operations analysis check is already active
-ORA-06512: на  "OWS.SY_EXCPT", line 56
-ORA-06512: на  "OWS.STND", line 1072
-ORA-06512: на  "OWS.SY_PROCESS", line 1961
-ORA-06512: на  "OWS.GLOB", line 1341
-ORA-06512: на  "OWS.GLOB", line 1352
-ORA-06512: на  "OWS.OPT_BPS_ANALYSIS_REFUND", line 312
-ORA-06512: на  line 2
+У меня есть следующее приложение написанное на Python Flask. Я хочу сюда по аналогии добавить к имеющимся вкладкам Запросы на регистрацию, пользователи, приложения добавить 
+вкладку Запрос прав.
 
+В данной вкладке должна быть таблица со всеми запросами на получение прав к приложениям, а именно столбцы: ID, USERNAME, Request Type, Text, Status, Date (аналогично как и в вкладке Запросы на регистрацию)
+Но в столбце Action вместо кнопки Сохранить должна быть кнопка одобрить.
 
-java.lang.Exception: An SQL error occurred. The SQL script: 
-BEGIN
-  OWS.OPT_BPS_ANALYSIS_REFUND.SET_WAITING_STATUS();
-END;
-	at com.openwaygroup.way4u.bpm.steps.utils.SqlExecution.sqlExceptionHandler(SqlExecution.java:266)
-	at com.openwaygroup.way4u.bpm.steps.utils.SqlExecution.executeStatement(SqlExecution.java:260)
-	at com.openwaygroup.way4u.bpm.steps.utils.SqlExecution.executeScript(SqlExecution.java:227)
-	at com.openwaygroup.way4u.bpm.steps.utils.SqlExecution.execute(SqlExecution.java:138)
-	at com.openwaygroup.xmlmanager.bpm.client.step.AbstractClientStepSqlExecution.doStep(AbstractClientStepSqlExecution.java:47)
-	at com.openwaygroup.xmlmanager.bpm.client.step.AbstractClientStep.execute(AbstractClientStep.java:135)
-	at com.openwaygroup.way4u.bpm.impl.Step.execute(Step.java:102)
-	at com.openwaygroup.way4u.bpm.impl.Executor2$ExecuteState.doOperation(Executor2.java:575)
-	at com.openwaygroup.way4u.bpm.impl.Executor2.executeOperation(Executor2.java:387)
-	at com.openwaygroup.way4u.bpm.impl.Executor2.execute0(Executor2.java:141)
-	at com.openwaygroup.way4u.bpm.impl.Executor2.execute(Executor2.java:118)
-	at com.openwaygroup.way4u.bpm.impl.BP.execute(BP.java:482)
-	at com.openwaygroup.way4u.bpm.impl.TransactionProcessor$SynchronousStepsProcessor.executeSynchronousSteps(TransactionProcessor.java:379)
-	at com.openwaygroup.way4u.bpm.impl.TransactionProcessor$SynchronousStepsProcessor.execute0(TransactionProcessor.java:349)
-	at com.openwaygroup.way4u.bpm.impl.TransactionProcessor$SynchronousStepsProcessor.execute(TransactionProcessor.java:257)
-	at com.openwaygroup.way4u.bpm.impl.TransactionProcessor.process(TransactionProcessor.java:69)
-	at com.openwaygroup.way4u.bpm.component.BPMService.process(BPMService.java:63)
-	at com.openwaygroup.way4u.sys2.impl.ServiceLauncher.run(ServiceLauncher.java:219)
-	at com.openwaygroup.way4u.sys2.util.threadpool.ThreadPool$ThreadPoolThread.runTaskWithHangupLogger(ThreadPool.java:407)
-	at com.openwaygroup.way4u.sys2.util.threadpool.ThreadPool$ThreadPoolThread.runTask(ThreadPool.java:380)
-	at com.openwaygroup.way4u.sys2.util.threadpool.ThreadPool$ThreadPoolThread.processTasks(ThreadPool.java:252)
-	at com.openwaygroup.way4u.sys2.util.threadpool.ThreadPool$ThreadPoolThread.run(ThreadPool.java:221)
-Caused by: java.sql.SQLException: ORA-20000: Refund operations analysis check is already active
-ORA-06512: на  "OWS.SY_EXCPT", line 56
-ORA-06512: на  "OWS.STND", line 1072
-ORA-06512: на  "OWS.SY_PROCESS", line 1961
-ORA-06512: на  "OWS.GLOB", line 1341
-ORA-06512: на  "OWS.GLOB", line 1352
-ORA-06512: на  "OWS.OPT_BPS_ANALYSIS_REFUND", line 312
-ORA-06512: на  line 2
+Данные берутся из БД postgresql сделующим селектом:
 
-	at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:509)
-	at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:461)
-	at oracle.jdbc.driver.T4C8Oall.processError(T4C8Oall.java:1104)
-	at oracle.jdbc.driver.T4CTTIfun.receive(T4CTTIfun.java:553)
-	at oracle.jdbc.driver.T4CTTIfun.doRPC(T4CTTIfun.java:269)
-	at oracle.jdbc.driver.T4C8Oall.doOALL(T4C8Oall.java:655)
-	at oracle.jdbc.driver.T4CCallableStatement.doOall8(T4CCallableStatement.java:265)
-	at oracle.jdbc.driver.T4CCallableStatement.doOall8(T4CCallableStatement.java:86)
-	at oracle.jdbc.driver.T4CCallableStatement.executeForRows(T4CCallableStatement.java:965)
-	at oracle.jdbc.driver.OracleStatement.doExecuteWithTimeout(OracleStatement.java:1205)
-	at oracle.jdbc.driver.OraclePreparedStatement.executeInternal(OraclePreparedStatement.java:3666)
-	at oracle.jdbc.driver.T4CCallableStatement.executeInternal(T4CCallableStatement.java:1358)
-	at oracle.jdbc.driver.OraclePreparedStatement.execute(OraclePreparedStatement.java:3778)
-	at oracle.jdbc.driver.OracleCallableStatement.execute(OracleCallableStatement.java:4251)
-	at oracle.jdbc.driver.OraclePreparedStatementWrapper.execute(OraclePreparedStatementWrapper.java:1081)
-	at com.openwaygroup.way4u.bpm.steps.utils.SqlExecution.executeStatement(SqlExecution.java:258)
-	... 20 more
-Caused by: Error : 20000, Position : 0, Sql = BEGIN
-  OWS.OPT_BPS_ANALYSIS_REFUND.SET_WAITING_STATUS();
-END;, OriginalSql = BEGIN
-  OWS.OPT_BPS_ANALYSIS_REFUND.SET_WAITING_STATUS();
-END;, Error Msg = ORA-20000: Refund operations analysis check is already active
-ORA-06512: на  "OWS.SY_EXCPT", line 56
-ORA-06512: на  "OWS.STND", line 1072
-ORA-06512: на  "OWS.SY_PROCESS", line 1961
-ORA-06512: на  "OWS.GLOB", line 1341
-ORA-06512: на  "OWS.GLOB", line 1352
-ORA-06512: на  "OWS.OPT_BPS_ANALYSIS_REFUND", line 312
-ORA-06512: на  line 2
+SELECT * FROM webplatform.reg_requests Where req_type = 'ACCESS' and status = 'A' ORDER BY id ASC 
 
-	at oracle.jdbc.driver.T4CTTIoer11.processError(T4CTTIoer11.java:513)
-	... 35 more
+В файле Python если что уже есть функции для подключения к БД:
+
+def read_db_config():
+    config = configparser.ConfigParser()
+    config.read('config.ini')
+    return {
+        'host': config['POSTGRESQL']['host'],
+        'port': config['POSTGRESQL']['port'],
+        'database': config['POSTGRESQL']['database'],
+        'user': config['POSTGRESQL']['user'],
+        'password': config['POSTGRESQL']['password']
+    }
+
+def get_db_connection():
+    db_config = read_db_config()
+    return psycopg2.connect(**db_config)
+
+поэтому можно работать с ними.
+
+Теперь о логике работы кнопки Одобрить. По нажатию на кнопку данные из столбца text должны быть добавлены к полю grants таблицы webplatform.users,
+при этом сопоставление должно быть по username, то есть username из таблицы webplatform.reg_requests должен быть равен username из webplatform.users.
+
+При этом поле grants может быть не пустым. Логика записи там такая, названия приложений к котором есть доступ пишутся через ; при этом в конце ; может не быть.
+Таким образом, например, в поле grants содержится значение IP;MO; , а в text PM. В итоге после нажатия на кнопку Одобрить в поле grants должно быть записано IP;MO;PM;
+
+Если например в поле grants PM уже есть то тогда записывать его не нужно.
+Если все прошло успешно то нужно вывести алерт об успешности выдачи прав на приложения для пользователя.
+При этом у записи напротив которой находилось кнопка одобрить необходимо изменить status с A на I.
+
+Вот код веб приложения:
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Администрирование</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/admin_styles.css">
+</head>
+<body>
+    <div class="tabs">
+        <button class="tablink" onclick="openTab(event, 'reg_requests')">Запросы на регистрацию</button>
+        <button class="tablink" onclick="openTab(event, 'users')">Пользователи</button>
+        <button class="tablink" onclick="openTab(event, 'applications')">Приложения</button>
+        <a class="tablink" style="text-decoration: none;" href="/">Вернуться в меню</a>
+    </div>
+
+    <div id="reg_requests" class="tabcontent">
+        <div>Запросы, требующие обработки имеют статус A, уже обработанные запросы имеют статус I. Статус меняется автоматически после отправки уведомления о выдаче грантов пользователю. Если это не произошло изменить статус стоит вручную и нажать Сохранить.
+        Сохранить необходимо нажимать для каждой записи отдельно.
+        В поле text указано куда необходимо пользователю предоставить доступ. Если там написано, что-то по чему не понятно куда пользователь хочет попасть или поле пустое, необходимо уточнить у пользователя или проверить должность по справочнику и попытаться самому понять. Например сотрудники ЦКП часто запрашивают доступ только к БИП.</div>
+        <br>
+        <div class="controls">
+            <label for="search_reg_requests">Поиск по Username:</label>
+            <input type="text" id="search_reg_requests" oninput="fetchData('reg_requests')">
+            <button onclick="toggleSort('reg_requests')">Сортировать по ID</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Request Type</th>
+                    <th>Text</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="reg_requests_body"></tbody>
+        </table>
+    </div>
+
+    <div id="users" class="tabcontent">
+        <div>В поле Grants необходимо указать роль (сокращение приложения из вкладки Приложения). Для того, чтобы дать полный доступ ко всему можно указать ADMIN. Если пользователю необходимо несколько ролей их необходимо указывать через точку с запятой, в конце можно ставить можно нет: PM;IP;TS;
+        Кнопку Сохранить необходимо нажимать для каждой записи. После сохранения грантов необходимо нажать на Отправить уведомления. После отработки скрипта пользователю уйдет уведомление о успешности выдачи прав, а поле Status изменится на А (для отображения изменений желательно обновить страницу).
+        Нажимать кнопку Отправить уведомления можно для всех пользователей сразу, которым были выданы гранты.
+        </div>
+        <br>
+        <div class="notification-button">
+            <button onclick="sendNotifications()">Отправить уведомления</button>
+        </div>
+        <div class="controls">
+            <label for="search_users">Поиск по Username:</label>
+            <input type="text" id="search_users" oninput="fetchData('users')">
+            <button onclick="toggleSort('users')">Сортировать по ID</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Father's Name</th>
+                    <th>Mail</th>
+                    <th>Status</th>
+                    <th>Last Login</th>
+                    <th>Grants</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="users_body"></tbody>
+        </table>
+    </div>
+
+    <div id="applications" class="tabcontent">
+        <div class="controls">
+            <button onclick="toggleSort('applications')">Сортировать по ID</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>App</th>
+                    <th>Alias</th>
+                </tr>
+            </thead>
+            <tbody id="applications_body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        let sortOrder = 'DESC'; // По умолчанию сортировка по убыванию
+        let aliases = []; // Глобальная переменная для хранения значений alias
+
+        // Функция для загрузки значений alias
+        function loadAliases() {
+            fetch('/get_data')
+                .then(response => response.json())
+                .then(data => {
+                    aliases = data.apps.map(app => app[2]); // Извлекаем значения alias
+                });
+        }
+
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablink");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+
+            // Загружаем данные для активной вкладки
+            fetchData(tabName);
+        }
+
+        function fetchData(table) {
+            const searchInput = table === 'reg_requests' 
+                ? document.getElementById('search_reg_requests').value 
+                : table === 'users' 
+                ? document.getElementById('search_users').value 
+                : '';
+            
+            fetch(`/get_data?sort=${sortOrder}&search=${searchInput}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (table === 'reg_requests') {
+                        const regRequestsBody = document.getElementById('reg_requests_body');
+                        regRequestsBody.innerHTML = data.reg_requests.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                                <td>${row[3]}</td>
+                                <td><input type="text" name="status" value="${row[4]}" onchange="updateField('reg_requests', ${row[0]}, 'status', this.value)"></td>
+                                <td>${row[5]}</td>
+                                <td><button onclick="saveChanges('reg_requests', ${row[0]})">Сохранить</button></td>
+                            </tr>
+                        `).join('');
+                    } else if (table === 'users') {
+                        const usersBody = document.getElementById('users_body');
+                        usersBody.innerHTML = data.users.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                                <td>${row[3]}</td>
+                                <td>${row[4]}</td>
+                                <td><input type="text" name="mail" value="${row[5]}" onchange="updateField('users', ${row[0]}, 'mail', this.value)"></td>
+                                <td><input type="text" name="status" value="${row[6]}" onchange="updateField('users', ${row[0]}, 'status', this.value)"></td>
+                                <td>${row[7]}</td>
+                                <td>
+                                    <div style="position: relative;">
+                                        <input type="text" name="grants" value="${row[8]}" onfocus="showDropdown('${row[0]}')">
+                                        <div id="dropdown-${row[0]}" class="dropdown-content">
+                                            <label><input type="checkbox" value="ADMIN" onchange="updateGrants('${row[0]}')"> ADMIN</label>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><button onclick="saveChanges('users', ${row[0]})">Сохранить</button></td>
+                            </tr>
+                        `).join('');
+                    } else if (table === 'applications') {
+                        const applicationsBody = document.getElementById('applications_body');
+                        applicationsBody.innerHTML = data.apps.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                            </tr>
+                        `).join('');
+                    }
+                });
+        }
+
+        function showDropdown(id) {
+            const dropdown = document.getElementById(`dropdown-${id}`);
+            dropdown.style.display = 'block';
+
+            // Очищаем старые значения (кроме ADMIN)
+            dropdown.innerHTML = '<label><input type="checkbox" value="ADMIN" onchange="updateGrants(\'' + id + '\')"> ADMIN</label>';
+
+            // Добавляем значения alias
+            aliases.forEach(alias => {
+                const label = document.createElement('label');
+                label.innerHTML = `<input type="checkbox" value="${alias}" onchange="updateGrants('${id}')"> ${alias}`;
+                dropdown.appendChild(label);
+            });
+
+            // Устанавливаем галочки для уже выбранных значений
+            const grantsInput = document.querySelector(`tr[data-id="${id}"] input[name="grants"]`);
+            const selectedValues = grantsInput.value.split(';').filter(Boolean); // Убираем пустые строки
+
+            dropdown.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                if (selectedValues.includes(checkbox.value)) {
+                    checkbox.checked = true;
+                }
+            });
+        }
+
+        function updateGrants(id) {
+            const dropdown = document.getElementById(`dropdown-${id}`);
+            const checkboxes = dropdown.querySelectorAll('input[type="checkbox"]:checked');
+            const grantsInput = document.querySelector(`tr[data-id="${id}"] input[name="grants"]`);
+
+            const selectedValues = Array.from(checkboxes).map(checkbox => checkbox.value);
+            grantsInput.value = selectedValues.join(';') + ';'; // Добавляем точку с запятой в конце
+        }
+
+        function toggleSort(table) {
+            sortOrder = sortOrder === 'DESC' ? 'ASC' : 'DESC';
+            fetchData(table);
+        }
+
+        function updateField(table, id, field, value) {
+            if (!window.changes) window.changes = {};
+            if (!window.changes[table]) window.changes[table] = {};
+            if (!window.changes[table][id]) window.changes[table][id] = {};
+            window.changes[table][id][field] = value;
+        }
+
+        function saveChanges(table, id) {
+            const changes = window.changes?.[table]?.[id] || {};
+            const row = document.querySelector(`#${table}_body tr[data-id="${id}"]`);
+
+            const data = {
+                table: table,
+                id: id,
+                ...changes
+            };
+
+            // Добавляем обязательные поля, если они не были изменены
+            if (table === 'users') {
+                if (!data.mail) data.mail = row.querySelector('input[name="mail"]').value;
+                if (!data.status) data.status = row.querySelector('input[name="status"]').value;
+                if (!data.grants) data.grants = row.querySelector('input[name="grants"]').value;
+            } else if (table === 'reg_requests') {
+                if (!data.status) data.status = row.querySelector('input[name="status"]').value;
+            }
+
+            fetch('/update_data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            }).then(response => response.json())
+              .then(data => {
+                  if (data.success) {
+                      alert('Changes saved successfully');
+                      fetchData(table);
+                  } else {
+                      alert('Error: ' + data.error);
+                  }
+              });
+        }
+
+        function sendNotifications() {
+            fetch('/send_notifications', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                } else {
+                    alert('Ошибка: ' + data.error);
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Открываем первую вкладку и загружаем данные
+            loadAliases();
+            document.getElementsByClassName('tablink')[0].click();
+        });
+
+        // Закрытие дропдауна при клике вне его области
+        document.addEventListener('click', function(event) {
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                if (!dropdown.contains(event.target) && !dropdown.previousElementSibling.contains(event.target)) {
+                    dropdown.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
