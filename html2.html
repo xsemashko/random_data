@@ -1,183 +1,122 @@
-{% extends "base.html" %}
-
-{% block content %}
- 
-<link rel="stylesheet" type="text/css" href="/static/css/index.css">
-<link rel="stylesheet" type="text/css" href="/static/css/index_background.css">
-
-{% include 'toolbar.html' %}
-
-  <form id="form{{ form_template }}">
-    <!-- Кнопка приложений с обработчиком -->
-    <div>
-      <a id="app_button" href="#" onclick="showAppsModal(event)"><img id="app_logo" src="/static/store_icon.png"></a>
-      <label for="app_button">Приложения</label>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Администрирование</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/admin_styles.css">
+</head>
+<body>
+    <div class="tabs">
+        <button class="tablink" onclick="openTab(event, 'reg_requests')">Запросы на регистрацию</button>
+        <button class="tablink" onclick="openTab(event, 'access_requests')">Запросы прав</button>
+        <button class="tablink" onclick="openTab(event, 'users')">Пользователи</button>
+        <button class="tablink" onclick="openTab(event, 'applications')">Приложения</button>
+        <a class="tablink" style="text-decoration: none;" href="/">Вернуться в меню</a>
     </div>
-    
-    <!-- Остальные кнопки остаются без изменений -->
-    <div>
-      <a id="app_button" href="{{ url_for('product_maximum') }}"><img id="app_logo" src="/static/pm_logo.png"></a>
-      <label for="app_button">Продукты Максимум</label>
+
+    <div id="reg_requests" class="tabcontent">
+        <!-- существующий код -->
     </div>
-    <!-- ... остальные приложения ... -->
-  </form>
 
-  <!-- Модальное окно для выбора приложений -->
-  <div id="appsModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Доступ к приложениям</h2>
-      <div id="appsList"></div>
-      <button onclick="submitAccessRequest()">Запросить доступ</button>
+    <div id="access_requests" class="tabcontent">
+        <div>Запросы на получение прав к приложениям. Статус A - активные запросы, I - обработанные.
+        По нажатию на кнопку "Одобрить" права из поля Text будут добавлены к существующим правам пользователя.</div>
+        <br>
+        <div class="controls">
+            <label for="search_access_requests">Поиск по Username:</label>
+            <input type="text" id="search_access_requests" oninput="fetchData('access_requests')">
+            <button onclick="toggleSort('access_requests')">Сортировать по ID</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Request Type</th>
+                    <th>Text</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="access_requests_body"></tbody>
+        </table>
     </div>
-  </div>
 
-  <!-- Стили для модального окна -->
-  <style>
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0,0,0,0.5);
-    }
+    <div id="users" class="tabcontent">
+        <!-- существующий код -->
+    </div>
 
-    .modal-content {
-      background-color: #fefefe;
-      margin: 15% auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 80%;
-      max-width: 600px;
-      border-radius: 10px;
-    }
+    <div id="applications" class="tabcontent">
+        <!-- существующий код -->
+    </div>
 
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+    <script>
+        // ... существующий JavaScript код ...
 
-    .close:hover {
-      color: black;
-    }
+        function fetchData(table) {
+            const searchInput = table === 'reg_requests' 
+                ? document.getElementById('search_reg_requests').value 
+                : table === 'access_requests'
+                ? document.getElementById('search_access_requests').value
+                : table === 'users' 
+                ? document.getElementById('search_users').value 
+                : '';
+            
+            fetch(`/get_data?sort=${sortOrder}&search=${searchInput}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (table === 'reg_requests') {
+                        // ... существующий код ...
+                    } else if (table === 'access_requests') {
+                        const accessRequestsBody = document.getElementById('access_requests_body');
+                        accessRequestsBody.innerHTML = data.access_requests.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                                <td>${row[3]}</td>
+                                <td>${row[4]}</td>
+                                <td>${row[5]}</td>
+                                <td><button onclick="approveRequest(${row[0]}, '${row[1]}', '${row[3]}')">Одобрить</button></td>
+                            </tr>
+                        `).join('');
+                    } else if (table === 'users') {
+                        // ... существующий код ...
+                    } else if (table === 'applications') {
+                        // ... существующий код ...
+                    }
+                });
+        }
 
-    .app-btn {
-      padding: 10px;
-      margin: 5px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .app-btn.available {
-      background-color: black;
-      color: white;
-    }
-
-    .app-btn.not-available {
-      background-color: #ccc;
-      color: black;
-    }
-
-    .app-btn.selected {
-      border: 2px solid blue;
-    }
-  </style>
-
-  <!-- JavaScript для работы с модальным окном -->
-  <script>
-    let selectedApps = [];
-
-    function showAppsModal(event) {
-      event.preventDefault();
-      fetch('/get_apps_data')
-        .then(response => response.json())
-        .then(data => {
-          displayApps(data.apps, data.user_grants);
-          document.getElementById('appsModal').style.display = 'block';
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    function displayApps(apps, userGrants) {
-      const appsList = document.getElementById('appsList');
-      appsList.innerHTML = '';
-      selectedApps = [];
-
-      const userHasAccess = userGrants.includes('ADMIN') ? 
-        apps.map(app => app.alias) : 
-        userGrants.split(';').filter(alias => alias);
-
-      apps.forEach(app => {
-        const isAvailable = userHasAccess.includes(app.alias) || userHasAccess.includes('ADMIN');
-        const btn = document.createElement('button');
-        btn.className = `app-btn ${isAvailable ? 'available' : 'not-available'}`;
-        btn.textContent = app.app;
-        btn.dataset.alias = app.alias;
-        btn.dataset.available = isAvailable;
-        
-        if (!isAvailable) {
-          btn.onclick = function() {
-            this.classList.toggle('selected');
-            const alias = this.dataset.alias;
-            if (this.classList.contains('selected')) {
-              selectedApps.push(alias);
-            } else {
-              selectedApps = selectedApps.filter(a => a !== alias);
+        // Функция для одобрения запроса прав
+        function approveRequest(requestId, username, requestedGrants) {
+            if (confirm(`Одобрить права "${requestedGrants}" для пользователя ${username}?`)) {
+                fetch('/approve_access_request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        request_id: requestId,
+                        username: username,
+                        requested_grants: requestedGrants
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        fetchData('access_requests'); // Обновляем таблицу
+                    } else {
+                        alert('Ошибка: ' + data.error);
+                    }
+                });
             }
-          };
-        } else {
-          btn.style.cursor = 'default';
         }
 
-        appsList.appendChild(btn);
-      });
-    }
-
-    function submitAccessRequest() {
-      if (selectedApps.length === 0) {
-        alert('Выберите хотя бы одно приложение для запроса доступа');
-        return;
-      }
-
-      fetch('/request_access', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ apps: selectedApps })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          alert('Запрос на доступ отправлен успешно');
-          document.getElementById('appsModal').style.display = 'none';
-        } else {
-          alert('Ошибка при отправке запроса: ' + data.error);
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Произошла ошибка при отправке запроса');
-      });
-    }
-
-    // Закрытие модального окна
-    document.querySelector('.close').onclick = function() {
-      document.getElementById('appsModal').style.display = 'none';
-    }
-
-    window.onclick = function(event) {
-      const modal = document.getElementById('appsModal');
-      if (event.target == modal) {
-        modal.style.display = 'none';
-      }
-    }
-  </script>
-{% endblock %}
+        // ... остальной существующий JavaScript код ...
+    </script>
+</body>
+</html>
