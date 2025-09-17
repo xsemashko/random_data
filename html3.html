@@ -1,77 +1,103 @@
+from flask import Flask, request, jsonify
 import psycopg2
 import configparser
-from flask import jsonify, request
-import json
 
-def read_db_config():
-    config = configparser.ConfigParser()
-    config.read('config.ini')
-    return {
-        'host': config['POSTGRESQL']['host'],
-        'port': config['POSTGRESQL']['port'],
-        'database': config['POSTGRESQL']['database'],
-        'user': config['POSTGRESQL']['user'],
-        'password': config['POSTGRESQL']['password']
-    }
+app = Flask(__name__)
 
-def get_db_connection():
-    db_config = read_db_config()
-    return psycopg2.connect(**db_config)
+# ... существующие функции ...
 
-@app.route('/get_apps_data')
-@login_required
-def get_apps_data():
+@app.route('/get_data')
+def get_data():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        # Получаем все приложения
-        cursor.execute("SELECT id, app, alias FROM webplatform.apps ORDER BY id ASC")
-        apps = [{'id': row[0], 'app': row[1], 'alias': row[2]} for row in cursor.fetchall()]
+        sort_order = request.args.get('sort', 'DESC')
+        search = request.args.get('search', '')
         
-        # Получаем права пользователя
-        cursor.execute("SELECT grants FROM webplatform.users WHERE username = %s", (current_user.username,))
-        user_grants = cursor.fetchone()
-        user_grants = user_grants[0] if user_grants else ''
+        # Запрос для access_requests
+        access_requests_query = """
+            SELECT * FROM webplatform.reg_requests 
+            WHERE req_type = 'ACCESS' AND status = 'A' 
+            AND username ILIKE %s 
+            ORDER BY id {sort}
+        """.format(sort=sort_order)
+        cursor.execute(access_requests_query, (f'%{search}%',))
+        access_requests = cursor.fetchall()
         
-        cursor.close()
-        conn.close()
+        # ... существующие запросы для других таблиц ...
         
         return jsonify({
-            'apps': apps,
-            'user_grants': user_grants
+            'reg_requests': reg_requests,
+            'access_requests': access_requests,
+            'users': users,
+            'apps': apps
         })
         
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'error': str(e)})
+    finally:
+        cursor.close()
+        conn.close()
 
-@app.route('/request_access', methods=['POST'])
-@login_required
-def request_access():
+@app.route('/approve_access_request', methods=['POST'])
+def approve_access_request():
     try:
-        data = request.get_json()
-        requested_apps = data.get('apps', [])
-        
-        if not requested_apps:
-            return jsonify({'success': False, 'error': 'No apps selected'})
-        
-        # Формируем строку с алиасами через точку с запятой
-        apps_string = ';'.join(requested_apps)
+        data = request.json
+        request_id = data['request_id']
+        username = data['username']
+        requested_grants = data['requested_grants']
         
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        # Вставляем запрос на доступ
+        # Получаем текущие права пользователя
+        cursor.execute("SELECT grants FROM webplatform.users WHERE username = %s", (username,))
+        user_data = cursor.fetchone()
+        
+        if not user_data:
+            return jsonify({'success': False, 'error': 'Пользователь не найден'})
+        
+        current_grants = user_data[0] or ''
+        
+        # Обрабатываем новые права
+        new_grants_list = []
+        if current_grants:
+            new_grants_list = current_grants.rstrip(';').split(';')
+        
+        requested_grants_list = requested_grants.rstrip(';').split(';')
+        
+        # Добавляем только уникальные права
+        for grant in requested_grants_list:
+            if grant and grant not in new_grants_list:
+                new_grants_list.append(grant)
+        
+        new_grants = ';'.join(new_grants_list) + ';'
+        
+        # Обновляем права пользователя
         cursor.execute(
-            "INSERT INTO webplatform.reg_requests (username, req_type, text, status) VALUES (%s, %s, %s, %s)",
-            (current_user.username, 'ACCESS', apps_string, 'A')
+            "UPDATE webplatform.users SET grants = %s WHERE username = %s",
+            (new_grants, username)
+        )
+        
+        # Меняем статус запроса на I
+        cursor.execute(
+            "UPDATE webplatform.reg_requests SET status = 'I' WHERE id = %s",
+            (request_id,)
         )
         
         conn.commit()
-        cursor.close()
-        conn.close()
         
-        return jsonify({'success': True})
+        return jsonify({
+            'success': True,
+            'message': f'Права успешно выданы пользователю {username}'
+        })
         
     except Exception as e:
-        return jsonify({'success': False, 'error': str(e)}), 500
+        conn.rollback()
+        return jsonify({'success': False, 'error': str(e)})
+    finally:
+        cursor.close()
+        conn.close()
+
+# ... остальной существующий Flask код ...
