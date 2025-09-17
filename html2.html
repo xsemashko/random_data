@@ -124,7 +124,16 @@
             fetch('/get_data_access')
                 .then(response => response.json())
                 .then(data => {
-                    aliases = data.apps.map(app => app[2]); // Извлекаем значения alias
+                    if (data && data.apps) {
+                        aliases = data.apps.map(app => app[2]); // Извлекаем значения alias
+                    } else {
+                        aliases = [];
+                        console.error('Ошибка загрузки aliases: данные не получены');
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки aliases:', error);
+                    aliases = [];
                 });
         }
 
@@ -155,66 +164,98 @@
                 : '';
             
             fetch(`/get_data_access?sort=${sortOrder}&search=${searchInput}`)
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Ошибка сети');
+                    }
+                    return response.json();
+                })
                 .then(data => {
+                    if (!data) {
+                        throw new Error('Данные не получены');
+                    }
+
                     if (table === 'reg_requests') {
                         const regRequestsBody = document.getElementById('reg_requests_body');
-                        regRequestsBody.innerHTML = data.reg_requests.map(row => `
-                            <tr data-id="${row[0]}">
-                                <td>${row[0]}</td>
-                                <td>${row[1]}</td>
-                                <td>${row[2]}</td>
-                                <td>${row[3]}</td>
-                                <td><input type="text" name="status" value="${row[4]}" onchange="updateField('reg_requests', ${row[0]}, 'status', this.value)"></td>
-                                <td>${row[5]}</td>
-                                <td><button onclick="saveChanges('reg_requests', ${row[0]})">Сохранить</button></td>
-                            </tr>
-                        `).join('');
+                        if (data.reg_requests && Array.isArray(data.reg_requests)) {
+                            regRequestsBody.innerHTML = data.reg_requests.map(row => `
+                                <tr data-id="${row[0]}">
+                                    <td>${row[0]}</td>
+                                    <td>${row[1] || ''}</td>
+                                    <td>${row[2] || ''}</td>
+                                    <td>${row[3] || ''}</td>
+                                    <td><input type="text" name="status" value="${row[4] || ''}" onchange="updateField('reg_requests', ${row[0]}, 'status', this.value)"></td>
+                                    <td>${row[5] || ''}</td>
+                                    <td><button onclick="saveChanges('reg_requests', ${row[0]})">Сохранить</button></td>
+                                </tr>
+                            `).join('');
+                        } else {
+                            regRequestsBody.innerHTML = '<tr><td colspan="7">Нет данных</td></tr>';
+                        }
                     } else if (table === 'access_requests') {
                         const accessRequestsBody = document.getElementById('access_requests_body');
-                        accessRequestsBody.innerHTML = data.access_requests.map(row => `
-                            <tr data-id="${row[0]}">
-                                <td>${row[0]}</td>
-                                <td>${row[1]}</td>
-                                <td>${row[2]}</td>
-                                <td>${row[3]}</td>
-                                <td>${row[4]}</td>
-                                <td>${row[5]}</td>
-                                <td><button onclick="approveRequest(${row[0]}, '${row[1]}', '${row[3].replace(/'/g, "\\'")}')">Одобрить</button></td>
-                            </tr>
-                        `).join('');
+                        if (data.access_requests && Array.isArray(data.access_requests)) {
+                            accessRequestsBody.innerHTML = data.access_requests.map(row => `
+                                <tr data-id="${row[0]}">
+                                    <td>${row[0]}</td>
+                                    <td>${row[1] || ''}</td>
+                                    <td>${row[2] || ''}</td>
+                                    <td>${row[3] || ''}</td>
+                                    <td>${row[4] || ''}</td>
+                                    <td>${row[5] || ''}</td>
+                                    <td><button onclick="approveRequest(${row[0]}, '${(row[1] || '').replace(/'/g, "\\'")}', '${(row[3] || '').replace(/'/g, "\\'")}')">Одобрить</button></td>
+                                </tr>
+                            `).join('');
+                        } else {
+                            accessRequestsBody.innerHTML = '<tr><td colspan="7">Нет данных</td></tr>';
+                        }
                     } else if (table === 'users') {
                         const usersBody = document.getElementById('users_body');
-                        usersBody.innerHTML = data.users.map(row => `
-                            <tr data-id="${row[0]}">
-                                <td>${row[0]}</td>
-                                <td>${row[1]}</td>
-                                <td>${row[2]}</td>
-                                <td>${row[3]}</td>
-                                <td>${row[4]}</td>
-                                <td><input type="text" name="mail" value="${row[5]}" onchange="updateField('users', ${row[0]}, 'mail', this.value)"></td>
-                                <td><input type="text" name="status" value="${row[6]}" onchange="updateField('users', ${row[0]}, 'status', this.value)"></td>
-                                <td>${row[7]}</td>
-                                <td>
-                                    <div style="position: relative;">
-                                        <input type="text" name="grants" value="${row[8]}" onfocus="showDropdown('${row[0]}')">
-                                        <div id="dropdown-${row[0]}" class="dropdown-content">
-                                            <label><input type="checkbox" value="ADMIN" onchange="updateGrants('${row[0]}')"> ADMIN</label>
+                        if (data.users && Array.isArray(data.users)) {
+                            usersBody.innerHTML = data.users.map(row => `
+                                <tr data-id="${row[0]}">
+                                    <td>${row[0]}</td>
+                                    <td>${row[1] || ''}</td>
+                                    <td>${row[2] || ''}</td>
+                                    <td>${row[3] || ''}</td>
+                                    <td>${row[4] || ''}</td>
+                                    <td><input type="text" name="mail" value="${row[5] || ''}" onchange="updateField('users', ${row[0]}, 'mail', this.value)"></td>
+                                    <td><input type="text" name="status" value="${row[6] || ''}" onchange="updateField('users', ${row[0]}, 'status', this.value)"></td>
+                                    <td>${row[7] || ''}</td>
+                                    <td>
+                                        <div style="position: relative;">
+                                            <input type="text" name="grants" value="${row[8] || ''}" onfocus="showDropdown('${row[0]}')">
+                                            <div id="dropdown-${row[0]}" class="dropdown-content">
+                                                <label><input type="checkbox" value="ADMIN" onchange="updateGrants('${row[0]}')"> ADMIN</label>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td><button onclick="saveChanges('users', ${row[0]})">Сохранить</button></td>
-                            </tr>
-                        `).join('');
+                                    </td>
+                                    <td><button onclick="saveChanges('users', ${row[0]})">Сохранить</button></td>
+                                </tr>
+                            `).join('');
+                        } else {
+                            usersBody.innerHTML = '<tr><td colspan="10">Нет данных</td></tr>';
+                        }
                     } else if (table === 'applications') {
                         const applicationsBody = document.getElementById('applications_body');
-                        applicationsBody.innerHTML = data.apps.map(row => `
-                            <tr data-id="${row[0]}">
-                                <td>${row[0]}</td>
-                                <td>${row[1]}</td>
-                                <td>${row[2]}</td>
-                            </tr>
-                        `).join('');
+                        if (data.apps && Array.isArray(data.apps)) {
+                            applicationsBody.innerHTML = data.apps.map(row => `
+                                <tr data-id="${row[0]}">
+                                    <td>${row[0]}</td>
+                                    <td>${row[1] || ''}</td>
+                                    <td>${row[2] || ''}</td>
+                                </tr>
+                            `).join('');
+                        } else {
+                            applicationsBody.innerHTML = '<tr><td colspan="3">Нет данных</td></tr>';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Ошибка загрузки данных:', error);
+                    const bodyElement = document.getElementById(table + '_body');
+                    if (bodyElement) {
+                        bodyElement.innerHTML = '<tr><td colspan="10">Ошибка загрузки данных</td></tr>';
                     }
                 });
         }
@@ -340,6 +381,9 @@
                     } else {
                         alert('Ошибка: ' + data.error);
                     }
+                })
+                .catch(error => {
+                    alert('Ошибка сети: ' + error.message);
                 });
             }
         }
