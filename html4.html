@@ -1,4 +1,68 @@
-<div>
-  <a id="app_button" href="#" onclick="showAppsModal(event)"><img id="app_logo" src="/static/store_icon.png"></a>
-  <label for="app_button">Приложения</label>
-</div>
+@app.route('/approve_access_request', methods=['POST'])
+@login_required
+@priviliges_check('ADMIN')
+def approve_access_request():
+    try:
+        data = request.get_json()
+        request_id = data.get('request_id')
+        username = data.get('username')
+        requested_grants = data.get('requested_grants')
+        
+        if not all([request_id, username, requested_grants]):
+            return jsonify({'success': False, 'error': 'Missing required parameters'})
+        
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Получаем текущие гранты пользователя
+        cursor.execute(
+            "SELECT grants FROM webplatform.users WHERE username = %s",
+            (username,)
+        )
+        result = cursor.fetchone()
+        
+        if not result:
+            cursor.close()
+            conn.close()
+            return jsonify({'success': False, 'error': 'User not found'})
+        
+        current_grants = result[0] or ''
+        
+        # Обрабатываем запрошенные гранты
+        requested_list = [grant.strip() for grant in requested_grants.split(';') if grant.strip()]
+        
+        # Обрабатываем текущие гранты
+        current_list = [grant.strip() for grant in current_grants.split(';') if grant.strip()]
+        
+        # Добавляем только новые гранты
+        for grant in requested_list:
+            if grant and grant not in current_list:
+                current_list.append(grant)
+        
+        # Формируем новую строку грантов
+        new_grants = ';'.join(current_list) + ';'
+        
+        # Обновляем гранты пользователя
+        cursor.execute(
+            "UPDATE webplatform.users SET grants = %s WHERE username = %s",
+            (new_grants, username)
+        )
+        
+        # Обновляем статус запроса
+        cursor.execute(
+            "UPDATE webplatform.reg_requests SET status = 'I' WHERE id = %s",
+            (request_id,)
+        )
+        
+        conn.commit()
+        cursor.close()
+        conn.close()
+        
+        return jsonify({
+            'success': True, 
+            'message': f'Права успешно выданы пользователю {username}'
+        })
+        
+    except Exception as e:
+        print(f"Error approving access request: {e}")
+        return jsonify({'success': False, 'error': str(e)})
