@@ -9,9 +9,9 @@
 <body>
     <div class="tabs">
         <button class="tablink" onclick="openTab(event, 'reg_requests')">Запросы на регистрацию</button>
-        <button class="tablink" onclick="openTab(event, 'access_requests')">Запросы прав</button>
         <button class="tablink" onclick="openTab(event, 'users')">Пользователи</button>
         <button class="tablink" onclick="openTab(event, 'applications')">Приложения</button>
+        <button class="tablink" onclick="openTab(event, 'access_requests')">Запросы прав</button>
         <a class="tablink" style="text-decoration: none;" href="/">Вернуться в меню</a>
     </div>
 
@@ -38,31 +38,6 @@
                 </tr>
             </thead>
             <tbody id="reg_requests_body"></tbody>
-        </table>
-    </div>
-
-    <div id="access_requests" class="tabcontent">
-        <div>Запросы на получение прав к приложениям. Статус A - активные запросы, I - обработанные.
-        По нажатию на кнопку "Одобрить" права из поля Text будут добавлены к существующим правам пользователя.</div>
-        <br>
-        <div class="controls">
-            <label for="search_access_requests">Поиск по Username:</label>
-            <input type="text" id="search_access_requests" oninput="fetchData('access_requests')">
-            <button onclick="toggleSort('access_requests')">Сортировать по ID</button>
-        </div>
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Username</th>
-                    <th>Request Type</th>
-                    <th>Text</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="access_requests_body"></tbody>
         </table>
     </div>
 
@@ -115,25 +90,40 @@
         </table>
     </div>
 
+    <div id="access_requests" class="tabcontent">
+        <div>Запросы на получение прав к приложениям. Статус A - активные запросы, требующие обработки. После нажатия кнопки "Одобрить" права из поля Text будут добавлены к пользователю, а статус изменится на I.</div>
+        <br>
+        <div class="controls">
+            <label for="search_access_requests">Поиск по Username:</label>
+            <input type="text" id="search_access_requests" oninput="fetchData('access_requests')">
+            <button onclick="toggleSort('access_requests')">Сортировать по ID</button>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Request Type</th>
+                    <th>Text</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="access_requests_body"></tbody>
+        </table>
+    </div>
+
     <script>
         let sortOrder = 'DESC'; // По умолчанию сортировка по убыванию
         let aliases = []; // Глобальная переменная для хранения значений alias
 
         // Функция для загрузки значений alias
         function loadAliases() {
-            fetch('/get_data_access')
+            fetch('/get_data')
                 .then(response => response.json())
                 .then(data => {
-                    if (data && data.apps) {
-                        aliases = data.apps.map(app => app[2]); // Извлекаем значения alias
-                    } else {
-                        aliases = [];
-                        console.error('Ошибка загрузки aliases: данные не получены');
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка загрузки aliases:', error);
-                    aliases = [];
+                    aliases = data.apps.map(app => app[2]); // Извлекаем значения alias
                 });
         }
 
@@ -157,105 +147,73 @@
         function fetchData(table) {
             const searchInput = table === 'reg_requests' 
                 ? document.getElementById('search_reg_requests').value 
-                : table === 'access_requests'
-                ? document.getElementById('search_access_requests').value
                 : table === 'users' 
                 ? document.getElementById('search_users').value 
+                : table === 'access_requests'
+                ? document.getElementById('search_access_requests').value
                 : '';
             
-            fetch(`/get_data_access?sort=${sortOrder}&search=${searchInput}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Ошибка сети');
-                    }
-                    return response.json();
-                })
+            fetch(`/get_data?sort=${sortOrder}&search=${searchInput}`)
+                .then(response => response.json())
                 .then(data => {
-                    if (!data) {
-                        throw new Error('Данные не получены');
-                    }
-
                     if (table === 'reg_requests') {
                         const regRequestsBody = document.getElementById('reg_requests_body');
-                        if (data.reg_requests && Array.isArray(data.reg_requests)) {
-                            regRequestsBody.innerHTML = data.reg_requests.map(row => `
-                                <tr data-id="${row[0]}">
-                                    <td>${row[0]}</td>
-                                    <td>${row[1] || ''}</td>
-                                    <td>${row[2] || ''}</td>
-                                    <td>${row[3] || ''}</td>
-                                    <td><input type="text" name="status" value="${row[4] || ''}" onchange="updateField('reg_requests', ${row[0]}, 'status', this.value)"></td>
-                                    <td>${row[5] || ''}</td>
-                                    <td><button onclick="saveChanges('reg_requests', ${row[0]})">Сохранить</button></td>
-                                </tr>
-                            `).join('');
-                        } else {
-                            regRequestsBody.innerHTML = '<tr><td colspan="7">Нет данных</td></tr>';
-                        }
-                    } else if (table === 'access_requests') {
-                        const accessRequestsBody = document.getElementById('access_requests_body');
-                        if (data.access_requests && Array.isArray(data.access_requests)) {
-                            accessRequestsBody.innerHTML = data.access_requests.map(row => `
-                                <tr data-id="${row[0]}">
-                                    <td>${row[0]}</td>
-                                    <td>${row[1] || ''}</td>
-                                    <td>${row[2] || ''}</td>
-                                    <td>${row[3] || ''}</td>
-                                    <td>${row[4] || ''}</td>
-                                    <td>${row[5] || ''}</td>
-                                    <td><button onclick="approveRequest(${row[0]}, '${(row[1] || '').replace(/'/g, "\\'")}', '${(row[3] || '').replace(/'/g, "\\'")}')">Одобрить</button></td>
-                                </tr>
-                            `).join('');
-                        } else {
-                            accessRequestsBody.innerHTML = '<tr><td colspan="7">Нет данных</td></tr>';
-                        }
+                        regRequestsBody.innerHTML = data.reg_requests.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                                <td>${row[3]}</td>
+                                <td><input type="text" name="status" value="${row[4]}" onchange="updateField('reg_requests', ${row[0]}, 'status', this.value)"></td>
+                                <td>${row[5]}</td>
+                                <td><button onclick="saveChanges('reg_requests', ${row[0]})">Сохранить</button></td>
+                            </tr>
+                        `).join('');
                     } else if (table === 'users') {
                         const usersBody = document.getElementById('users_body');
-                        if (data.users && Array.isArray(data.users)) {
-                            usersBody.innerHTML = data.users.map(row => `
-                                <tr data-id="${row[0]}">
-                                    <td>${row[0]}</td>
-                                    <td>${row[1] || ''}</td>
-                                    <td>${row[2] || ''}</td>
-                                    <td>${row[3] || ''}</td>
-                                    <td>${row[4] || ''}</td>
-                                    <td><input type="text" name="mail" value="${row[5] || ''}" onchange="updateField('users', ${row[0]}, 'mail', this.value)"></td>
-                                    <td><input type="text" name="status" value="${row[6] || ''}" onchange="updateField('users', ${row[0]}, 'status', this.value)"></td>
-                                    <td>${row[7] || ''}</td>
-                                    <td>
-                                        <div style="position: relative;">
-                                            <input type="text" name="grants" value="${row[8] || ''}" onfocus="showDropdown('${row[0]}')">
-                                            <div id="dropdown-${row[0]}" class="dropdown-content">
-                                                <label><input type="checkbox" value="ADMIN" onchange="updateGrants('${row[0]}')"> ADMIN</label>
-                                            </div>
+                        usersBody.innerHTML = data.users.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                                <td>${row[3]}</td>
+                                <td>${row[4]}</td>
+                                <td><input type="text" name="mail" value="${row[5]}" onchange="updateField('users', ${row[0]}, 'mail', this.value)"></td>
+                                <td><input type="text" name="status" value="${row[6]}" onchange="updateField('users', ${row[0]}, 'status', this.value)"></td>
+                                <td>${row[7]}</td>
+                                <td>
+                                    <div style="position: relative;">
+                                        <input type="text" name="grants" value="${row[8]}" onfocus="showDropdown('${row[0]}')">
+                                        <div id="dropdown-${row[0]}" class="dropdown-content">
+                                            <label><input type="checkbox" value="ADMIN" onchange="updateGrants('${row[0]}')"> ADMIN</label>
                                         </div>
-                                    </td>
-                                    <td><button onclick="saveChanges('users', ${row[0]})">Сохранить</button></td>
-                                </tr>
-                            `).join('');
-                        } else {
-                            usersBody.innerHTML = '<tr><td colspan="10">Нет данных</td></tr>';
-                        }
+                                    </div>
+                                </td>
+                                <td><button onclick="saveChanges('users', ${row[0]})">Сохранить</button></td>
+                            </tr>
+                        `).join('');
                     } else if (table === 'applications') {
                         const applicationsBody = document.getElementById('applications_body');
-                        if (data.apps && Array.isArray(data.apps)) {
-                            applicationsBody.innerHTML = data.apps.map(row => `
-                                <tr data-id="${row[0]}">
-                                    <td>${row[0]}</td>
-                                    <td>${row[1] || ''}</td>
-                                    <td>${row[2] || ''}</td>
-                                </tr>
-                            `).join('');
-                        } else {
-                            applicationsBody.innerHTML = '<tr><td colspan="3">Нет данных</td></tr>';
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Ошибка загрузки данных:', error);
-                    const bodyElement = document.getElementById(table + '_body');
-                    if (bodyElement) {
-                        bodyElement.innerHTML = '<tr><td colspan="10">Ошибка загрузки данных</td></tr>';
+                        applicationsBody.innerHTML = data.apps.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                            </tr>
+                        `).join('');
+                    } else if (table === 'access_requests') {
+                        const accessRequestsBody = document.getElementById('access_requests_body');
+                        accessRequestsBody.innerHTML = data.access_requests.map(row => `
+                            <tr data-id="${row[0]}">
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                                <td>${row[3]}</td>
+                                <td>${row[4]}</td>
+                                <td>${row[5]}</td>
+                                <td><button onclick="approveRequest(${row[0]}, '${row[1]}', '${row[3]}')">Одобрить</button></td>
+                            </tr>
+                        `).join('');
                     }
                 });
         }
@@ -342,6 +300,29 @@
               });
         }
 
+        function approveRequest(requestId, username, requestedGrants) {
+            fetch('/approve_access_request', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    request_id: requestId,
+                    username: username,
+                    requested_grants: requestedGrants
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(data.message);
+                    fetchData('access_requests'); // Обновляем таблицу
+                } else {
+                    alert('Ошибка: ' + data.error);
+                }
+            });
+        }
+
         function sendNotifications() {
             fetch('/send_notifications', {
                 method: 'POST',
@@ -357,35 +338,6 @@
                     alert('Ошибка: ' + data.error);
                 }
             });
-        }
-
-        // Функция для одобрения запроса прав
-        function approveRequest(requestId, username, requestedGrants) {
-            if (confirm(`Одобрить права "${requestedGrants}" для пользователя ${username}?`)) {
-                fetch('/approve_access_request', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        request_id: requestId,
-                        username: username,
-                        requested_grants: requestedGrants
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message);
-                        fetchData('access_requests'); // Обновляем таблицу
-                    } else {
-                        alert('Ошибка: ' + data.error);
-                    }
-                })
-                .catch(error => {
-                    alert('Ошибка сети: ' + error.message);
-                });
-            }
         }
 
         document.addEventListener('DOMContentLoaded', function() {
