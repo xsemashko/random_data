@@ -1,103 +1,41 @@
-from flask import Flask, request, jsonify
-import psycopg2
-import configparser
-
-app = Flask(__name__)
-
-# ... существующие функции ...
-
 @app.route('/get_data')
+@login_required
+@priviliges_check('ADMIN')
 def get_data():
+    # Получаем параметры сортировки и поиска из запроса
+    sort_order = request.args.get('sort', 'DESC')  # По умолчанию сортировка по убыванию
+    search_username = request.args.get('search', '')
+
+    reg_requests, users, apps = pdbw.admin_console_get(sort_order, search_username)
+    
+    # Получаем запросы на доступ
+    access_requests = []
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        
-        sort_order = request.args.get('sort', 'DESC')
-        search = request.args.get('search', '')
-        
-        # Запрос для access_requests
-        access_requests_query = """
+        query = """
             SELECT * FROM webplatform.reg_requests 
             WHERE req_type = 'ACCESS' AND status = 'A' 
-            AND username ILIKE %s 
-            ORDER BY id {sort}
-        """.format(sort=sort_order)
-        cursor.execute(access_requests_query, (f'%{search}%',))
+            ORDER BY id ASC
+        """
+        if search_username:
+            query = f"""
+                SELECT * FROM webplatform.reg_requests 
+                WHERE req_type = 'ACCESS' AND status = 'A' 
+                AND username ILIKE '%{search_username}%'
+                ORDER BY id ASC
+            """
+        
+        cursor.execute(query)
         access_requests = cursor.fetchall()
-        
-        # ... существующие запросы для других таблиц ...
-        
-        return jsonify({
-            'reg_requests': reg_requests,
-            'access_requests': access_requests,
-            'users': users,
-            'apps': apps
-        })
-        
-    except Exception as e:
-        return jsonify({'error': str(e)})
-    finally:
         cursor.close()
         conn.close()
-
-@app.route('/approve_access_request', methods=['POST'])
-def approve_access_request():
-    try:
-        data = request.json
-        request_id = data['request_id']
-        username = data['username']
-        requested_grants = data['requested_grants']
-        
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        # Получаем текущие права пользователя
-        cursor.execute("SELECT grants FROM webplatform.users WHERE username = %s", (username,))
-        user_data = cursor.fetchone()
-        
-        if not user_data:
-            return jsonify({'success': False, 'error': 'Пользователь не найден'})
-        
-        current_grants = user_data[0] or ''
-        
-        # Обрабатываем новые права
-        new_grants_list = []
-        if current_grants:
-            new_grants_list = current_grants.rstrip(';').split(';')
-        
-        requested_grants_list = requested_grants.rstrip(';').split(';')
-        
-        # Добавляем только уникальные права
-        for grant in requested_grants_list:
-            if grant and grant not in new_grants_list:
-                new_grants_list.append(grant)
-        
-        new_grants = ';'.join(new_grants_list) + ';'
-        
-        # Обновляем права пользователя
-        cursor.execute(
-            "UPDATE webplatform.users SET grants = %s WHERE username = %s",
-            (new_grants, username)
-        )
-        
-        # Меняем статус запроса на I
-        cursor.execute(
-            "UPDATE webplatform.reg_requests SET status = 'I' WHERE id = %s",
-            (request_id,)
-        )
-        
-        conn.commit()
-        
-        return jsonify({
-            'success': True,
-            'message': f'Права успешно выданы пользователю {username}'
-        })
-        
     except Exception as e:
-        conn.rollback()
-        return jsonify({'success': False, 'error': str(e)})
-    finally:
-        cursor.close()
-        conn.close()
+        print(f"Error fetching access requests: {e}")
 
-# ... остальной существующий Flask код ...
+    return jsonify({
+        'reg_requests': reg_requests,
+        'users': users,
+        'apps': apps,
+        'access_requests': access_requests
+    })
