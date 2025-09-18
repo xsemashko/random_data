@@ -5,6 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Администрирование</title>
     <link rel="stylesheet" type="text/css" href="/static/css/admin_styles.css">
+    <style>
+        /* Стили для вкладки Запросы прав */
+        #access_requests {
+            display: none;
+            padding: 20px;
+        }
+
+        #access_requests table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        #access_requests th, #access_requests td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        #access_requests th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        #access_requests tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        #access_requests tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        #access_requests .controls {
+            margin-bottom: 15px;
+        }
+
+        #access_requests .controls label {
+            margin-right: 10px;
+        }
+
+        #access_requests .controls input[type="text"] {
+            padding: 5px;
+            margin-right: 10px;
+        }
+
+        #access_requests .controls button {
+            padding: 5px 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        #access_requests .controls button:hover {
+            background-color: #45a049;
+        }
+
+        #access_requests button {
+            padding: 5px 10px;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin: 2px;
+        }
+
+        #access_requests .approve-btn {
+            background-color: #2196F3;
+        }
+
+        #access_requests .approve-btn:hover {
+            background-color: #0b7dda;
+        }
+
+        #access_requests .reject-btn {
+            background-color: #f44336;
+        }
+
+        #access_requests .reject-btn:hover {
+            background-color: #d32f2f;
+        }
+    </style>
 </head>
 <body>
     <div class="tabs">
@@ -91,7 +172,7 @@
     </div>
 
     <div id="access_requests" class="tabcontent">
-        <div>Запросы на получение прав к приложениям. Статус A - активные запросы, требующие обработки. После нажатия кнопки "Одобрить" права из поля Text будут добавлены к пользователю, а статус изменится на I.</div>
+        <div>Запросы на получение прав к приложениям. Статус A - активные запросы, требующие обработки. После нажатия кнопки "Одобрить" права из поля Text будут добавлены к пользователю, а статус изменится на I. Кнопка "Отклонить" просто меняет статус на I без выдачи прав.</div>
         <br>
         <div class="controls">
             <label for="search_access_requests">Поиск по Username:</label>
@@ -211,7 +292,10 @@
                                 <td>${row[3]}</td>
                                 <td>${row[4]}</td>
                                 <td>${row[5]}</td>
-                                <td><button onclick="approveRequest(${row[0]}, '${row[1]}', '${row[3]}')">Одобрить</button></td>
+                                <td>
+                                    <button class="approve-btn" onclick="approveRequest(${row[0]}, '${row[1]}', '${row[3]}')">Одобрить</button>
+                                    <button class="reject-btn" onclick="rejectRequest(${row[0]})">Отклонить</button>
+                                </td>
                             </tr>
                         `).join('');
                     }
@@ -321,6 +405,29 @@
                     alert('Ошибка: ' + data.error);
                 }
             });
+        }
+
+        function rejectRequest(requestId) {
+            if (confirm('Вы уверены, что хотите отклонить этот запрос?')) {
+                fetch('/reject_access_request', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        request_id: requestId
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message);
+                        fetchData('access_requests'); // Обновляем таблицу
+                    } else {
+                        alert('Ошибка: ' + data.error);
+                    }
+                });
+            }
         }
 
         function sendNotifications() {
