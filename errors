@@ -3,12 +3,11 @@ function formatNumberWithSpaces(number) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
 }
 
-// После загрузки страницы
 document.addEventListener('DOMContentLoaded', function() {
-    const tdElements = document.querySelectorAll('td');
+    // Только ячейки с классом .razryad
+    const tdElements = document.querySelectorAll('td.razryad');
     
     tdElements.forEach(td => {
-        // Проверяем, содержит ли ячейка число
         const number = parseInt(td.textContent.trim());
         if (!isNaN(number)) {
             td.textContent = formatNumberWithSpaces(number);
