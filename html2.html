@@ -119,29 +119,26 @@ class MQWorkerPUT:
     def put_to_queue(self, root, od, put_mqmd, put_opts, put_rfh2, log_queue):
         queue2 = pymqi.Queue(self.qmgr)
         try:
-            # Создаем PMO с таймаутом 5 секунд для отправки
             pmo = pymqi.PMO()
             pmo.Options = pymqi.CMQC.MQPMO_WAIT
-            pmo.WaitInterval = 5000  # 5 секунд
+            pmo.WaitInterval = 5000
             
             queue2.open(od)
             queue2.put_rfh2(root.toprettyxml().encode('utf-8'), put_mqmd, pmo, [put_rfh2])
-            log_queue.put(['INFO', 'Сообщение успешно отправлено в MQ'])
             
         except pymqi.MQMIError as e:
             if e.reason == pymqi.CMQC.MQRC_PUT_INHIBITED:
-                log_queue.put(['ERROR', 'Таймаут отправки: не удалось отправить сообщение за 5 секунд, продолжаем работу'])
+                log_queue.put(['ERROR', 'Time out occured'])
             else:
-                log_queue.put(['ERROR', f'Ошибка MQ при отправке: {e}'])
-            # Пробрасываем исключение для обработки в декораторе
+                log_queue.put(['ERROR', f'Error while send to MQ: {e}'])
             raise
             
         except Exception as e:
-            log_queue.put(['ERROR', f'Неожиданная ошибка при отправке: {str(e)}'])
+            log_queue.put(['ERROR', f'Error while send to MQ: {str(e)}'])
             raise
             
         finally:
             try:
                 queue2.close()
             except:
-                pass  # Игнорируем ошибки при закрытии очереди
+                pass
