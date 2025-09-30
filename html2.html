@@ -121,21 +121,17 @@ class MQWorkerPUT:
             pmo = pymqi.PMO()
             pmo.Options = pymqi.CMQC.MQPMO_WAIT
             pmo.WaitInterval = 5000
-            
             queue2.open(od)
             queue2.put_rfh2(root.toprettyxml().encode('utf-8'), put_mqmd, pmo, [put_rfh2])
-            
         except pymqi.MQMIError as e:
             if e.reason == pymqi.CMQC.MQRC_PUT_INHIBITED:
                 log_queue.put(['ERROR', 'Time out occured while sending to MQ'])
             else:
                 log_queue.put(['ERROR', f'Error while sending to MQ: {e}'])
             raise
-            
         except Exception as e:
             log_queue.put(['ERROR', f'Error while sending to MQ: {str(e)}'])
             raise
-            
         finally:
             try:
                 queue2.close()
