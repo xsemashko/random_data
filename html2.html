@@ -32,9 +32,8 @@ def queue_handler(fn):
             elif e.reason == pymqi.CMQC.MQRC_Q_MGR_STOPPING or e.reason == pymqi.CMQC.MQRC_HOST_NOT_AVAILABLE:
                 log_queue.put(['ERROR',traceback.format_exc()])
                 cls.reinit(log_queue)
-            # Для таймаута отправки НЕ делаем reinit, просто логируем
             elif e.reason == pymqi.CMQC.MQRC_PUT_INHIBITED:
-                log_queue.put(['ERROR', 'Таймаут отправки сообщения: операция заняла более 5 секунд'])
+                log_queue.put(['ERROR', 'Time out occured while sending to MQ'])
             else:
                 log_queue.put(['ERROR',traceback.format_exc()])
         except:
@@ -128,13 +127,13 @@ class MQWorkerPUT:
             
         except pymqi.MQMIError as e:
             if e.reason == pymqi.CMQC.MQRC_PUT_INHIBITED:
-                log_queue.put(['ERROR', 'Time out occured'])
+                log_queue.put(['ERROR', 'Time out occured while sending to MQ'])
             else:
-                log_queue.put(['ERROR', f'Error while send to MQ: {e}'])
+                log_queue.put(['ERROR', f'Error while sending to MQ: {e}'])
             raise
             
         except Exception as e:
-            log_queue.put(['ERROR', f'Error while send to MQ: {str(e)}'])
+            log_queue.put(['ERROR', f'Error while sending to MQ: {str(e)}'])
             raise
             
         finally:
