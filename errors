@@ -1,1 +1,34 @@
-MQI Error. Comp: 2, Reason 2018: FAILED: MQRC_HCONN_ERROR
+def mq_putter(mp_queue,log_queue):
+
+#Connecting to MQ
+    MQP = MQWorkerPUT(log_queue)
+
+    while 1:
+        present_to_put = 0
+        try:
+            mp_item_rs = mp_queue.get_nowait()
+            root = mp_item_rs[0]
+            od = mp_item_rs[1]
+            put_mqmd = mp_item_rs[2]
+            put_opts = mp_item_rs[3]
+            put_rfh2 = mp_item_rs[4]
+            RECORD_ID = mp_item_rs[5]
+            RQUID = mp_item_rs[6]
+            present_to_put = 1
+        except:
+            #Queue empty
+            time.sleep(0.0001)
+
+        if present_to_put == 1:
+            try:
+                MQP.put_to_queue(root,od,put_mqmd,put_opts,put_rfh2,RECORD_ID,RQUID,log_queue)
+                mp_item_rs = None
+                root = None
+                od = None
+                put_mqmd = None
+                put_opts = None
+                put_rfh2 = None
+                RECORD_ID = None
+                present_to_put = 0
+            except:
+                log_queue.put(['ERROR',traceback.format_exc()])
