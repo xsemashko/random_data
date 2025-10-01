@@ -1,2 +1,60 @@
->>> print([attr for attr in dir(pymqi.CMQC) if 'MQPMO' in attr])
-['MQPMO_ALTERNATE_USER_AUTHORITY', 'MQPMO_ASYNC_RESPONSE', 'MQPMO_CURRENT_LENGTH', 'MQPMO_CURRENT_VERSION', 'MQPMO_DEFAULT_CONTEXT', 'MQPMO_FAIL_IF_QUIESCING', 'MQPMO_LENGTH_1', 'MQPMO_LENGTH_2', 'MQPMO_LENGTH_3', 'MQPMO_LOGICAL_ORDER', 'MQPMO_MD_FOR_OUTPUT_ONLY', 'MQPMO_NEW_CORREL_ID', 'MQPMO_NEW_MSG_ID', 'MQPMO_NONE', 'MQPMO_NOT_OWN_SUBS', 'MQPMO_NO_CONTEXT', 'MQPMO_NO_SYNCPOINT', 'MQPMO_PASS_ALL_CONTEXT', 'MQPMO_PASS_IDENTITY_CONTEXT', 'MQPMO_PUB_OPTIONS_MASK', 'MQPMO_RESOLVE_LOCAL_Q', 'MQPMO_RESPONSE_AS_Q_DEF', 'MQPMO_RESPONSE_AS_TOPIC_DEF', 'MQPMO_RETAIN', 'MQPMO_SCOPE_QMGR', 'MQPMO_SET_ALL_CONTEXT', 'MQPMO_SET_IDENTITY_CONTEXT', 'MQPMO_STRUC_ID', 'MQPMO_STRUC_ID_ARRAY', 'MQPMO_SUPPRESS_REPLYTO', 'MQPMO_SYNCPOINT', 'MQPMO_SYNC_RESPONSE', 'MQPMO_VERSION_1', 'MQPMO_VERSION_2', 'MQPMO_VERSION_3', 'MQPMO_WARN_IF_NO_SUBS_MATCHED']
+import threading
+import queue
+
+@queue_handler
+def put_to_queue(self, root, od, put_mqmd, put_opts, put_rfh2, RECORD_ID, RQUID, log_queue):
+    queue2 = pymqi.Queue(self.qmgr)
+    try:
+        result_queue = queue.Queue()
+        error_queue = queue.Queue()
+        
+        def put_worker():
+            try:
+                queue2.open(od)
+                # Используем стандартные опции без WaitInterval
+                pmo = pymqi.PMO()
+                pmo.Options = pymqi.CMQC.MQPMO_SYNC_RESPONSE
+                queue2.put_rfh2(root.toprettyxml().encode('utf-8'), put_mqmd, pmo, [put_rfh2])
+                result_queue.put(True)
+            except Exception as e:
+                error_queue.put(e)
+        
+        # Запускаем отправку в отдельном потоке
+        thread = threading.Thread(target=put_worker)
+        thread.daemon = True
+        thread.start()
+        
+        # Ждем максимум 5 секунд
+        thread.join(5)
+        
+        if thread.is_alive():
+            # Таймаут - прерываем операцию
+            log_queue.put(['ERROR', f'Time out occurred while sending [{RECORD_ID}] to MQ'])
+            # Пытаемся закрыть очередь чтобы прервать операцию
+            try:
+                queue2.close()
+            except:
+                pass
+            return  # Просто выходим, не бросаем исключение
+        
+        # Проверяем ошибки
+        if not error_queue.empty():
+            error = error_queue.get()
+            if isinstance(error, pymqi.MQMIError):
+                log_queue.put(['ERROR', f'MQ Error while sending [{RECORD_ID}] to MQ: {error}'])
+            else:
+                log_queue.put(['ERROR', f'Error while sending [{RECORD_ID}] to MQ: {str(error)}'])
+            raise error
+        
+        # Успех
+        log_queue.put(['DEBUG', root.toprettyxml()])
+        log_queue.put(['INFO', f"Message sent: [{RECORD_ID}] [MQ] RQUID = {RQUID}"])
+        
+    except Exception as e:
+        # Эта часть сработает только если ошибка не таймаут
+        raise
+    finally:
+        try:
+            queue2.close()
+        except:
+            pass
