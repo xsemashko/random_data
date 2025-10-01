@@ -1,9 +1,8 @@
-def mq_putter(mp_queue,log_queue):
-
-#Connecting to MQ
+def mq_putter(mp_queue, log_queue):
+    # Connecting to MQ
     MQP = MQWorkerPUT(log_queue)
 
-    while 1:
+    while True:
         present_to_put = 0
         try:
             mp_item_rs = mp_queue.get_nowait()
@@ -16,19 +15,39 @@ def mq_putter(mp_queue,log_queue):
             RQUID = mp_item_rs[6]
             present_to_put = 1
         except:
-            #Queue empty
+            # Queue empty
             time.sleep(0.0001)
 
         if present_to_put == 1:
-            try:
-                MQP.put_to_queue(root,od,put_mqmd,put_opts,put_rfh2,RECORD_ID,RQUID,log_queue)
-                mp_item_rs = None
-                root = None
-                od = None
-                put_mqmd = None
-                put_opts = None
-                put_rfh2 = None
-                RECORD_ID = None
-                present_to_put = 0
-            except:
-                log_queue.put(['ERROR',traceback.format_exc()])
+            error_queue = tqueue.Queue()
+            
+            def put_worker():
+                try:
+                    MQP.put_to_queue(root, od, put_mqmd, put_opts, put_rfh2, RECORD_ID, RQUID, log_queue)
+                except Exception as e:
+                    error_queue.put(e)
+            
+            # Запускаем отправку в отдельном потоке с таймаутом
+            thread = threading.Thread(target=put_worker)
+            thread.daemon = True
+            thread.start()
+            thread.join(5)  # Ждем максимум 5 секунд
+            
+            if thread.is_alive():
+                log_queue.put(['ERROR', f'Time out occurred while sending [{RECORD_ID}] to MQ'])
+                # Поток все еще работает - просто продолжаем, он будет убит как daemon
+            else:
+                # Проверяем ошибки
+                if not error_queue.empty():
+                    error = error_queue.get()
+                    log_queue.put(['ERROR', f'Error in MQ thread while sending [{RECORD_ID}]: {str(error)}'])
+            
+            # Очистка переменных
+            mp_item_rs = None
+            root = None
+            od = None
+            put_mqmd = None
+            put_opts = None
+            put_rfh2 = None
+            RECORD_ID = None
+            present_to_put = 0
