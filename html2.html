@@ -33,7 +33,7 @@ def queue_handler(fn):
                 log_queue.put(['ERROR',traceback.format_exc()])
                 cls.reinit(log_queue)
             elif e.reason == pymqi.CMQC.MQRC_PUT_INHIBITED:
-                log_queue.put(['ERROR', 'Time out occured while sending to MQ'])
+                pass
             else:
                 log_queue.put(['ERROR',traceback.format_exc()])
         except:
@@ -115,7 +115,7 @@ class MQWorkerPUT:
         self.qmgr.disconnect()
 
     @queue_handler
-    def put_to_queue(self, root, od, put_mqmd, put_opts, put_rfh2, log_queue):
+    def put_to_queue(self, root, od, put_mqmd, put_opts, put_rfh2, RECORD_ID, RQUID, log_queue):
         queue2 = pymqi.Queue(self.qmgr)
         try:
             pmo = pymqi.PMO()
@@ -123,15 +123,16 @@ class MQWorkerPUT:
             pmo.WaitInterval = 5000
             queue2.open(od)
             queue2.put_rfh2(root.toprettyxml().encode('utf-8'), put_mqmd, pmo, [put_rfh2])
-            log_queue.put(['INFO', 'Сообщение успешно отправлено в MQ'])
+            log_queue.put(['DEBUG',root.toprettyxml()])
+            log_queue.put(['INFO',f"Message sent: [{RECORD_ID}] [MQ] RQUID = {RQUID}"])
         except pymqi.MQMIError as e:
             if e.reason == pymqi.CMQC.MQRC_PUT_INHIBITED:
-                log_queue.put(['ERROR', 'Time out occured while sending to MQ'])
+                log_queue.put(['ERROR', 'Time out occured while sending [{RECORD_ID}] to MQ'])
             else:
-                log_queue.put(['ERROR', f'Error while sending to MQ: {e}'])
+                log_queue.put(['ERROR', f'Error while sending [{RECORD_ID}] to MQ: {e}'])
             raise
         except Exception as e:
-            log_queue.put(['ERROR', f'Error while sending to MQ: {str(e)}'])
+            log_queue.put(['ERROR', f'Error while sending [{RECORD_ID}] to MQ: {str(e)}'])
             raise
         finally:
             try:
