@@ -26,23 +26,19 @@ def mq_putter(mp_queue, log_queue):
                     MQP.put_to_queue(root, od, put_mqmd, put_opts, put_rfh2, RECORD_ID, RQUID, log_queue)
                 except Exception as e:
                     error_queue.put(e)
-            
-            # Запускаем отправку в отдельном потоке с таймаутом
+
             thread = threading.Thread(target=put_worker)
             thread.daemon = True
             thread.start()
-            thread.join(5)  # Ждем максимум 5 секунд
-            
+            thread.join(5)
+
             if thread.is_alive():
                 log_queue.put(['ERROR', f'Time out occurred while sending [{RECORD_ID}] to MQ'])
-                # Поток все еще работает - просто продолжаем, он будет убит как daemon
             else:
-                # Проверяем ошибки
                 if not error_queue.empty():
                     error = error_queue.get()
                     log_queue.put(['ERROR', f'Error in MQ thread while sending [{RECORD_ID}]: {str(error)}'])
-            
-            # Очистка переменных
+
             mp_item_rs = None
             root = None
             od = None
