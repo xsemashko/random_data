@@ -1,3 +1,7 @@
+Вот функция какая получилась и класс. После установки на тестовый стенд в логе всё выглядит так, как будто всё работает без проблем, ответы уходят, но сопровождение IBM MQ говорят что ответ не получают.
+
+Функция которая создаёт объект класса и запускает метод:
+
 def mq_putter(mp_queue, log_queue):
     # Connecting to MQ
     MQP = MQWorkerPUT(log_queue)
@@ -23,7 +27,7 @@ def mq_putter(mp_queue, log_queue):
             
             def put_worker():
                 try:
-                    MQP.put_to_queue(root, od, put_mqmd, put_opts, put_rfh2, RECORD_ID, RQUID, log_queue)
+                    MQP.put_to_queue(root, od, put_mqmd, put_opts, put_rfh2, log_queue)
                 except Exception as e:
                     error_queue.put(e)
 
@@ -38,6 +42,9 @@ def mq_putter(mp_queue, log_queue):
                 if not error_queue.empty():
                     error = error_queue.get()
                     log_queue.put(['ERROR', f'Error in MQ thread while sending [{RECORD_ID}]: {str(error)}'])
+                else:
+                    log_queue.put(['DEBUG',root.toprettyxml()])
+                    log_queue.put(['INFO',f"Message sent: [{RECORD_ID}] [MQ] RQUID = {RQUID}"])
 
             mp_item_rs = None
             root = None
@@ -47,3 +54,124 @@ def mq_putter(mp_queue, log_queue):
             put_rfh2 = None
             RECORD_ID = None
             present_to_put = 0
+			
+Сам клас на всякий случай дублирую:
+
+import pymqi, time, traceback, configparser
+from pymqi import CMQC
+from functools import wraps
+
+config = configparser.ConfigParser()
+config.read("config.ini")
+
+queue_manager = config["DEFAULT"]["queue_manager"]
+channel = config["DEFAULT"]["channel"]
+host = config["DEFAULT"]["host"]
+port = config["DEFAULT"]["port"]
+queue_name = config["DEFAULT"]["queue_input"]
+queue_name2 = config["DEFAULT"]["queue_output"]
+conn_info = '%s(%s)' % (host, port)
+ssl_cipher_spec = config["DEFAULT"]["ssl_cipher_spec"]
+enable_ssl = config["DEFAULT"]["enable_ssl"]
+key_repo_location = config["DEFAULT"]["key_repo_location"]
+
+def queue_handler(fn):
+    @wraps(fn)
+    def wrapper(*args, **kw):
+        cls = args[0]
+        log_queue = args[-1]
+        reconnectTries = 5400
+        reconnectIdle = 6
+        try:
+            return fn(*args, **kw)
+        except pymqi.MQMIError as e:
+            if e.reason == pymqi.CMQC.MQRC_RECONNECT_FAILED or e.reason == pymqi.CMQC.MQRC_CONNECTION_BROKEN:
+                log_queue.put(['ERROR',traceback.format_exc()])
+                cls.reinit(log_queue)
+            elif e.reason == pymqi.CMQC.MQRC_Q_MGR_STOPPING or e.reason == pymqi.CMQC.MQRC_HOST_NOT_AVAILABLE:
+                log_queue.put(['ERROR',traceback.format_exc()])
+                cls.reinit(log_queue)
+        except:
+            log_queue.put(['ERROR',traceback.format_exc()])
+    return wrapper
+
+def init_connection_handler(fn):
+    @wraps(fn)
+    def wrapper(*args, **kw):
+        reconnectTries = 5400
+        reconnectIdle = 6
+        log_queue = args[-1]
+        for try_no in range(reconnectTries):
+            try:
+                return fn(*args, **kw)
+            except:
+                if try_no%50 == 0:
+                    log_queue.put(['ERROR',traceback.format_exc()])
+                time.sleep(reconnectIdle)
+    return wrapper
+
+class MQWorkerPUT:
+    @init_connection_handler
+    def __init__(self,log_queue):
+        self.gmo = pymqi.GMO()
+        self.gmo.Options = pymqi.CMQC.MQGMO_WAIT
+        self.gmo.WaitInterval = 5000
+
+        if enable_ssl == "True":
+            self.cd = pymqi.CD()
+            self.cd.ChannelName = bytes(channel, 'utf-8')
+            self.cd.ConnectionName = bytes(conn_info, 'utf-8')
+            self.cd.ChannelType = pymqi.CMQC.MQCHT_CLNTCONN
+            self.cd.TransportType = pymqi.CMQC.MQXPT_TCP
+            self.cd.SSLCipherSpec = bytes(ssl_cipher_spec, 'utf-8')
+            self.sco = pymqi.SCO()
+            self.sco.KeyRepository = bytes(key_repo_location, 'utf-8')
+            self.sco.CertificateLabel = b'ibmwebspheremqimpc'
+
+        if enable_ssl == "True":
+            self.qmgr = pymqi.QueueManager(None)
+            self.qmgr.connect_with_options(queue_manager, self.cd, self.sco, opts=pymqi.CMQC.MQCNO_RECONNECT_Q_MGR)
+        else:
+            self.qmgr = pymqi.connect(queue_manager, channel, conn_info)
+
+        log_queue.put(['INFO',' [MQ Putter] Connected successful'])
+
+    @init_connection_handler
+    def reinit(self,log_queue):
+        try:
+            self.qmgr.disconnect()
+        except:
+            pass
+
+        self.gmo = pymqi.GMO()
+        self.gmo.Options = pymqi.CMQC.MQGMO_WAIT
+        self.gmo.WaitInterval = 5000
+
+        if enable_ssl == "True":
+            self.cd = pymqi.CD()
+            self.cd.ChannelName = bytes(channel, 'utf-8')
+            self.cd.ConnectionName = bytes(conn_info, 'utf-8')
+            self.cd.ChannelType = pymqi.CMQC.MQCHT_CLNTCONN
+            self.cd.TransportType = pymqi.CMQC.MQXPT_TCP
+            self.cd.SSLCipherSpec = bytes(ssl_cipher_spec, 'utf-8')
+            self.sco = pymqi.SCO()
+            self.sco.KeyRepository = bytes(key_repo_location, 'utf-8')
+            self.sco.CertificateLabel = b'ibmwebspheremqimpc'
+
+        if enable_ssl == "True":
+            self.qmgr = pymqi.QueueManager(None)
+            self.qmgr.connect_with_options(queue_manager, self.cd, self.sco, opts=pymqi.CMQC.MQCNO_RECONNECT_Q_MGR)
+        else:
+            self.qmgr = pymqi.connect(queue_manager, channel, conn_info)
+
+        log_queue.put(['INFO',' [MQ Putter] Connected successful'])
+
+    def __del__(self):
+        self.qmgr.disconnect()
+
+    @queue_handler
+    def put_to_queue(self,root,od,put_mqmd,put_opts,put_rfh2,log_queue):
+        queue2 = pymqi.Queue(self.qmgr)
+        queue2.open(od)
+        queue2.put_rfh2(root.toprettyxml().encode('utf-8'), put_mqmd, put_opts, [put_rfh2])
+        queue2.close()
