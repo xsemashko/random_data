@@ -1,29 +1,42 @@
-import concurrent.futures
+def mq_putter(mp_queue,log_queue):
 
-def mq_putter(mp_queue, log_queue):
+#Connecting to MQ
     MQP = MQWorkerPUT(log_queue)
-    
-    with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
-        while True:
-            present_to_put = 0
-            try:
-                mp_item_rs = mp_queue.get_nowait()
-                root, od, put_mqmd, put_opts, put_rfh2, RECORD_ID, RQUID = mp_item_rs
-                present_to_put = 1
-            except:
-                time.sleep(0.0001)
 
-            if present_to_put == 1:
-                future = executor.submit(
-                    MQP.put_to_queue, 
-                    root, od, put_mqmd, put_opts, put_rfh2, RECORD_ID, RQUID, log_queue
-                )
-                
+    while 1:
+        present_to_put = 0
+        try:
+            mp_item_rs = mp_queue.get_nowait()
+            root = mp_item_rs[0]
+            od = mp_item_rs[1]
+            put_mqmd = mp_item_rs[2]
+            put_opts = mp_item_rs[3]
+            put_rfh2 = mp_item_rs[4]
+            RECORD_ID = mp_item_rs[5]
+            RQUID = mp_item_rs[6]
+            present_to_put = 1
+        except:
+            #Queue empty
+            time.sleep(0.0001)
+
+        if present_to_put == 1:
+            with pool.ThreadPoolExecutor(max_workers=1) as executor:
+                future = executor.submit(MQP.put_to_queue, root, od, put_mqmd, put_opts, put_rfh2, log_queue)
+
                 try:
-                    future.result(timeout=5)  # Таймаут 5 секунд
+                    future.result(timeout=5)
                     log_queue.put(['DEBUG', root.toprettyxml()])
                     log_queue.put(['INFO', f"Message sent: [{RECORD_ID}] [MQ] RQUID = {RQUID}"])
                 except concurrent.futures.TimeoutError:
                     log_queue.put(['ERROR', f'Time out occurred while sending [{RECORD_ID}] to MQ'])
                 except Exception as e:
                     log_queue.put(['ERROR', f'Error while sending [{RECORD_ID}]: {str(e)}'])
+                
+                mp_item_rs = None
+                root = None
+                od = None
+                put_mqmd = None
+                put_opts = None
+                put_rfh2 = None
+                RECORD_ID = None
+                present_to_put = 0
