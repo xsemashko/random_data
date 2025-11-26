@@ -1,42 +1,609 @@
-def mq_putter(mp_queue,log_queue):
+У меня имеется следующая html страница. На ней есть элементы Jinja2 так как бэкенд написан на Python flask. Также тут используется бибилиотека chart.umd.js с помощью которой рисуются графики.
+НА 2х графиках, и именно: myChart, myChart2 имеется следующая проблема. Перестали вмещаться лэйблы, так как в labels уже передаётся много значений. Над бы там сделать прокрутку какую-то.
+Также проблема с нехваткой цветов, я задавал семь ["#406682","#7f96aa","#bec9d4","#dee4e9","#fff","#89A8B2","#B3C8CF"] в обном случае через переменную в другом напрямую в опциях графика, нужно сделать чтобы цветовгенерировался автамотически
+но оттенки нужно брать около тех, что я уже выбрал, чтобы была единая гамма.
 
-#Connecting to MQ
-    MQP = MQWorkerPUT(log_queue)
+Сделай всё сразу готовым файлом, чтобы я только заменил, всё остальное хорошо и ничего ментяь не нужно.
 
-    while 1:
-        present_to_put = 0
-        try:
-            mp_item_rs = mp_queue.get_nowait()
-            root = mp_item_rs[0]
-            od = mp_item_rs[1]
-            put_mqmd = mp_item_rs[2]
-            put_opts = mp_item_rs[3]
-            put_rfh2 = mp_item_rs[4]
-            RECORD_ID = mp_item_rs[5]
-            RQUID = mp_item_rs[6]
-            present_to_put = 1
-        except:
-            #Queue empty
-            time.sleep(0.0001)
+<!DOCTYPE html>
+<html>
+<head>
+  <div id="pagetop"></div>
+  <title>Продукты Максимум</title>
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/js/dataTables.min.js"></script>
+  <link href="/static/css/product_maximum.css" rel="stylesheet">
+  <link href="/static/css/loader.css" rel="stylesheet">
+  <script src="/static/js/chart.umd.js"></script>
+  <script src="/static/js/fixedHeader.dataTables.js"></script>
+  <script src="/static/js/dataTables.fixedHeader.js"></script>
+  <link href="/static/css/fixedHeader.dataTables.css" rel="stylesheet">
+  <link href="/static/css/product_maximum_modal.css" rel="stylesheet">
+  <script src="/static/js/dataTables.buttons.js"></script>
+  <script src="/static/js/buttons.dataTables.js"></script>
+  <script src="/static/js/jszip.min.js"></script>
+  <script src="/static/js/vfs_fonts.js"></script>
+  <script src="/static/js/buttons.html5.min.js"></script>
+  <script src="/static/js/buttons.print.min.js"></script>
+  <script src="/static/js/chartjs-plugin-datalabels.min.js"></script>
+  <script src="/static/js/swiffy-slider.min.js" crossorigin="anonymous" defer></script>
+  <link href="/static/css/swiffy-slider.min.css" rel="stylesheet" crossorigin="anonymous">
+</head>
+<body>
 
-        if present_to_put == 1:
-            with pool.ThreadPoolExecutor(max_workers=1) as executor:
-                future = executor.submit(MQP.put_to_queue, root, od, put_mqmd, put_opts, put_rfh2, log_queue)
+<script type="text/javascript">
+  $(window).on('load', function() {
+    setTimeout(removeLoader, 2000);
+  });
+  function removeLoader() {
+    $('#loading').hide();
+    $('#loadingDiv').remove();
+    document.getElementById("ButtonsBlock").style.display = "grid";
+    document.getElementById("myTable").style.display = "block";
+  };
+</script>
 
-                try:
-                    future.result(timeout=5)
-                    log_queue.put(['DEBUG', root.toprettyxml()])
-                    log_queue.put(['INFO', f"Message sent: [{RECORD_ID}] [MQ] RQUID = {RQUID}"])
-                except concurrent.futures.TimeoutError:
-                    log_queue.put(['ERROR', f'Time out occurred while sending [{RECORD_ID}] to MQ'])
-                except Exception as e:
-                    log_queue.put(['ERROR', f'Error while sending [{RECORD_ID}]: {str(e)}'])
-                
-                mp_item_rs = None
-                root = None
-                od = None
-                put_mqmd = None
-                put_opts = None
-                put_rfh2 = None
-                RECORD_ID = None
-                present_to_put = 0
+<div id="loadingDiv"></div>
+<div id="loading"></div>
+
+<button onclick="topFunction()" id="myBtn">Вверх</button>
+
+<div id="ButtonsBlock">
+  <a id="button1" href="#myTable_info">К таблице</a>
+  <a id="button1" href="#" onclick="showDialog()">Слайды</a>
+</div>
+
+{% include 'toolbar_with_opacity.html' %}
+
+<div class="grid-div">
+
+<div style="width:660px;background:#232935;height:390px;padding:30px 30px;border-radius:20px;justify-self: center;box-shadow: 4px 4px 6px 0px rgba(34,60,80,0.5)"><canvas id="linearChart"></canvas></div>
+
+{% set cards_total = total_amount[0] + total_amount[1] + total_amount[2] %}
+
+<div style="display: grid;grid-template-rows: 1fr 1fr 1fr;max-width:100px;background:#232935;max-height:440px;padding:50px 30px;border-radius:20px;justify-self: right;box-shadow: 4px 4px 6px 0px rgba(34,60,80,0.5);justify-content: center;text-align: center">
+  {% set aactive =  total_amount[0] * 100 / cards_total %}
+  {% set bblocked =  total_amount[1] * 100 / cards_total %}
+  {% set aannul =  total_amount[2] * 100 / cards_total %}
+  <div>
+  <div style="color: white;font-family: 'OpenSans';font-size: 14px;font-weight: bold;text-align: center;">Карт активно, {{'%0.1f' % aactive|float}} %:</div>
+  <div id="cards_count">{{ total_amount[0] }}</div>
+</div>
+<div>
+  <div style="color: white;font-family: 'OpenSans';font-size: 14px;font-weight: bold;text-align: center;">Заблокировано, {{'%0.1f' % bblocked|float}} %:</div>
+  <div id="cards_count">{{ total_amount[1] }}</div>
+</div>
+<div>
+  <div style="color: white;font-family: 'OpenSans';font-size: 14px;font-weight: bold;text-align: center;">Аннулировано, {{'%0.1f' % aannul|float}} %:</div>
+  <div id="cards_count">{{ total_amount[2] }}</div>
+  </div>
+</div>
+<div style="width:390px;background:rgba(35,41,53,1);height:390px;padding:30px 30px;border-radius:20px;justify-self: center;box-shadow: 4px 4px 6px 0px rgba(34,60,80,0.5)"><canvas id="myChart"></canvas></div>
+<div class="myChart2-container"><canvas id="myChart2"></canvas></div>
+</div>
+
+<div id="modalBackdrop" onclick="closeDialog()"></div>
+
+<dialog id="sliderDialog">
+  <button id="closeDialogButton" onclick="closeDialog()">Закрыть</button>
+  <div class="swiffy-slider slider-nav-dark slider-indicators-dark slider-indicators-highlight" style="width: 100%;height: 100%;">
+    <ul class="slider-container">
+        <li><div id="slide-wrapper"><p id="hh">Динамика активирования карт в разрезе карточных продуктов линейки "Максимум"</p>
+          <p id="s_text">На графике отражена динамика активирования карт в разрезе карточных продуктов линейки "Максимум" без учета аннулирования карт.</p>
+          <div class="lineChartSlider-container"><canvas id="lineChartSlider"></canvas></div></div></li>
+        <li><div id="slide-wrapper"><p id="hh">Динамика активирования карт в разрезе продуктов (детально)</p>
+          <p id="s_text">На графике отражена динамика активирования карт в разрезе карточных продуктов линейки "Максимум" (детально) без учета аннулирования карт.</p><div class="barChartSlider-container"><canvas id="barChartSlider"></canvas></div></div></li>
+        <li><div id="slide-wrapper"><p id="hh">Доля активных карт в разрезе продуктов (детально)</p>
+          <p id="s_text">На графике отражена доля активных карт в разрезе карточных продуктов линейки "Максимум" (детально) без учета аннулирования карт.</p>
+          <div class="pieChartSlider-container"><canvas id="pieChartSlider"></canvas></div></div></li>
+    </ul>
+    <button type="button" class="slider-nav"></button>
+    <button type="button" class="slider-nav slider-nav-next"></button>
+
+    <div class="slider-indicators">
+        <button class="active"></button>
+        <button></button>
+        <button></button>
+    </div>
+  </div>
+  <p id="brand_desc">WEB-платформа процессинга "ВИЮ". Разработано командой процессинга.</p>
+</dialog>
+
+<script>
+
+const getOrCreateTooltip = (chart) => {
+  let tooltipEl = chart.canvas.parentNode.querySelector('div');
+
+  if (!tooltipEl) {
+    tooltipEl = document.createElement('div');
+	tooltipEl.setAttribute('id', 'tooltip-div');
+    tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
+    tooltipEl.style.borderRadius = '3px';
+    tooltipEl.style.color = 'white';
+    tooltipEl.style.opacity = 1;
+    tooltipEl.style.pointerEvents = 'none';
+    tooltipEl.style.position = 'absolute';
+    tooltipEl.style.transform = 'translate(-50%, 0)';
+    tooltipEl.style.transition = 'all .1s ease';
+
+    const table = document.createElement('div');
+	table.setAttribute('id', 'Mytooltip')
+
+    tooltipEl.appendChild(table);
+    chart.canvas.parentNode.appendChild(tooltipEl);
+  }
+
+  return tooltipEl;
+};
+
+const externalTooltipHandler = (context) => {
+  // Tooltip Element
+  const {chart, tooltip} = context;
+  const tooltipEl = getOrCreateTooltip(chart);
+
+  // Hide if no tooltip
+  if (tooltip.opacity === 0) {
+    tooltipEl.style.opacity = 0;
+    return;
+  }
+
+  // Set Text
+  if (tooltip.body) {
+    const titleLines = tooltip.title || [];
+    const bodyLines = tooltip.body.map(b => b.lines);
+
+    const tableHead = document.createElement('div');
+	tableHead.setAttribute('id', 'tooltip-thead');
+
+    titleLines.forEach(title => {
+      const tr = document.createElement('div');
+	  tr.setAttribute('id','tooltip-tr');
+
+      const th = document.createElement('div');
+	  th.setAttribute('id','tooltip-th');
+      const text = document.createTextNode(title);
+
+      th.appendChild(text);
+      tr.appendChild(th);
+      tableHead.appendChild(tr);
+    });
+
+    const tableBody = document.createElement('div');
+	tableBody.setAttribute('id', 'tooltip-tbody');
+    bodyLines.forEach((body, i) => {
+      const colors = tooltip.labelColors[i];
+
+      const span = document.createElement('span');
+	  span.setAttribute('id', 'tooltip-span');
+      span.style.background = colors.backgroundColor;
+      span.style.borderColor = colors.borderColor;
+      span.style.borderWidth = '2px';
+      span.style.marginRight = '10px';
+      span.style.height = '10px';
+      span.style.width = '10px';
+      span.style.display = 'inline-block';
+
+      const tr = document.createElement('div');
+	  tr.setAttribute('id','tooltip-tr2');
+
+      const td = document.createElement('div');
+	  td.setAttribute('id','tooltip-td');
+
+      const text = document.createTextNode(body);
+
+      td.appendChild(span);
+      td.appendChild(text);
+      tr.appendChild(td);
+      tableBody.appendChild(tr);
+    });
+
+    const tableRoot = tooltipEl.querySelector('#Mytooltip');
+
+    // Remove old children
+    while (tableRoot.firstChild) {
+      tableRoot.firstChild.remove();
+    }
+
+    // Add new children
+    tableRoot.appendChild(tableHead);
+    tableRoot.appendChild(tableBody);
+  }
+
+  const {offsetLeft: positionX, offsetTop: positionY} = chart.canvas;
+
+  // Display, position, and set styles for font
+  tooltipEl.style.opacity = 1;
+  tooltipEl.style.left = positionX + tooltip.caretX + 'px';
+  tooltipEl.style.top = positionY + tooltip.caretY + 'px';
+  //tooltipEl.style.font = tooltip.options.bodyFont.string;
+  tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
+};
+
+var xValues = {{ chart_labels|safe }};
+var barColors2 = ["#406682","#7f96aa","#bec9d4","#dee4e9","#fff","#89A8B2","#B3C8CF"];
+var Labels_product = {{ chart2_labels|safe }};
+var Values_product = {{ chart2_values|safe }};
+
+new Chart("linearChart", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [
+    {% set bgColors = ["60,102,130","127,150,170","190,201,212","222,228,233","255,255,255","137,168,178","#179,200,207"] %}
+    {% set count = namespace(value=0) %}
+    {% for element in chart_by_types_values %}
+      {
+        label: '{{element[-1]}}',
+        data: {{element[0:-1]}},
+        fill: true,
+        tension: 0.3,
+        pointRadius: 7,
+        borderColor: "rgba({{bgColors[count.value]}}, 1)",
+        pointBackgroundColor: "rgba({{bgColors[count.value]}}, 1)",
+        backgroundColor: "rgba({{bgColors[count.value]}}, 0.2)",
+        borderWidth: 4
+      },
+    {% if count.value < bgColors|length %}
+        {% set count.value = count.value + 1 %}
+    {% else %}
+        {% set count.value = 0 %}
+    {% endif %}
+    {% endfor %}
+    ]},
+  options: {
+	maintainAspectRatio: false,
+    plugins: {
+  tooltip: {intersect: false, bodyFont: {size: 15}, titleFont: {size: 15}},
+    legend: {labels: {color: "white", font: {size: 14}}}, title: {text: "Динамика активирования карт в разрезе продуктов", display: true, color: "white", font: {size: 18}}},
+    scales: {x: {grid: {color: "#406682"},ticks: {color: "white", font: {size: 14}}},y: {grid: {color: "#406682"},ticks: {color: "white", font: {size: 14}}}},
+  }
+});
+
+new Chart("myChart", {
+  type: "bar",
+  data: {
+    labels: xValues,
+    datasets: [
+      {% set bgColors = ["#406682","#7f96aa","#bec9d4","#dee4e9","#fff","#89A8B2","#B3C8CF"] %}
+      {% set count = namespace(value=0) %}
+      {% for element in chart_values %}
+      {
+        label: '{{element[-1]}}',
+        data: {{element[0:-1]}},
+        backgroundColor: "{{bgColors[count.value]}}",
+        borderColor: "white",
+        borderWidth: 2.5,
+        borderRadius: 3
+      },
+      {% if count.value < bgColors|length %}
+          {% set count.value = count.value + 1 %}
+      {% else %}
+          {% set count.value = 0 %}
+      {% endif %}
+      {% endfor %}
+    ]
+  },
+  options: {
+	maintainAspectRatio: false,
+    responsive: true,
+    plugins: {
+    tooltip: {enabled: false, position: 'nearest', bodyFont: {size: 15}, titleFont: {size: 15}, external: externalTooltipHandler},
+    legend: {labels: {color: "white", font: {size: 14}}}, 
+    title: {text: "Динамика активирования карт в разрезе продуктов (детально)", display: true, color: "white", font: {size: 16}}},
+    scales: {x: {stacked: true, ticks: {color: "white", font: {size: 14}}}, y: {stacked: true, ticks: {color: "white", font: {size: 14}}}},
+  }
+});
+
+new Chart("myChart2", {
+  type: "doughnut",
+  data: {
+    labels: Labels_product,
+    datasets: [{
+      backgroundColor: barColors2,
+      data: Values_product
+    }]
+  },
+  options: {
+  maintainAspectRatio: false,
+  plugins: {
+  title: {text: "Доля активных карт в разрезе продуктов (детально)", display: true, color: "white", font: {size: 18}},
+  tooltip: {enabled: false, position: 'nearest', bodyFont: {size: 15}, titleFont: {size: 15}, external: externalTooltipHandler},
+    legend: 
+    { labels: 
+      {color: "white", font: {size: 14}},
+      }
+    },
+  }
+});
+
+</script>
+<script>
+  // Get the button
+  let mybutton = document.getElementById("myBtn");
+
+  // When the user scrolls down 20px from the top of the document, show the button
+  window.onscroll = function() {scrollFunction()};
+
+  function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+      mybutton.style.display = "block";
+    } else {
+      mybutton.style.display = "none";
+    }
+  }
+
+  // When the user clicks on the button, scroll to the top of the document
+  function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+  }
+</script>
+    <div id="totable"></div>
+    <table id="myTable" style="width:100%">
+      <thead>
+        <tr>
+        {% for element in col_names %}
+          <th>{{element}}</th>
+        {% endfor %}
+        </tr>
+      </thead>
+    <tbody>
+      {% for row in data %}
+      <tr>
+        {% for column in row %}
+        <td>{{ column }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+        {% for element in col_names %}
+          <th>{{element}}</th>
+        {% endfor %}
+        </tr>
+      </tfoot>
+    </table>
+
+<script type="text/javascript">
+  new DataTable('#myTable', {
+    language: {
+        url: '/static/js//ru.json'},
+    order: [[0, 'desc']],
+    layout : {
+        top: {
+          buttons: [{extend: 'excel', filename: 'Belkart_Maximum_Full', title: ''},
+            {
+              extend: 'excel',
+              filename: 'Belkart_Maximum_Selected',
+              title: '',
+              text: 'Сохранить текущую страницу',
+              exportOptions: {
+                modifier: {
+                  page: 'current'
+                }
+              }
+            }
+          ]
+        }
+    },
+    initComplete: function () {
+        this.api()
+            .columns()
+            .every(function () {
+                let column = this;
+                let title = column.footer().textContent;
+ 
+                // Create input element
+                let input = document.createElement('input');
+                input.placeholder = title;
+                column.footer().replaceChildren(input);
+ 
+                // Event listener for user input
+                input.addEventListener('keyup', () => {
+                    if (column.search() !== this.value) {
+                        column.search(input.value).draw();
+                    }
+                });
+            });
+    },
+    fixedHeader: {
+        footer: true
+    }
+});
+</script>
+
+<script>
+  const dialog = document.getElementById("sliderDialog");
+  
+  function showDialog() {
+  var xValues = {{ chart_labels|safe }};
+  var barColors2 = ["#406682","#7f96aa","#bec9d4","#dee4e9","#fff","#89A8B2","#B3C8CF"];
+  var Labels_product = {{ chart2_labels|safe }};
+  var Values_product = {{ chart2_values|safe }};
+  dialog.show();
+  document.getElementById("sliderDialog").style.display = "block";
+  document.getElementById("modalBackdrop").style.display = "block";
+
+  new Chart("lineChartSlider", {
+  type: "line",
+  plugins: [ChartDataLabels],
+  data: {
+    labels: xValues,
+    datasets: [
+    {% set bgColors = ["60,102,130","127,150,170","190,201,212","222,228,233","255,255,255","137,168,178","#179,200,207"] %}
+    {% set count = namespace(value=0) %}
+    {% for element in chart_by_types_values %}
+      {
+        label: '{{element[-1]}}',
+        data: {{element[0:-1]}},
+        fill: true,
+        tension: 0.3,
+        pointRadius: 7,
+        borderColor: "rgba({{bgColors[count.value]}}, 1)",
+        pointBackgroundColor: "rgba({{bgColors[count.value]}}, 1)",
+        backgroundColor: "rgba({{bgColors[count.value]}}, 0.2)",
+        borderWidth: 4
+      },
+    {% if count.value < bgColors|length %}
+        {% set count.value = count.value + 1 %}
+    {% else %}
+        {% set count.value = 0 %}
+    {% endif %}
+    {% endfor %}
+    ]},
+  options: {
+    maintainAspectRatio: false,
+    plugins: {
+	datalabels: {
+		display: function(context) {
+			var dataset = context.dataset;
+			var value = dataset.data[context.dataIndex];
+			return value > 0;
+		},
+        backgroundColor: function(context) {
+          return context.dataset.borderColor;
+        },
+        borderRadius: 4,
+        color: function (context) {
+      var rgb = context.dataset.borderColor;
+	  let colorArr = rgb.slice(
+	  rgb.indexOf("(") + 1,
+	  rgb.indexOf(")")
+	  ).split(", ");
+	  const myArray = colorArr[0].split(",");
+      var threshold = 140;
+      var luminance = 0.299 * myArray[0] + 0.587 * myArray[1] + 0.114 * myArray[2];
+      return luminance > threshold ? 'black' : 'white';
+    },
+        font: {
+          weight: 'bold',
+		  size: 20,
+        },
+        formatter: Math.round,
+        padding: 6
+      },
+  tooltip: {intersect: false, bodyFont: {size: 20}, titleFont: {size: 20}},
+    legend: {labels: {color: "white", font: {size: 17}}}, title: {text: "Динамика активирования карт в разрезе продуктов", display: false, color: "white", font: {size: 20}}},
+    scales: {x: {grid: {color: "#406682"},ticks: {color: "white", font: {size: 20}}},y: {grid: {color: "#406682"},ticks: {color: "white", font: {size: 20}}}},
+  }
+});
+
+new Chart("barChartSlider", {
+  type: "bar",
+  plugins: [ChartDataLabels],
+  data: {
+    labels: xValues,
+    datasets: [
+      {% set bgColors = ["#406682","#7f96aa","#bec9d4","#dee4e9","#fff","#89A8B2","#B3C8CF"] %}
+      {% set count = namespace(value=0) %}
+      {% for element in chart_values %}
+      {
+        label: '{{element[-1]}}',
+        data: {{element[0:-1]}},
+        backgroundColor: "{{bgColors[count.value]}}",
+        borderColor: "white",
+        borderWidth: 2.5,
+        borderRadius: 3
+      },
+      {% if count.value < bgColors|length %}
+          {% set count.value = count.value + 1 %}
+      {% else %}
+          {% set count.value = 0 %}
+      {% endif %}
+      {% endfor %}
+    ]
+  },
+  options: {
+    responsive: true,
+	maintainAspectRatio: false,
+    plugins: {
+	datalabels: {
+		backgroundColor: 'white',
+		borderRadius: 4,
+		color: 'black',
+		font: {
+          weight: 'bold',
+		  size: 14,
+        },
+		display: function(context) {
+			var dataset = context.dataset;
+			var value = dataset.data[context.dataIndex];
+			return value > 30;},
+	},
+    tooltip: {bodyFont: {size: 20}, titleFont: {size: 20}},
+    legend: {labels: {color: "white", font: {size: 16}}}, 
+    title: {text: "Динамика активирования карт в разрезе продуктов (детально)", display: false, color: "white", font: {size: 20}}},
+    scales: {x: {stacked: true, ticks: {color: "white", font: {size: 20}}}, y: {stacked: true, ticks: {color: "white", font: {size: 20}}}},
+  }
+});
+
+new Chart("pieChartSlider", {
+  type: "doughnut",
+  data: {
+    labels: Labels_product,
+    datasets: [{
+      backgroundColor: barColors2,
+      data: Values_product,
+      cutout: '65%',
+    }]
+  },
+  plugins: [ChartDataLabels],
+  options: {
+  layout: {
+  	padding: 0
+  },
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: {
+  datalabels: {
+  		align: function(context) {
+  			var dataset = context.dataset;
+  			var value = dataset.data[context.dataIndex];
+  			let percentage = (value / context.chart._metasets[context.datasetIndex].total * 100).toFixed(1);
+  			if (percentage < 5) {
+  				return 'start';
+  			} else {
+  				return 'end';
+  			}
+  		},
+  		anchor: 'start',
+        backgroundColor: 'white',
+        borderColor: 'white',
+        borderRadius: 25,
+        borderWidth: 2,
+        color: 'black',
+        display: 'auto',
+        font: {
+          weight: 'bold',
+		  size: 17,
+        },
+        padding: 6,
+        formatter: (value, context) => {
+                            let percentage = (value / context.chart._metasets
+                            [context.datasetIndex].total * 100)
+                                .toFixed(1) + '%';
+                            return percentage + '\n' + value;
+        },
+      },
+  title: {text: "Доля активных карт в разрезе продуктов (детально)", display: false, color: "white", font: {size: 20}},
+  tooltip: {bodyFont: {size: 20}, titleFont: {size: 20}},
+    legend: 
+    { labels: 
+      {color: "white", font: {size: 16}},
+      }
+    },
+  }
+});
+
+  }
+  
+  function closeDialog() {
+  dialog.close();
+  document.getElementById("sliderDialog").style.display = "none";
+  document.getElementById("modalBackdrop").style.display = "none";
+  }
+ </script>
+
+</body>
+</html>
