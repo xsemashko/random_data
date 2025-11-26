@@ -24,7 +24,7 @@
   
   <style>
     /* Стили для контейнера графика с прокруткой */
-    .myChart-container {
+    .chart-scroll-container {
       width: 100%;
       overflow-x: auto;
       background: #232935;
@@ -33,10 +33,11 @@
       border-radius: 20px;
       justify-self: center;
       box-shadow: 4px 4px 6px 0px rgba(34,60,80,0.5);
+      margin-bottom: 20px;
     }
     
-    .myChart-container canvas {
-      min-width: 800px; /* Минимальная ширина для графика */
+    .chart-scroll-container canvas {
+      min-width: 800px; /* Минимальная ширина для графика с большим количеством меток */
     }
     
     .myChart2-container {
@@ -47,6 +48,25 @@
       border-radius: 20px;
       justify-self: center;
       box-shadow: 4px 4px 6px 0px rgba(34,60,80,0.5);
+    }
+    
+    /* Стили для полосы прокрутки */
+    .chart-scroll-container::-webkit-scrollbar {
+      height: 12px;
+    }
+    
+    .chart-scroll-container::-webkit-scrollbar-track {
+      background: #2a3242;
+      border-radius: 6px;
+    }
+    
+    .chart-scroll-container::-webkit-scrollbar-thumb {
+      background: #406682;
+      border-radius: 6px;
+    }
+    
+    .chart-scroll-container::-webkit-scrollbar-thumb:hover {
+      background: #4a7699;
     }
   </style>
 </head>
@@ -101,8 +121,14 @@
 </div>
 
 <!-- Заменяем div для myChart на контейнер с прокруткой -->
-<div class="myChart-container"><canvas id="myChart"></canvas></div>
-<div class="myChart2-container"><canvas id="myChart2"></canvas></div>
+<div class="chart-scroll-container">
+  <canvas id="myChart" style="min-width: 800px;"></canvas>
+</div>
+
+<div class="myChart2-container">
+  <canvas id="myChart2"></canvas>
+</div>
+
 </div>
 
 <div id="modalBackdrop" onclick="closeDialog()"></div>
@@ -339,7 +365,6 @@ const externalTooltipHandler = (context) => {
   tooltipEl.style.opacity = 1;
   tooltipEl.style.left = positionX + tooltip.caretX + 'px';
   tooltipEl.style.top = positionY + tooltip.caretY + 'px';
-  //tooltipEl.style.font = tooltip.options.bodyFont.string;
   tooltipEl.style.padding = tooltip.options.padding + 'px ' + tooltip.options.padding + 'px';
 };
 
@@ -386,6 +411,7 @@ new Chart("linearChart", {
   }
 });
 
+// Настройка графика myChart с возможностью прокрутки
 new Chart("myChart", {
   type: "bar",
   data: {
@@ -415,10 +441,12 @@ new Chart("myChart", {
     scales: {
       x: {
         stacked: true, 
-        ticks: {color: "white", font: {size: 14}},
-        // Добавляем возможность прокрутки
-        afterFit: function(scale) {
-          scale.width = Math.max(scale.width, 800); // Минимальная ширина оси X
+        ticks: {
+          color: "white", 
+          font: {size: 14},
+          // Автоповорот меток при большом количестве
+          maxRotation: 45,
+          minRotation: 45
         }
       }, 
       y: {stacked: true, ticks: {color: "white", font: {size: 14}}}
@@ -441,9 +469,9 @@ new Chart("myChart2", {
   title: {text: "Доля активных карт в разрезе продуктов (детально)", display: true, color: "white", font: {size: 18}},
   tooltip: {enabled: false, position: 'nearest', bodyFont: {size: 15}, titleFont: {size: 15}, external: externalTooltipHandler},
     legend: 
-    { labels: 
-      {color: "white", font: {size: 14}},
-      }
+    { 
+      labels: {color: "white", font: {size: 14}},
+      position: 'right'
     },
   }
 });
