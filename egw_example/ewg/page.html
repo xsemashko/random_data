@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <title>Шлюз электронной коммерции</title>
+    
+    <!-- CSS библиотеки -->
+    <link href="{{ url_for('static', filename='css/lib/w3.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/lib/notiflix-3.2.6.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+</head>
+
+<body class="page">
+    <header class="header page__header center">
+        <span class="card__title upper-xl">Оплата заказа</span>
+    </header>
+
+    <main class="page__content">
+        <form id="cardform" class="form page__content-form" name="sendForm" 
+              action="https://egw.smartpro.best/egateway.ashx?action=makeTransfer" method="post">
+            
+            <div class="card__content header">
+                {% if merchant_name %}
+                <div class="center">
+                    <h2>«{{ merchant_name }}»</h2>
+                </div>
+                {% endif %}
+                
+                {% if merchant_org_name %}
+                <div class="center">
+                    <h4>{{ merchant_org_name }}</h4>
+                </div>
+                {% endif %}
+                
+                {% if merchant_addr %}
+                <div class="center">
+                    <h4>{{ merchant_addr }}</h4>
+                </div>
+                {% endif %}
+                
+                <div class="center">
+                    <span class="upper">Номер заказа: <b style="color: #000;">{{ order_number }}</b></span>
+                </div>
+                
+                {% if merchant_url %}
+                <div class="center" style="margin-top: 10px;">
+                    <small><a href="{{ merchant_url }}" target="_blank">{{ merchant_url }}</a></small>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="card__content w3-row w3-row-padding">
+                <div class="card__container w3-half">
+                    <div class="card__title">
+                        <span>Данные карты</span>
+                    </div>
+                    <div class="card__from">
+                        <label for="cardfrom_mask" class="upper-card">Номер карточки</label>
+                        <input id="cardfrom_mask" class="card__input" type="text" name="CARD_MASK"
+                            inputmode="numeric" pattern="[0-9 ]*" placeholder="XXXX XXXX XXXX XXXX" required
+                            autocomplete="cc-number">
+                        <input id="cardfrom" type="hidden" name="CARD" value="">
+
+                        <div class="card__expcvc">
+                            <div id="card__exp">
+                                <div class="left" style="margin-right: 32px;">
+                                    <label for="cardexp" class="upper-card w3-block">Срок</label>
+                                    <input id="cardexp" class="card__input" type="text" name="EXP_FULL" size="5" maxlength="5"
+                                        placeholder="ММ/ГГ" inputmode="numeric" pattern="[0-9\/]*" required
+                                        autocomplete="cc-exp">
+                                    <input id="cardexp_month" type="hidden" name="EXP" value="">
+                                    <input id="cardexp_year" type="hidden" name="EXP_YEAR" value="">
+                                </div>
+                            </div>
+                            <div class="right">
+                                <label for="cardcvc_mask" class="upper-card w3-block">CVV/CVC2</label>
+                                <input id="cardcvc_mask" class="card__input" type="text" name="CVC2_MASK"
+                                    inputmode="numeric" pattern="[0-9]*" maxlength="3" size="3" placeholder="000"
+                                    title="Введите CVV/CVC2 на обратной стороне карточки" required
+                                    autocomplete="cc-csc">
+                                <input id="cardcvc" type="hidden" name="CVC2" value="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if merchant_add_info %}
+                <div class="card__container w3-half">
+                    <div class="card__title">
+                        <span>Дополнительная информация</span>
+                    </div>
+                    <div class="card__info">
+                        <p style="white-space: pre-line; font-size: 14px; line-height: 1.4;">
+                            {{ merchant_add_info }}
+                        </p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="card__content w3-row w3-row-padding" style="margin-bottom: 32px;">
+                <div class="card__container w3-full">
+                    <div class="card__title">
+                        <span>Детали операции</span>
+                    </div>
+                    <div class="data__container">
+                        <div class="inline__container">
+                            <div class="inline__item">
+                                <label class="upper" for="amount">Сумма операции</label>
+                                <input id="amount" class="data__input" type="text" name="AMOUNT" 
+                                       value="{{ amount }}" size="14" maxlength="14" readonly>
+                            </div>
+                            <div class="inline__item">
+                                <label class="upper" for="currency">Валюта</label>
+                                <input class="data__input" type="text" id="currency" name="CURRENCY" 
+                                       value="{{ currency }}" readonly>
+                            </div>
+                            <div class="inline__item right" id="trnsFeeBlock" style="display: none;">
+                                <div class="upper">Комиссия</div>
+                                <span class="data__input red">
+                                    <span id="TRNSFEE" style="font-size: 18px;"></span>
+                                    <span id="TRNSFEE_CURRENCY" style="font-size: 18px;"></span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="new-line">
+                            <label class="upper" for="desc">Описание</label>
+                            <input id="desc" class="data__input" type="text" name="DESC" 
+                                   value="{{ description }}" placeholder="" size="50" maxlength="50" readonly>
+                        </div>
+                        
+                        {% if merchant_info %}
+                        <div class="new-line" style="margin-top: 15px;">
+                            <div class="upper" style="margin-bottom: 5px;">Информация о платеже</div>
+                            <div class="data__info" style="font-size: 14px; color: #666;">
+                                {{ merchant_info }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="w3-bar">
+                <div id="cancelBtnBlock" class="w3-bar-item w3-mobile">
+                    <button type="button" class="w3-button bt w3-mobile w3-round" 
+                            onclick="cancelOperation()">Отменить операцию</button>
+                </div>
+                <div class="w3-hide-large w3-hide-medium" style="margin-top: 16px;">&nbsp;</div>
+                <div id="transferBtnBlock" class="w3-bar-item w3-mobile right">
+                    <button type="submit" class="w3-button bt w3-mobile w3-round">Совершить операцию</button>
+                </div>
+            </div>
+
+            <!-- Скрытые поля из токена -->
+            <input type="hidden" name="TRTYPE" value="{{ trtype }}">
+            <input type="hidden" name="MERCHANT" value="{{ merchant }}">
+            <input id="feeFlag" type="hidden" name="FEE_FLAG" value="false">
+            <input type="hidden" name="HASH_KEY" value="{{ hash_key }}">
+            <input type="hidden" name="CONFIRM_ID" value="">
+            <input type="hidden" name="CONFIRM" value="">
+            <input type="hidden" name="BVEB_FROM_FLAG" value="">
+            <input type="hidden" name="BVEB_TO_FLAG" value="">
+            <input type="hidden" name="isShowCheque" value="{{ 'true' if is_show_cheque else 'false' }}">
+            <input type="hidden" name="BACKREF" value="{{ back_url }}">
+            <input type="hidden" name="CARD_NUMBER_MASK_SCHEME" value="1|4|...">
+            <input type="hidden" name="ORDER" value="{{ order_number }}">
+            
+            <!-- Дополнительные поля из токена -->
+            <input type="hidden" name="MERCHANT_NAME" value="{{ merchant_name }}">
+            <input type="hidden" name="MERCHANT_ORG_NAME" value="{{ merchant_org_name }}">
+            <input type="hidden" name="MERCHANT_ADDR" value="{{ merchant_addr }}">
+            <input type="hidden" name="MERCHANT_URL" value="{{ merchant_url }}">
+        </form>
+    </main>
+
+    <form method="POST" name="threeDSform" target="_self"></form>
+    <form method="POST" name="chequeForm" target="_self"></form>
+
+    <div class="w3-bar pay-blok">
+        <img src="{{ url_for('static', filename='img/belkart.svg') }}" class="w3-bar-item w3-center pay-icon">
+        <img src="{{ url_for('static', filename='img/bip.svg') }}" class="w3-bar-item w3-center pay-icon">
+    </div>
+
+    <footer class="footer page__footer">
+        <span class="page__footer-text">ООО «СмартПроцессинг» © 2022-2026</span>
+    </footer>
+
+    <!-- JavaScript библиотеки -->
+    <script src="{{ url_for('static', filename='js/lib/jquery-3.6.4.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lib/notiflix-3.2.6.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lib/autonumeric.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lib/cleave.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lib/sha256.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/lib/tdsinfo.js') }}"></script>
+    
+    <!-- Основные скрипты -->
+    <script>
+        function cancelOperation() {
+            if (confirm('Вы уверены, что хотите отменить операцию?')) {
+                window.location.href = "{{ back_url }}";
+            }
+        }
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // Маски для ввода данных карты
+            initCardMasks();
+            
+            // Валидация формы
+            setupFormValidation();
+            
+            // Проверка токена в консоли (для отладки)
+            console.log('Token loaded: {{ token[:50] }}...');
+        });
+        
+        function initCardMasks() {
+            if (typeof Cleave !== 'undefined') {
+                // Маска для номера карты
+                new Cleave('#cardfrom_mask', {
+                    creditCard: true,
+                    delimiter: ' ',
+                    onValueChanged: function(e) {
+                        document.getElementById('cardfrom').value = e.target.rawValue;
+                    }
+                });
+                
+                // Маска для срока действия
+                new Cleave('#cardexp', {
+                    date: true,
+                    datePattern: ['m', 'y'],
+                    delimiter: '/',
+                    onValueChanged: function(e) {
+                        const parts = e.target.value.split('/');
+                        if (parts.length === 2) {
+                            document.getElementById('cardexp_month').value = parts[0];
+                            document.getElementById('cardexp_year').value = parts[1];
+                        }
+                    }
+                });
+                
+                // Маска для CVV
+                new Cleave('#cardcvc_mask', {
+                    numericOnly: true,
+                    blocks: [3],
+                    onValueChanged: function(e) {
+                        document.getElementById('cardcvc').value = e.target.rawValue;
+                    }
+                });
+            }
+        }
+        
+        function setupFormValidation() {
+            const form = document.getElementById('cardform');
+            
+            form.addEventListener('submit', function(e) {
+                if (!validateForm()) {
+                    e.preventDefault();
+                    return false;
+                }
+                
+                // Если валидация прошла, можно добавить дополнительные действия
+                // Например, показать лоадер
+                showLoading();
+                
+                // Генерация хеша если доступна библиотека sha256
+                if (typeof sha256 !== 'undefined') {
+                    generateAndAddHash();
+                }
+                
+                return true;
+            });
+        }
+        
+        function validateForm() {
+            const cardNumber = document.getElementById('cardfrom_mask').value.replace(/\s/g, '');
+            const expiry = document.getElementById('cardexp').value;
+            const cvv = document.getElementById('cardcvc_mask').value;
+            
+            let isValid = true;
+            let errorMessage = '';
+            
+            // Валидация номера карты
+            if (cardNumber.length < 16 || !/^\d+$/.test(cardNumber)) {
+                isValid = false;
+                errorMessage = 'Введите корректный 16-значный номер карты';
+            }
+            
+            // Валидация срока действия
+            if (!expiry.match(/^\d{2}\/\d{2}$/)) {
+                isValid = false;
+                errorMessage = 'Введите срок действия в формате ММ/ГГ';
+            } else {
+                const [month, year] = expiry.split('/').map(Number);
+                const currentYear = new Date().getFullYear() % 100;
+                const currentMonth = new Date().getMonth() + 1;
+                
+                if (month < 1 || month > 12) {
+                    isValid = false;
+                    errorMessage = 'Месяц должен быть от 01 до 12';
+                } else if (year < currentYear || (year === currentYear && month < currentMonth)) {
+                    isValid = false;
+                    errorMessage = 'Срок действия карты истек';
+                }
+            }
+            
+            // Валидация CVV
+            if (cvv.length !== 3 || !/^\d+$/.test(cvv)) {
+                isValid = false;
+                errorMessage = 'Введите корректный 3-значный CVV/CVC код';
+            }
+            
+            if (!isValid && errorMessage) {
+                alert(errorMessage);
+            }
+            
+            return isValid;
+        }
+        
+        function generateAndAddHash() {
+            try {
+                // Пример генерации хеша на основе данных формы
+                const order = document.querySelector('input[name="ORDER"]').value;
+                const amount = document.querySelector('input[name="AMOUNT"]').value;
+                const currency = document.querySelector('input[name="CURRENCY"]').value;
+                const merchant = document.querySelector('input[name="MERCHANT"]').value;
+                
+                const hashData = order + amount + currency + merchant + "{{ hash_key }}";
+                const generatedHash = sha256(hashData);
+                
+                // Удаляем старый хеш если есть
+                const oldHash = document.querySelector('input[name="HASH"]');
+                if (oldHash) oldHash.remove();
+                
+                // Добавляем новый хеш
+                const hashInput = document.createElement('input');
+                hashInput.type = 'hidden';
+                hashInput.name = 'HASH';
+                hashInput.value = generatedHash;
+                document.getElementById('cardform').appendChild(hashInput);
+                
+            } catch (error) {
+                console.error('Error generating hash:', error);
+            }
+        }
+        
+        function showLoading() {
+            const submitBtn = document.querySelector('#cardform button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = 'Обработка...';
+            }
+        }
+    </script>
+</body>
+</html>
