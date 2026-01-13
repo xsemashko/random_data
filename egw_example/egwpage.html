@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head><meta charset="UTF-8" /><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta http-equiv="X-UA-Compatible" content="IE=edge" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="icon" type="image/x-icon" href="./img/favicon.ico" /><title>
+	Шлюз электронной коммерции
+</title>
+    <link href="css/lib/w3.css?v=1744375928" rel="stylesheet">
+    <link href="css/lib/notiflix-3.2.6.min.css?v=1686128604" rel="stylesheet">
+    <link href="css/main.css?v=1763982636" rel="stylesheet">
+</head>
+
+<body class="page">
+    
+    <header class="header page__header center">
+        
+        <span class="card__title upper-xl">Оплата заказа</span>
+        
+    </header>
+
+    <main class="page__content">
+        <form id="cardform" class="form page__content-form" name="sendForm" action="https://egw.smartpro.best/egateway.ashx?action=makeTransfer" method="post">
+            <div class="card__content header">
+                
+                <div class="center">
+                    <h2>«FAINEX»</h2>
+                </div>
+                
+                <div class="center">
+                    <h4>ООО «Файнекс»</h4>
+                </div>
+                
+                <div class="center">
+                    <h4>Республика Беларусь, 223056, Минская область, Минский район, с/с Сеницкий, аг. Сеница, ул. Армейская, д. 8, пом. 4 (офис 2)</h4>
+                </div>
+                
+
+                <div class="center">
+                    
+                    <span class="upper">Номер заказа:  <b style="color: #000;">122689</b> </span>
+                </div>
+                
+            </div>
+
+
+            <div class="card__content w3-row w3-row-padding">
+                
+                <div class="card__container w3-half">
+                    <div class="card__title">
+                        <span>Данные карты</span>
+                    </div>
+                    <div class="card__from">
+                        <label for="cardfrom_mask" class="upper-card">Номер карточки</label>
+                        <input id="cardfrom_mask" class="card__input" type="text" name="CARD_MASK"
+                            inputmode="numeric" pattern="[0-9 ]*" placeholder="XXXX XXXX XXXX XXXX" >
+                        <input id="cardfrom" type="hidden" name="CARD" value="">
+
+                        <div class="card__expcvc">
+                            
+                            <div id="card__exp">
+                                <div class="left" style="margin-right: 32px;">
+                                    <label for="cardexp" class="upper-card w3-block">Срок</label>
+                                    <input id="cardexp" class="card__input" type="text" name="EXP_FULL" size="5" maxlength="5"
+                                        placeholder="ММ/ГГ" inputmode="numeric" pattern="[0-9\/]*" >
+                                    <input id="cardexp_month" type="hidden" name="EXP" value="">
+                                    <input id="cardexp_year" type="hidden" name="EXP_YEAR" value="">
+                                </div>
+                            </div>
+                            
+                            <div class="right">
+                                <label for="cardcvc_mask" class="upper-card w3-block">CVV/CVC2</label>
+                                <input id="cardcvc_mask" class="card__input" type="text" name="CVC2_MASK"
+                                    inputmode="numeric" pattern="[0-9]*" maxlength="3" size="3" placeholder="000"
+                                    title="Введите CVV/CVC2 на обратной стороне карточки">
+                                <input id="cardcvc" type="hidden" name="CVC2" value="">
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+
+            <div class="card__content w3-row w3-row-padding" style="margin-bottom: 32px;">
+                <div class="card__container w3-full">
+                    <div class="card__title">
+                        <span>Детали операции</span>
+                    </div>
+                    <div class="data__container">
+                        <div class="inline__container">
+                            
+                            <div class="inline__item">
+                                <label class="upper" for="amount">Сумма операции</label>
+                                <input id="amount" class="data__input" type="text" name="AMOUNT" value="10,00" size="14" maxlength="14" readonly>
+                            </div>
+                            
+                            <div class="inline__item">
+                                <label class="upper" for="currency">Валюта</label>
+
+                                
+                                <input class="data__input" type="text" id="currency" name="CURRENCY" value="BYN" readonly>
+                                
+                            </div>
+                            
+                            <div class="inline__item right" id="trnsFeeBlock" style="display: none;">
+                                <div class="upper">Комиссия</div>
+                                <span class="data__input red">
+                                    <span id="TRNSFEE" style="font-size: 18px;"></span>
+                                    <span id="TRNSFEE_CURRENCY" style="font-size: 18px;"></span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="new-line">
+                            
+                            <label class="upper" for="desc">Описание</label>
+                            <input id="desc" class="data__input" type="text" name="DESC" value="Заявка на пополнение № 22689" placeholder="" onblur="$(this).validate(1);"
+                                size="50" maxlength="50" readonly>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+
+            <div class="w3-bar">
+                <div id="cancelBtnBlock" class="w3-bar-item w3-mobile">
+                    <input class="w3-button bt w3-mobile w3-round" type="button" value="Отменить операцию" name="cancelBtnAction">
+                </div>
+                <div class="w3-hide-large w3-hide-medium" style="margin-top: 16px;">&nbsp;</div>
+                
+                <div id="transferBtnBlock" class="w3-bar-item w3-mobile right">
+                    <input class="w3-button bt w3-mobile w3-round" type="button" value="Совершить операцию" name="transferBtnAction">
+                </div>
+                
+            </div>
+
+            <input type="hidden" name="TRTYPE" value="1">
+            <input type="hidden" name="MERCHANT" value="E0100004">
+            <input id="feeFlag" type="hidden" name="FEE_FLAG" value="false" />
+            <input type="hidden" name="HASH_KEY" value="xcydWtdG1dFoRPyUkw2pXQ==">
+            <input type="hidden" name="CONFIRM_ID" value="">
+            <input type="hidden" name="CONFIRM" value="">
+            <input type="hidden" name="BVEB_FROM_FLAG" value="">
+            <input type="hidden" name="BVEB_TO_FLAG" value="">
+            <input type="hidden" name="isShowCheque" value="true">
+            <input type="hidden" name="BACKREF" value="https://app.fainex.by/home/wallet/my_balance">
+            <input type="hidden" name="CARD_NUMBER_MASK_SCHEME" value="1|4|...">
+            <input type="hidden" name="ORDER" value="122689">
+        </form>
+    </main>
+    
+
+    <form method="POST" name="threeDSform" target="_self"></form>
+    <form method="POST" name="chequeForm" target="_self"></form>
+
+    <div class="w3-bar pay-blok">
+        <img src="./img/belkart.svg" class="w3-bar-item w3-center pay-icon" />
+        <img src="./img/bip.svg" class="w3-bar-item w3-center pay-icon" />
+    </div>
+
+    <footer class="footer page__footer">
+        <span class="page__footer-text">ООО «СмартПроцессинг» © 2022-2026
+        </span>
+    </footer>
+</body>
+
+<script src="js/lib/jquery-3.6.4.js?v=1688131424"></script>
+<script src="js/lib/notiflix-3.2.6.min.js?v=1686128604"></script>
+<script src="js/lib/autonumeric.js?v=1687265962"></script>
+<script src="js/lib/cleave.min.js?v=1763504946"></script>
+<script src="js/lib/sha256.js?v=1696856454"></script>
+<script src="js/lib/tdsinfo.js?v=1744375928"></script>
+<script src="js/new_main.js?v=1767942434"></script>
+<script src="js/main.js?v=1767942650"></script>
+
+
+</html>
