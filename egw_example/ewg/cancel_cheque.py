@@ -76,3 +76,49 @@ def is_valid_url(url):
         return all([result.scheme, result.netloc])
     except:
         return False
+
+
+@app.route('/cancellationCheque.aspx')
+def cancellation_cheque():
+    """Страница отмены операции - точная копия оригинала"""
+    data_base64 = request.args.get('data')
+    
+    if not data_base64:
+        return "Данные не указаны", 400
+    
+    try:
+        # Декодируем данные
+        data_base64 = unquote(data_base64)
+        missing_padding = len(data_base64) % 4
+        if missing_padding:
+            data_base64 += '=' * (4 - missing_padding)
+        
+        data_bytes = base64.b64decode(data_base64)
+        data = json.loads(data_bytes.decode('utf-8'))
+        
+        # Извлекаем данные
+        error_code = data.get('RC', '-99')
+        error_text = data.get('RC_TRANS_CRYPT', '')
+        back_url = data.get('BACKREF', '/')
+        
+        # Исправляем кодировку как в основной форме
+        if error_text:
+            error_text = fix_encoding(error_text)
+        
+        # Рендерим шаблон с теми же данными что и в примере
+        return render_template('cancellation_cheque.html',
+                             error_code=error_code,
+                             error_text=error_text,
+                             back_url=back_url,
+                             current_year=datetime.now().year,
+                             site_name=app.config['SITE_NAME'])
+        
+    except Exception as e:
+        print(f"Error: {e}")
+        # При ошибке показываем дефолтную страницу
+        return render_template('cancellation_cheque.html',
+                             error_code='-99',
+                             error_text='',
+                             back_url='/',
+                             current_year=datetime.now().year,
+                             site_name=app.config['SITE_NAME'])
