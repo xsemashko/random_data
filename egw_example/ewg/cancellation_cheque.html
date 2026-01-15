@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Подключаем те же стили что и в основной форме -->
+    <link href="{{ url_for('static', filename='css/lib/w3.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/lib/notiflix-3.2.6.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    
+    <title>Чек отмены операции {{ site_name }}</title>
+</head>
+
+<body class="page center">
+    <header class="header page__header center">
+        <div class="card__title upper-xl w3-padding-32">Операция отменена клиентом</div>
+
+        <div class="data__container w3-padding-32">
+            {% if error_text %}
+            <div class="error-message">{{ error_text }}</div>
+            {% endif %}
+            
+            {% if error_code and error_code != 'ERROR' %}
+            <div class="error-code">Код ошибки: {{ error_code }}</div>
+            {% endif %}
+        </div>
+    </header>
+
+    <div style="margin-top: 32px;">
+        <center>
+            <a href="{{ back_url }}" class="back-link">
+                Вернуться на страницу торговца
+            </a>
+        </center>
+        
+        <!-- Дополнительные кнопки -->
+        <div class="action-buttons" style="margin-top: 20px; text-align: center;">
+            <button onclick="window.close()" class="w3-button w3-round" style="margin: 5px;">
+                Закрыть окно
+            </button>
+            <button onclick="window.print()" class="w3-button w3-round" style="margin: 5px;">
+                Распечатать чек
+            </button>
+        </div>
+    </div>
+
+    <footer class="footer page__footer">
+        <span class="page__footer-text">{{ site_name }} © {{ current_year }}</span>
+    </footer>
+
+    <!-- Подключаем те же скрипты -->
+    <script src="{{ url_for('static', filename='js/lib/jquery-3.6.4.js') }}"></script>
+    
+    <script>
+        $(document).ready(function () {
+            // Сообщаем родительскому окну (если есть) что операция отменена
+            try {
+                if (window.parent && window.parent !== window) {
+                    parent.postMessage('cancelled', '*');
+                }
+                
+                // Также можно отправить сообщение opener (если открыто через window.open)
+                if (window.opener) {
+                    window.opener.postMessage('cancelled', '*');
+                }
+            } catch (e) {
+                console.log('Cross-origin message not allowed:', e);
+            }
+            
+            // Автоматический редирект через 30 секунд
+            setTimeout(function() {
+                window.location.href = "{{ back_url }}";
+            }, 30000);
+        });
+        
+        // Обработка клавиши Escape для быстрого закрытия
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                window.close();
+            }
+        });
+    </script>
+</body>
+</html>
