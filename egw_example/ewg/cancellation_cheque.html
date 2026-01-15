@@ -1,18 +1,15 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    
-    <!-- Подключаем те же стили что и в основной форме -->
     <link href="{{ url_for('static', filename='css/lib/w3.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/lib/notiflix-3.2.6.min.css') }}" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-    
-    <title>Чек отмены операции {{ site_name }}</title>
+    <title>Чек отмены операции шлюза электронной коммерции</title>
 </head>
 
 <body class="page center">
@@ -20,13 +17,11 @@
         <div class="card__title upper-xl w3-padding-32">Операция отменена клиентом</div>
 
         <div class="data__container w3-padding-32">
-            <div class="error-message">
-                {% if error_text %}
-                    {{ error_text }}
-                {% else %}
-                    Операция отменена: {{ error_code }}
-                {% endif %}
-            </div>
+            {% if error_text %}
+            <div class="error-message">{{ error_text }}</div>
+            {% else %}
+            <div class="error-message">Операция отменена: {{ error_code }}</div>
+            {% endif %}
         </div>
     </header>
 
@@ -37,10 +32,9 @@
     </div>
 
     <footer class="footer page__footer">
-        <span class="page__footer-text">{{ site_name }} © {{ current_year }}</span>
+        <span class="page__footer-text">ООО «СмартПроцессинг» © 2022-{{ current_year }}</span>
     </footer>
 
-    <!-- Оригинальный скрипт как в примере -->
     <script src="{{ url_for('static', filename='js/lib/jquery-3.6.4.js') }}"></script>
     <script>
         $(document).ready(function () {
